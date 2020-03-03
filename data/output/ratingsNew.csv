@@ -1,0 +1,223 @@
+Recipe_code,Recipe_name,Unit_weight_amount,new,price,score
+R10030,Teriyaki Chicken with Coconut Rice and Bok Choy,31.25,0,7.28,2.37
+R10082,Rosemary-Walnut Crusted Chicken,62.5,0,8.1,4.94
+R10118,UK Chicken with Mustard Sauce NOT FOR FAMILY,58.25,0,7.8,4.96
+R10123B,"Smoky Chicken Fajitas with Charred Pepper and Onion, Garlic-Lime Crema",24.0,0,7.73,2.11
+R10125,Do the Dukkah Chicken with Sweet Potatoes and Snap Peas,20.0,0,9.92,1.36
+R10134,Apricot-Chili Glazed Chicken with Roasted Potatoes and Carrots,38.85,0,9.38,3.05
+R10138,"Pan-Seared Chicken with Yukon Potatoes, Green Beans, and Creamy Dill Sauce",50.85,0,8.51,3.74
+R10145C,Chicken and Pineapple Quesadillas,22.25,0,8.48,2.02
+R10158,Grilled Chicken with Potato and Summer Squash Hash,52.25,0,7.59,3.91
+R10167B,Baked Parmesan Chicken Nuggets with Green Beans and Oven Fries,34.0,0,9.17,2.71
+R10169C,Honey-Ginger Glazed Chicken,58.1,0,7.84,4.68
+R10175,Quickest Chicken Parmesan,45.26,0,8.94,3.08
+R10181,Seared Chicken with Fig-Balsamic,52.85,0,7.53,4.27
+R10181B,Seared Chicken with Fig-Balsamic,52.85,0,9.82,4.3
+R10181C,Balsamic Fig Chicken - Summer,57.85,0,9.86,4.87
+R10182,RAPID: Maple-Balsamic Chicken with Sweet Potato and Brussels,46.5,0,9.74,3.56
+R10211A,Sauteed Chicken Breasts with Dijon Herb Sauce,56.1,0,7.05,4.55
+R10213A,Maple glazed chicken,48.0,0,9.78,3.88
+R10254A,Cheesy Chicken Enchilada Casserole,32.06,0,8.28,2.24
+R15033,"Turkey Patty Melt with Mushrooms, Gruyere and Arugula",49.0,0,9.89,4.18
+R15040,Jerk Chicken Skewers with Peach and Curried Rice,31.1,0,7.88,2.39
+R15046,UK Shredded Barbecue Chicken with Black Bean Salad,45.4,0,8.16,3.79
+R15065,Roast Chicken Dinner,49.5,0,9.55,3.27
+R15102A,Apple turkey burger,23.75,0,7.95,1.99
+R15110A,1 Pan Chicken Sausage Orzotto,51.36,0,7.51,4.18
+R15144A,Spiced Cashew Orange Chicken Stir Fry,19.75,0,8.67,1.18
+R15147A,Spinach Ricotta Ravioli with Chicken Sausage,32.6,0,9.81,2.63
+R15152A,Sesame Pecan Chicken Tenders with Honey Mustard,72.25,0,8.71,5.45
+R15153A,Teriyaki Chicken and Snow Pea Stirfry,32.5,0,7.29,2.49
+R15159B,Pulled Pork Rice Bowl,24.35,0,9.97,1.98
+R15164A,Chicken Paillard,55.6,0,7.42,4.31
+R15182A,Chicken Mozzarella Flatbread With Sriracha-Honey Buffalo Sauce And Ranch Sauce,19.5,0,9.63,1.71
+R20019,Seared Steak with Dijon Tomato Salad and Marble Potatoes,56.65,0,9.22,4.45
+R20037B,Steak Tagliata (Family Friendly),59.25,0,9.09,5.18
+R20039,Soy Glazed Steak,76.0,0,9.11,5.9
+R20054,Quick-Marinated Steak,61.25,0,8.08,5.58
+R20059,Seared Steak and Creamy Chipotle Pan-Sauce,54.4,0,7.88,4.02
+R20074,Pan-Seared Steak with Spring Veggie Succotash,32.5,0,9.43,3.06
+R20080,UK Black Sesame Teriyaki Beef,18.5,0,9.6,1.49
+R20081,Rosemary Beef Skewers with Garlic Bread and Blistered Green Beans,24.25,0,9.74,2.05
+R20082,Beef Fajitas with Kiwi Salsa,37.4,0,8.53,2.56
+R20153B,Steak Caprese with Garlic-Roasted Potatoes (Classic),56.5,0,8.5,3.85
+R20154A,"Steak Sheet Bake - Potatoes, Mini Bell Peppers, Orange Parsley Butter",43.25,0,9.39,3.88
+R20162A,Southwest Lime Marinated Steak Fajitas with Spiced Crema,23.0,0,8.95,2.02
+R20164A,Mediterranean Gyro bowl,23.5,0,9.11,1.98
+R25037,Caramelized Onion Shepherd's Pie,55.6,0,9.67,4.19
+R25048,Homestyle Meatloaf,48.75,0,8.13,3.72
+R25064,Fussiloni al Forno,48.76,0,8.73,2.91
+R25071,Caramelized Pineapple Burgers with Slaw,48.25,0,7.11,3.71
+R25073C,Hoisin-Glazed Meatballs with Green Beans and Rice,26.0,0,8.4,1.78
+R25077,Chimichurri Burger,24.25,0,8.63,1.68
+R25088,Tortellini Gratin with Tomato-Basil Bolognese and Spinach,43.76,0,7.86,2.56
+R25089,Cheddar Frico Burger,50.0,0,8.77,3.23
+R25090,Shawarma Beef Meatballs w Bulgur and broiled vegetables,40.6,0,7.09,2.97
+R25091,Thai Beef with Carrot Noodles,36.4,0,7.11,2.7
+R25093A,Cumin Beef Stir Fry,20.0,0,9.47,1.44
+R25099A,Meatloaf with Chive Mashed Potato,53.6,0,8.08,4.19
+R25107A,Shepherd's Pie,34.0,0,7.38,2.57
+R25114A,Cheesy meatball bake,44.26,0,8.57,2.78
+R25117B,Dinner and Lunch Chili and Burrito,62.16,0,9.31,4.04
+R25127A,White BBQ Meatloaf,71.5,0,8.87,5.61
+R25128A,Cheesy Meatball Skillet,42.76,0,7.26,2.84
+R25132A,Taco Pizza,20.25,0,7.16,1.33
+R25181A,Beef And Pepper Tostadas,36.25,0,8.62,2.6
+R30012,Chili Cashew Shrimp with Brown Rice,40.5,0,8.91,3.26
+R30015B,Shrimp and Snap Pea Risotto - Summer,31.35,0,9.18,2.34
+R30023,Shrimp and Farro Bowl,25.0,0,9.93,2.07
+R30031,Lemony Shrimp Linguine NOT FOR FAM,23.25,0,8.55,2.08
+R30060,Sesame Shrimp with Jasmine Rice and Green Beans,24.75,0,7.81,2.09
+R30131A,Crispy Chipotle Shrimp Tacos,27.0,0,8.32,2.21
+R30906A,Spicy Korean Style Shrimp With Sesame Cucumber Salad Over Rice,43.5,0,7.08,3.53
+R35048,Roasted Salmon with French Lentil Salad,32.75,0,9.89,2.65
+R35053,Roasted Salmon with Grape Tomatoes and Green Beans,34.25,0,9.51,3.0
+R35054,Parmesan Crusted Tilapia,28.75,0,9.09,2.05
+R35064,Tempura Fish Tacos,29.0,0,8.23,2.0
+R35100,UK Spiced Buttery Mahi Mahi,33.0,0,7.52,2.47
+R35118B,Turkish Spiced Salmon With Orange Arugula Salad And Couscous,37.35,0,8.65,2.57
+R35124A,One sheet fish tacos,29.25,0,9.14,2.14
+R35129B,Salmon With Creamy Lemon Dill Sauce (with stock),28.35,0,9.86,2.15
+R35169A,Tilapia with Scallion Pesto over Ginger Jasmine Rice with Green Beans,23.5,0,8.84,1.65
+R35170A,Salmon over Tomato Couscous with Lemon Crema,17.5,0,8.26,1.49
+R35173A,Crispy Spiced Tilapia Sandwich with Red Cabbage and Cucumber Slaw,46.5,0,7.74,3.59
+R35174A,Southwest Salmon Bowl,34.1,0,8.07,2.89
+R35176A,"Hoisin-Sriracha Grilled Salmon with Jasmine Rice, Grilled Baby Bok Choy, and Sriracha Butter",15.5,0,9.27,1.16
+R40021,Pork Tenderloin with Potatoes and Tarragon Cream Sauce,41.85,0,7.35,4.3
+R40023B,Flaming Pork Fajitas,23.25,0,7.14,1.5
+R40045,Mustard Pork Chops with Roasted Green Beans and Latkes,51.85,0,7.12,3.47
+R40047,Pork al Mojo,44.75,0,9.57,3.11
+R40062,UK Homemade Pork Schnitzel,65.15,0,8.42,4.74
+R40064,Southern Pork Chops with Potato-Collard Hash,45.1,0,7.29,3.18
+R40066,Pork Chops with Arugula-Peach Salad and Couscous,52.85,0,8.47,3.8
+R40068B,Cherry-Balsamic Glazed Pork Tenderloin with Fingerlings and Broccoli,61.0,0,8.42,5.64
+R40069,Cuban Pork with Warm Confetti Salad NOT IN FAMILY,33.15,0,7.52,1.88
+R40070,UK Peachy Pork Tacos,55.25,0,8.3,4.12
+R40078B,Seared Pork Tenderloin with Homemade Applesauce and green beans,33.25,0,8.2,3.35
+R40079B,Seared Pork Chops with Brussels Sprouts,48.85,0,8.85,3.13
+R40084A,lemongrass pork tenderloin,32.35,0,8.91,3.1
+R40097A,Balsamic glazed pork with couscous - Dinner to Lunch,34.1,0,7.14,2.25
+R40110A,Herb-Crusted Pork Tenderloin,34.75,0,8.88,3.72
+R40113A,Sweet and Tangy Glazed Pork Chops,49.25,0,8.51,3.24
+R45012,Seared Sausages with Warm Orzo Salad,32.25,0,9.57,2.77
+R45024,Pork and Chinese Eggplant Stir-Fry,27.75,0,8.98,1.75
+R45030,Tuscan Pork Linguine (FAMILY ONLY),44.0,0,7.49,3.89
+R45042,Cauliflower Pancetta Mac & Cheese,34.6,0,7.21,2.21
+R45057,"Tuscan Ribollita with Kale, Italian Sausage, and Parmesan Croutons CLASSIC ONLY",60.0,0,7.08,3.98
+R45058,Sausage and Tomato Risotto,37.6,0,8.76,3.05
+R45059,UK Cheesy Tomato Orzo Risotto,42.85,0,9.82,2.86
+R45060B,UK Super Quick Creamy Pasta with Peas and Pancetta with Truffle,29.85,0,8.16,2.48
+R45063A,UK Orecchiette with Herbed Pork (f),25.0,0,8.93,2.0
+R45063B,UK Orecchiette with Herbed Pork (f),27.0,0,8.37,1.97
+R45064B,Penne With a Kick - summer,34.0,0,8.64,3.1
+R45072B,Macaroni a la Vodka,33.26,0,9.82,2.01
+R45078,"Oven-Baked Corn & Tomato Risotto with Pancetta, Thyme, and Parmesan NOT FOR FAM",28.4,0,9.88,1.82
+R45079,Sweet Italian Sausage and Broccolini Pasta,26.25,0,9.72,2.12
+R45084,UK Herbed Pork with Sicilian Caponata,57.0,0,7.59,4.58
+R45085,Thai Pork Larb,26.25,0,7.21,1.9
+R45088A,BBQ Pork Meatloaf with Cabbage and Sweet Potato,45.75,0,7.3,3.8
+R45089,One-Pot Sausage and Tortellini Soup,51.61,0,7.05,3.31
+R45096A,Hawaiian Pork Burgers with Salad,49.75,0,7.28,3.99
+R45109B,Pork carnitas (Classic version),64.85,0,9.05,4.87
+R45109C,Pork carnitas (non-romaine),63.85,0,7.21,4.85
+R45110A,"Spaghetti with Fresh Tomatoes, Chorizo, Hot Chilies, and Basil",16.5,0,7.96,1.2
+R45113A,"Sausage Flatbreads with Pickled Jalapeno, Shallot, and Salad",59.76,0,9.53,4.38
+R45116A,Bangers and Mash with Thyme Gravy,36.25,0,7.07,2.83
+R45162A,BBQ Pulled Pork Flatbread,20.0,0,9.44,1.53
+R45178A,Pineapple BBQ Pizza,50.0,0,7.85,3.81
+R60088,Roasted Eggplant Linguine with Sun-Dried Tomato and Chili,30.75,0,8.89,2.44
+R60132,Roasted Carrot and Avocado Salad with Israeli Couscous,20.6,0,9.63,1.56
+R60155,Wild Mushroom Lo Mein,37.1,0,9.21,2.51
+R60166B,Bell Pepper and Black Bean Quesadillas,28.9,0,9.41,2.3
+R60253,Chard & Wild Mushroom Penne,24.0,0,7.85,1.8
+R60266,Spring Tortellini Gratin,32.1,0,7.53,2.08
+R60271A,Portobello & Orecchiette Primavera,20.25,0,9.25,1.73
+R60286,Sweet Potato & Quinoa Bowl,18.5,0,9.42,1.3
+R60288,Roasted Vegetable Quesadillas,23.25,0,9.97,1.91
+R60301,Summer Succotash-Stuffed Peppers,20.35,0,8.24,1.32
+R60306,Caramelized Veggie Skewers,57.15,0,8.12,4.21
+R60308,Stuffed Summer Squash Boats NOT FOR FAM,19.6,0,9.33,1.48
+R60319,Summer Ratatouille,25.5,0,8.02,1.89
+R60326,Freekeh & Brussels Sprouts Salad,21.75,0,9.79,1.74
+R60326B,Freekeh & Brussels Sprouts Salad,21.75,0,9.58,1.74
+R60350,Mushroom Ragu with Crispy Polenta Cakes and Tangy Arugula Salad,52.1,0,8.29,4.1
+R60351,"Autumn Risotto with Butternut Squash, Sage, and Pepitas",15.0,0,9.25,1.16
+R60392B,"Veggie Lo Mein with Mushrooms, Green Beans, and Sweet Ginger-Soy Sauce",36.1,0,9.26,2.53
+R60408,Polenta Cakes with Asparagus and Mushrooms,25.25,0,7.31,2.04
+R60411,NL Couscous and Grilled Asparagus Salad,20.0,0,9.71,1.42
+R60421B,Fatoush Salad with Crispy Chickpeas and Chips,52.65,0,8.52,4.16
+R60435,Grilled Zucchini and Asparagus Farro Bowl,22.75,0,9.69,1.9
+R60447,Spicy Shakshuka with Chickpeas,37.41,0,8.17,2.5
+R60456B,Squash Flatbread with Fresh Mozzarella,26.0,0,7.03,1.56
+R60461,Aritchoke Risotto ONLY VEGGIE,26.1,0,9.72,2.07
+R60498A,Southwest Black Bean Burgers,26.4,0,7.96,2.04
+R60501A,"Cuban Rice with Halloumi, Poblano, and Salsa Verde",13.75,0,9.85,1.14
+R60502A,Saag Paneer Flatbread,11.25,0,9.85,0.72
+R60513A,Pasta with Roasted Veggies and Goat Cheese,35.9,0,8.72,3.15
+R60518A,Baked Veggie Pasta Parmesan,37.75,0,8.9,3.08
+R60524A,Vegetarian Italian Subs,20.0,0,8.35,1.78
+R60526A,Super Cheesy Corn and Poblano Quesadillas,10.0,0,7.88,0.83
+R60535A,One-Pot Tortelloni With Heirloom Tomato And Kale,22.0,0,9.26,1.87
+R60538A,"Pasta With Baby Broccoli, Basil, And Sun Dried Tomto Cream",28.75,0,9.37,2.08
+R70041,Seitan Chili,40.5,0,9.37,2.92
+R70043A,Halloumi Jumble with Chimichurri,19.25,0,7.27,1.47
+R70044A,Seitan Tacos al Pastor with Poblano,23.25,0,8.48,1.79
+R70044B,Seitan Tacos al Pastor with Poblano,23.25,0,7.17,1.99
+R80007A,Lobster Ravioli with Shrimp and Heirloom Tomatoes,31.25,0,8.65,2.84
+R80016B,Ribeye with Bearnaise Style Sauce,71.5,0,8.32,5.28
+R80019A,NY Strip with Cauli Mash and Heirloom Tomatoes,48.25,0,9.66,3.84
+R80031A,Lobster Ravioli with Maitake Mushrooms,22.25,0,8.05,1.98
+R80037A,Prosciutto Wrapped Chicken over Truffle Mushroom Risotto,51.0,0,7.43,3.74
+R80044A,Soy Shiitake Demi Glazed Steak over Wasabi Potatoes with Roasted Asparagus,45.0,0,9.28,3.66
+R80080A,Hoisin Seared Ribeye with Scallion Sesame Pesto,37.25,0,7.3,2.66
+R80091A,"Duck Breast with Nectarine-Balsamic Sauce, Lemony Rice, and Watercress Salad",56.35,0,9.1,3.69
+R80093A,Lobster Ravioli and Zucchini in Creamy Tomato Sauce,33.53,0,7.22,2.59
+R80099A,Soy Steak with Scalllion Mashed Potatoes and Sesame Snow Peas and Edamame,46.0,0,9.47,3.5
+R80104A,"Steakhouse Classic Ny Strip With Truffle Mushroom Sauce, Roasted Carrots, And Stuffed Potato",52.0,0,9.12,4.03
+R90001A,"Chorizo, Avocado, and Egg sandwich with Potato Hash",21.0,0,7.24,1.86
+R90027A,Breakfast Sausage Flatbread with Eggs,13.5,0,7.25,1.04
+R90035A,Mexican Breakfast Pizza,11.25,0,9.96,0.97
+R90089A,Pho Soup To Noodle Stir Fry,18.85,0,8.12,1.42
+R10128,UK Hearty Roasted Chicken with Dijon Mushroom Sauce,30.0,1,8.18,2.31
+R10130,HDP Chicken with Farro Caprese,49.0,1,9.68,3.71
+R10133,AU Zucchini and Parmesan Topped Chicken,46.75,1,8.89,3.55
+R10139,UK Pesto Roulades with Roasted Potatoes,31.5,1,8.73,2.42
+R10174,Pan Roasted Chicken with Dijon Mustard Sauce,36.35,1,7.07,2.78
+R10183,Eastern Carolina Pulled Chicken,40.6,1,8.11,3.09
+R10259A,Grilled Tuscan Chicken & Broccoli with Spicy Lemon Pasta,33.0,1,9.9,2.53
+R15037,Char-Broiled BBQ Chicken with Summery Potato & Green Bean Salad,60.0,1,9.56,4.52
+R15148B,Bulgogi Tacos,54.0,1,9.09,4.08
+R15154A,Chicken & Poblano Tacos with Tomatillo Salsa and Lime Crema,30.06,1,8.85,2.32
+R15174A,"Smothered Chicken Enchiladas With Poblano Pepper, Onion, And Sour Cream",26.0,1,8.55,2.02
+R20068,"Italian Ciabatta Burgers with Caramelized Onion, Mozzarella, and Sweet-and-Tangy Arugula Salad (f)",53.0,1,9.43,4.01
+R20167A,Ranch Steak With Creamy Peppercorn Sauce,47.0,1,9.39,3.57
+R25041B,Tomato Garlic Ragu (family version),45.01,1,8.01,3.42
+R25058D,Spicy Poblano Chili - Family,54.76,1,7.28,4.14
+R25118A,Meatloaf Burger,22.25,1,7.65,1.74
+R25139A,Burger With Garlic-Rosemary Mayo And Lemon Butter Corn,19.25,1,8.59,1.52
+R30043,Brioche Shrimp Rolls,22.25,1,7.97,1.74
+R30048,Shrimp and Chorizo Paella,32.63,1,9.39,2.51
+R30903A,Pasta with Spicy Shrimp and Garlic Herb Butter,27.0,1,7.24,2.09
+R35101,UK Herby Sea Bass with Salsa Verde,35.25,1,7.47,2.7
+R35111B,One-Pan Crispy Tilapia,18.5,1,7.75,1.46
+R35126A,Teriyaki Salmon with Ginger Scallion Rice and Snap Peas,25.75,1,8.98,2.0
+R35127A,Crispy southwest tilapia,30.85,1,7.84,2.37
+R35166A,Blackened Fish Sandwiches,27.25,1,9.21,2.11
+R35168A,Smoky Brown Sugar Salmon with Sweet Potatoes and Sunflower Seed Salad,21.0,1,8.66,1.65
+R40017B,Spice Rubbed Pork with Sweet Potato Fries and Pineapple-Avocado Salsa,21.25,1,7.04,1.67
+R40047B,Pork al Mojo,35.4,1,9.11,2.71
+R40100A,"Sweet and Smoky Pork Tenderloin with Cherry Sauce, Apple-Carrot Slaw and Mashed Potatoes",59.0,1,8.12,4.45
+R45053,Brown Sugar Pork,24.0,1,8.93,1.87
+R45060,UK Super Quick Creamy Pasta with Peas and Pancetta,27.85,1,8.73,2.15
+R45076,Gnocchi with Chorizo Bolognese,28.85,1,8.16,2.23
+R60080,Creamy Linguine with Wild Mushrooms and Tarragon,16.25,1,7.35,1.3
+R60080B,Creamy Tagliatelle with Mushrooms and Tarragon,16.25,1,9.09,1.3
+R60430,Edamame and Soba Noodle Bowl,47.15,1,9.48,3.58
+R60431,BE Pearl Barley Salad,44.0,1,7.96,3.34
+R60488A,Veggie Lovers Flatbread with Spinach Salad,22.0,1,7.27,1.72
+R60530A,"Veggie ""Carnitas""",56.4,1,7.99,4.26
+R60534A,Tomato Ricotta Flatbread,23.0,1,9.02,1.8
+R80036A,"Skirt Steak with Mushroom Sauce and Arugula, Pear, Ricotta Salata Salad",48.0,1,7.35,3.64
+R80048A,Maple Glazed Duck with Blood Orange Salad,31.25,1,8.85,2.4
+R80087A,Ribeye with Maitre D' Butter Roasted Baby Carrots over Truffle Mashed Potatoes,40.25,1,7.25,3.07
+R90096A,Orange Chicken With Rice Pilaf And Buttery Broccoli To Garlic And Meditteranean Chicken Pasta,67.1,1,8.11,5.05
