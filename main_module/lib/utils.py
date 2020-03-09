@@ -47,36 +47,46 @@ from openpyxl import load_workbook
 # =============================================================================
 
 
-def elapsed_time(text, start_t):
+def elapsed_time(text, start_t, sept=70):
     """
     Return elapsed time.
 
     Parameters
     ----------
     :text: str
+
         Text to be printed
 
     :start_t: float
-        Generated from time.time()
+
+        Generated from time.time_ns()
+
+    :sept: int
+
+        Length of text
 
     Returns
     -------
     str
-        A string containing arg "text" followed by hours, minutes, seconds
+        A string containing arg "text" followed by hours, minutes, seconds,
+        milliseconds.
 
     Example usage
     -------------
 
     >>> import time
-    >>> start = time.time()
+    >>> start = time.time_ns()
     >>> time.sleep(2)
     >>> elapsed_time("Time taken:", start)
-    Time taken: 00:00:02
+    Time taken: 00:00:02 000 ms
 
     """
-    minute, second = divmod(round(time.time() - start_t, 2), 60)
+    second, ms = divmod(round((time.time_ns() / 1e6) - (start_t / 1e6), 0),
+                        1000)
+    minute, second = divmod(second, 60)
     hour, minute = divmod(minute, 60)
-    fn_op = text + " " + "%02d:%02d:%02d" % (hour, minute, second)
+    fn_op = text + str("%02d:%02d:%02d %03d ms" % (hour, minute, second, ms))\
+        .rjust(sept - len(text))
     return fn_op
 
 
