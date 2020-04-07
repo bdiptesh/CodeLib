@@ -91,6 +91,47 @@ class Test_Cluster(unittest.TestCase):
         self.assertEqual(max(tmp_op["cluster"]), 5)
 
 
+class Test_Knn(unittest.TestCase):
+    """
+    Test suite for KNN.
+    """
+
+    def setUp(self):
+        """Setup for module ``Test_Knn``."""
+
+    def test_knn_class(self):
+        """ Test KNN classification.
+        """
+        df_ip = pd.read_csv(path + "/data/input/iris.csv")
+        df_ip = df_ip[["y", "x1", "x2"]]
+        df_train, df_test = split(df_ip,
+                                  stratify=df_ip["y"],
+                                  test_size=0.1,
+                                  random_state=42)
+        mod = Knn(df_train, "y", ["x1", "x2"], method="classify")
+        mod.fit()
+        y_hat = mod.predict(df_test[["x1", "x2"]]).tolist()
+        y = df_test["y"].values.tolist()
+        acc = round(len([i for i, j in zip(y, y_hat) if i == j]) / len(y), 2)
+        self.assertGreaterEqual(acc, 0.93)
+
+    def test_knn_reg(self):
+        """ Test KNN regression.
+        """
+        df_ip = pd.read_csv(path + "/data/input/iris.csv")
+        df_ip = df_ip[["y", "x1", "x2"]]
+        df_train, df_test = split(df_ip,
+                                  stratify=df_ip["y"],
+                                  test_size=0.1,
+                                  random_state=42)
+        mod = Knn(df_train, "y", ["x1", "x2"], method="regression")
+        mod.fit()
+        y_hat = mod.predict(df_test[["x1", "x2"]]).tolist()
+        y = df_test["y"].values.tolist()
+        acc = round(len([i for i, j in zip(y, y_hat) if i == j]) / len(y), 2)
+        self.assertGreaterEqual(acc, 0.87)
+
+
 class Test_RandomForest(unittest.TestCase):
     """
     Test suite for random forest.
@@ -133,47 +174,6 @@ class Test_RandomForest(unittest.TestCase):
         y_hat = list(mod.predict(test[["x1", "x2", "x3", "x4"]]))
         y_hat = [int(round(i)) for i in y_hat]
         y = test["y"].values.tolist()
-        acc = round(len([i for i, j in zip(y, y_hat) if i == j]) / len(y), 2)
-        self.assertGreaterEqual(acc, 0.87)
-
-
-class Test_Knn(unittest.TestCase):
-    """
-    Test suite for KNN.
-    """
-
-    def setUp(self):
-        """Setup for module ``Test_Knn``."""
-
-    def test_knn_class(self):
-        """ Test KNN classification.
-        """
-        df_ip = pd.read_csv(path + "/data/input/iris.csv")
-        df_ip = df_ip[["y", "x1", "x2"]]
-        df_train, df_test = split(df_ip,
-                                  stratify=df_ip["y"],
-                                  test_size=0.1,
-                                  random_state=42)
-        mod = Knn(df_train, "y", ["x1", "x2"], method="classify")
-        mod.fit()
-        y_hat = mod.predict(df_test[["x1", "x2"]]).tolist()
-        y = df_test["y"].values.tolist()
-        acc = round(len([i for i, j in zip(y, y_hat) if i == j]) / len(y), 2)
-        self.assertGreaterEqual(acc, 0.93)
-
-    def test_knn_reg(self):
-        """ Test KNN regression.
-        """
-        df_ip = pd.read_csv(path + "/data/input/iris.csv")
-        df_ip = df_ip[["y", "x1", "x2"]]
-        df_train, df_test = split(df_ip,
-                                  stratify=df_ip["y"],
-                                  test_size=0.1,
-                                  random_state=42)
-        mod = Knn(df_train, "y", ["x1", "x2"], method="regression")
-        mod.fit()
-        y_hat = mod.predict(df_test[["x1", "x2"]]).tolist()
-        y = df_test["y"].values.tolist()
         acc = round(len([i for i, j in zip(y, y_hat) if i == j]) / len(y), 2)
         self.assertGreaterEqual(acc, 0.87)
 

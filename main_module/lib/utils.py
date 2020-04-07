@@ -18,7 +18,7 @@ Author
 ::
 
     Author: Diptesh.Basak
-    Date: Aug 11, 2019
+    Date: Apr 06, 2020
     License: BSD 3-Clause
 """
 
@@ -28,6 +28,8 @@ Author
 
 import time
 import copy
+
+from typing import List, Any
 
 import pandas as pd
 import numpy as np
@@ -47,7 +49,9 @@ from openpyxl import load_workbook
 # =============================================================================
 
 
-def elapsed_time(text, start_t, sept=70):
+def elapsed_time(text: str,
+                 start_t: int,
+                 sept: int = 70) -> str:
     """
     Return elapsed time.
 
@@ -57,7 +61,7 @@ def elapsed_time(text, start_t, sept=70):
 
         Text to be printed
 
-    :start_t: float
+    :start_t: int
 
         Generated from time.time_ns()
 
@@ -90,13 +94,15 @@ def elapsed_time(text, start_t, sept=70):
     return fn_op
 
 
-def prime_list(limit):
+def prime_list(limit: int = 2) -> List[int]:
     """
     Generate a list of prime numbers till limit.
 
     Parameters
     ----------
     :limit: int
+
+        An integer till which we need to generate primes
 
     Returns
     -------
@@ -105,7 +111,7 @@ def prime_list(limit):
 
     Example usage
     -------------
-    >>> prime_numbers = prime_list(100)
+    >>> prime_numbers = prime_list(20)
 
     """
     is_prime = np.ones(limit + 1, dtype=np.bool)
@@ -115,8 +121,11 @@ def prime_list(limit):
     return list(np.nonzero(is_prime)[0][2:])
 
 
-def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None,
-                       **to_excel_kwargs):
+def append_df_to_excel(filename: str,
+                       df: pd.DataFrame,
+                       sheet_name: str = 'Sheet1',
+                       startrow: int = None,
+                       **to_excel_kwargs: Any) -> None:
     """
     Append dataframe to spreadsheet.
 
@@ -134,13 +143,13 @@ def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None,
 
         dataframe to save to workbook
 
-    :sheet_name: str
+    :sheet_name: str, optional, default : 'Sheet1'
 
-        Name of sheet which will contain DataFrame. `default:` ``Sheet1``
+        Name of sheet which will contain DataFrame
 
-    :startrow: int
+    :startrow: int, optional, default : None
 
-        upper left cell row to dump data frame. `default:` ``None``
+        upper left cell row to dump data frame.
         calculate the last row in the existing DF and write to the next row.
 
     :to_excel_kwargs:
@@ -180,7 +189,7 @@ def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None,
     writer.save()
 
 
-def df_size(df):
+def df_size(df: pd.DataFrame) -> str:
     """
     Determine size of a pandas.DataFrame.
 
@@ -203,7 +212,10 @@ def df_size(df):
     return op
 
 
-def table_output(df, col, header, precision=3):
+def table_output(df: pd.DataFrame,
+                 col: List,
+                 header: List,
+                 precision: int = 3) -> PrettyTable():
     """
     Return prettytable object.
 

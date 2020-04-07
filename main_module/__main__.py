@@ -37,8 +37,8 @@ __doc__ = lib.cfg.__doc__
 path = lib.cfg.path + "data/"
 module = lib.cfg.module
 
-sep = "-" * 70
-start = time.time_ns()
+sep: str = "-" * 70
+start: int = time.time_ns()
 print(sep, "\n" + __doc__, "v" + __version__, "\n" + sep)
 
 # =============================================================================
@@ -56,24 +56,6 @@ CLI.add_argument("-c", "--count",
 args = CLI.parse_args()
 
 cnt = args.count[0]
-
-# =============================================================================
-# --- User defined functions
-# =============================================================================
-
-
-def t_sum(x, y):
-    """Sum 2 numbers.
-
-    Parameters
-    ----------
-    :x: int
-
-    :y: int
-
-    """
-    return x + y
-
 
 # =============================================================================
 # -- Main
@@ -104,9 +86,9 @@ if __name__ == '__main__':
     df_ip = df_ip.iloc[:10, :]
     tsp = lib.opt.TSP()
     opt = tsp.solve(loc=df_ip["city"].tolist(),
-                    x=df_ip["lat"].tolist(),
-                    y=df_ip["lng"].tolist(),
-                    debug=0)
+                    lat=df_ip["lat"].tolist(),
+                    lon=df_ip["lng"].tolist(),
+                    debug=False)
     df_op = pd.DataFrame(data=list(opt[2]), columns=["city", "dist"])
     df_op = pd.merge(df_op,
                      df_ip,

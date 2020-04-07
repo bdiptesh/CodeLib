@@ -4,11 +4,13 @@ Module for commonly used machine learning algorithms.
 Statistics module
 -----------------
 
+**Available routines:**
+
 - class ``Model``: Builds GLMnet model
 - class ``Cluster``: K-means clustering
 - class ``Knn``: K Nearest Neighbor
 - class ``RandomForest``: Random forest
-- class ``XGBoost``: XGBoost
+- class ``XGBoost``: XGBoost (random or timeseries split cross validation)
 
 Objective
 ---------
@@ -33,7 +35,7 @@ Author
 # =============================================================================
 
 from dataclasses import dataclass
-from warnings import simplefilter
+from typing import List, Tuple, Dict, Optional, Union, Any
 
 import copy
 import pandas as pd
@@ -51,16 +53,12 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import scale
 from sklearn.model_selection import RandomizedSearchCV
 
-# Ignore all future warnings
-simplefilter(action='ignore', category=FutureWarning)
-
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
 # =============================================================================
 
 # pylint: disable=invalid-name
 # pylint: disable-msg=too-many-arguments
-np.warnings.filterwarnings('ignore')
 
 # =============================================================================
 # --- User defined functions
@@ -102,7 +100,11 @@ class Model():
     n_jobs: int = -1
     k_fold: int = 10
 
-    def cv_glmnet(self, df, y_var, x_var, strata=None):
+    def cv_glmnet(self,
+                  df: pd.DataFrame,
+                  y_var: List[str],
+                  x_var: List[str],
+                  strata: str = None) -> Dict[str, float]:
         """
         Glmnet cross validation module (sklearn).
 
@@ -191,7 +193,9 @@ class Cluster():
 
     """
 
-    def __init__(self, x_var, max_clus):
+    def __init__(self,
+                 x_var: List[str],
+                 max_clus: int):
         """Initialize variables for module ``Cluster``."""
         self.x_var = x_var
         self.max_clus = max_clus
@@ -201,40 +205,9 @@ class Cluster():
         self.df_op = None
 
     @staticmethod
-    def ConvertToContinous(df):
-        """
-        Convert categorical variables to dummy variables.
-
-        Parameters
-        ----------
-        :df: pandas.DataFrame
-
-            An input pandas dataframe containing continous and/or categorical
-            variables
-
-        Returns
-        -------
-        numpy.array
-
-        """
-        x_cat = df.select_dtypes(include=['object', 'bool'])
-        x_num = df.select_dtypes(include=['int', 'float64'])
-        if not x_cat.empty:
-            for i, c in enumerate(x_cat.columns):
-                temp_d = pd.get_dummies(pd.DataFrame(x_cat[c]))
-                if len(temp_d.columns) > 1:
-                    temp_d.drop(temp_d.columns[[0]], axis=1, inplace=True)
-                if i == 0:
-                    x_cat_d = temp_d
-                else:
-                    x_cat_d = x_cat_d.join(temp_d)
-            df_ip_t = x_num.join(x_cat_d)
-        else:
-            df_ip_t = x_num
-        return df_ip_t.values
-
-    @staticmethod
-    def _Compact(data, centers, labels):
+    def _Compact(data: np.array,
+                 centers: List[float],
+                 labels: List[int]) -> float:
         """Compute compactness of given clustering solution."""
         k_sum = 0.0
         for i in enumerate(data):
@@ -242,7 +215,7 @@ class Cluster():
             k_sum += np.linalg.norm(centers[cluster_num] - data[i[0]])**2
         return k_sum
 
-    def _NRef(self):
+    def _NRef(self) -> pd.DataFrame:
         """
         Create null reference distribution.
 
@@ -302,7 +275,10 @@ class Cluster():
                 df_sample = x_cont_d
         return df_sample
 
-    def gap(self, df, stop="globalMax", n_trial=10):
+    def gap(self,
+            df: pd.DataFrame,
+            stop: str = "globalMax",
+            n_trial: int = 10) -> pd.DataFrame:
         """
         Gap statistic module.
 
@@ -326,7 +302,7 @@ class Cluster():
         """
         self.df_ip = copy.copy(df)
         df = df[self.x_var]
-        self.clus_ip = self.ConvertToContinous(df)
+        self.clus_ip = pd.get_dummies(df, drop_first=True).values
         self.clus_ip = self.clus_ip.astype('float64')
         self.max_clus = min(self.max_clus, len(df.drop_duplicates()))
         self.clus_ip = scale(self.clus_ip)
@@ -343,7 +319,7 @@ class Cluster():
             # Create random data for comparison
             cluster["trial_compact"] = np.zeros(n_trial)
             for trial in range(n_trial):
-                samples = self.ConvertToContinous(self._NRef())
+                samples = pd.get_dummies(self._NRef(), drop_first=True).values
                 samples = samples.astype('float64')
                 samples = scale(samples)
                 sample_labels = cluster["kclusters"].fit_predict(samples)
@@ -416,7 +392,11 @@ class Knn():
 
     """
 
-    def __init__(self, df, y_var, x_var, method="classify"):
+    def __init__(self,
+                 df: pd.DataFrame,
+                 y_var: str,
+                 x_var: List[str],
+                 method: str = "classify"):
         """Initialize variables for module ``Knn``."""
         self.df = df.reset_index(drop=True)
         self.y_var = y_var
@@ -433,7 +413,10 @@ class Knn():
         df_ip_x.columns = self.x_var
         self.df = self.df[[self.y_var]].join(df_ip_x)
 
-    def fit(self, grid_params=None, n_fold=5):
+    def fit(self,
+            grid_params: Optional[Dict[str,
+                                       List[Union[str, int]]]] = None,
+            n_fold: int = 5) -> Dict[str, Any]:
         """Fit KNN model."""
         max_k = max(int(len(self.df)/(n_fold * 2)), 1)
         if grid_params is None:
@@ -469,7 +452,7 @@ class Knn():
                                self.df[self.y_var])
         return gs_op.best_params_
 
-    def predict(self, x_pred):
+    def predict(self, x_pred: pd.DataFrame) -> pd.DataFrame:
         """Prediction module."""
         x_pred = pd.DataFrame(scale(pd.get_dummies(x_pred)))
         return self.model.predict(x_pred)
@@ -499,7 +482,11 @@ class RandomForest():
 
     """
 
-    def __init__(self, df, y_var, x_var, method="classify"):
+    def __init__(self,
+                 df: pd.DataFrame,
+                 y_var: str,
+                 x_var: List[str],
+                 method: str = "classify"):
         """Initialize variables for module ``RandomForest``."""
         self.df = df.reset_index(drop=True)
         self.y_var = y_var
@@ -515,7 +502,11 @@ class RandomForest():
         self.x_var = list(df_ip_x.columns)
         self.df = self.df[[self.y_var]].join(df_ip_x)
 
-    def fit(self, grid_param=None, n_jobs=-1, verbose=0, seed=123456789):
+    def fit(self,
+            grid_param: Optional[Dict[str, Union[bool, int, str]]] = None,
+            n_jobs: int = -1,
+            verbose: int = 0,
+            seed: int = 123456789) -> Dict[str, Any]:
         """Fit random forest model.
 
         Parameters
@@ -600,7 +591,8 @@ class RandomForest():
         self.model.fit(X=self.df[self.x_var], y=self.df[self.y_var])
         return grid.best_params_
 
-    def predict(self, x_pred):
+    def predict(self,
+                x_pred: pd.DataFrame) -> pd.DataFrame:
         """Predict values."""
         return self.model.predict(pd.get_dummies(x_pred))
 
@@ -657,9 +649,15 @@ class XGBoost():
     """
 
     def __init__(self,
-                 y_train, x_train,
-                 y_test=None, x_test=None,
-                 opts=None, params=None):
+                 y_train: pd.Series,
+                 x_train: pd.DataFrame,
+                 y_test: Optional[pd.Series] = None,
+                 x_test: Optional[pd.DataFrame] = None,
+                 opts: Optional[Dict[str, Union[str, int]]] = None,
+                 params: Optional[Dict[str,
+                                       List[Union[str,
+                                                  int,
+                                                  float]]]] = None):
         """Initialize variables for module ``XGBoost``."""
         self.y_train = y_train
         self.x_train = x_train
@@ -690,7 +688,8 @@ class XGBoost():
         self.xgb_model = None
 
     @staticmethod
-    def rmse(y, y_hat):
+    def rmse(y: List[Union[int, float]],
+             y_hat: List[Union[int, float]]) -> float:
         """Determine root mean squared of error.
 
         Parameters
@@ -712,7 +711,8 @@ class XGBoost():
                                       for a, b in zip(y, y_hat)])), 2)
 
     @staticmethod
-    def mse(y, y_hat):
+    def mse(y: List[Union[int, float]],
+            y_hat: List[Union[int, float]]) -> float:
         """Determine mean squared of error.
 
         Parameters
@@ -733,7 +733,16 @@ class XGBoost():
         return round(np.mean([(a - b) ** 2
                               for a, b in zip(y, y_hat)]), 2)
 
-    def _best_param(self, obj):
+    def _best_param(self,
+                    obj: Dict[str,
+                              Union[List[Union[float,
+                                               int,
+                                               Dict[str,
+                                                    Union[int,
+                                                          str,
+                                                          float]]]]]]
+                    ) -> Tuple[Dict[str, Union[float, int, str]],
+                               List[List[float]]]:
         """Determine optimal hyper-parameters.
 
         Parameters
@@ -774,16 +783,16 @@ class XGBoost():
         if min(one_se_op) == np.Inf:
             return -1
         opt_param = one_se_op.index(min(one_se_op))
-        return obj["params"][opt_param], one_se
+        return (obj["params"][opt_param], one_se)
 
-    def fit(self):
+    def fit(self) -> bool:
         """Fit XGBoost model.
 
         Returns
         -------
-        :flag: int
+        :flag: bool
 
-            1 if model exists, -1 otherwise
+            True if model exists, False otherwise
 
         """
         est_xgb = xgb.XGBRegressor(n_jobs=self.opts["n_jobs"],
@@ -805,7 +814,7 @@ class XGBoost():
         rs_xgb.fit(self.x_train, self.y_train)
         tmp = self._best_param(rs_xgb.cv_results_)
         if tmp == -1:
-            return -1
+            return False
         fit_param = self._best_param(rs_xgb.cv_results_)[0]
         self.xgb_model = xgb.XGBRegressor(n_jobs=self.opts["n_jobs"],
                                           verbosity=0,
@@ -815,9 +824,9 @@ class XGBoost():
                                           **fit_param)
         self.xgb_model.fit(self.x_train.append(self.x_test),
                            self.y_train.append(self.y_test))
-        return 1
+        return True
 
-    def predict(self, x_pred):
+    def predict(self, x_pred: pd.DataFrame) -> List[Union[int, float]]:
         """Predict using the XGBoost model built.
 
         Parameters
