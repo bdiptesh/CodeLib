@@ -6,7 +6,7 @@ Author
 ::
 
     Author: Diptesh
-    Date Jun 14, 2019
+    Date: Jun 14, 2019
     License: BSD 3-Clause
 """
 
@@ -18,7 +18,6 @@ Author
 
 import time
 import argparse
-import ctypes
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -38,11 +37,9 @@ __doc__ = lib.cfg.__doc__
 path = lib.cfg.path + "data/"
 module = lib.cfg.module
 
-sep = "-" * 70
-start = time.time()
+sep: str = "-" * 70
+start: int = time.time_ns()
 print(sep, "\n" + __doc__, "v" + __version__, "\n" + sep)
-
-c_utils = ctypes.CDLL(lib.cfg.path + "bin/utils.so")
 
 # =============================================================================
 # --- Arguments
@@ -61,30 +58,12 @@ args = CLI.parse_args()
 cnt = args.count[0]
 
 # =============================================================================
-# --- User defined functions
-# =============================================================================
-
-
-def t_sum(x, y):
-    """Sum 2 numbers.
-
-    Parameters
-    ----------
-    :x: int
-
-    :y: int
-
-    """
-    return x + y
-
-
-# =============================================================================
 # -- Main
 # =============================================================================
 
 if __name__ == '__main__':
     # Clustering
-    start = time.time()
+    start = time.time_ns()
     fn_ip = "store.csv"
     df_ip = pd.read_csv(path + "input/" + fn_ip)
     opt_cluster = lib.stat.Cluster(x_var=["x1"], max_clus=5)
@@ -97,16 +76,19 @@ if __name__ == '__main__':
                                      "Gap statistic",
                                      "Simulation error"]))
     print("Optimal cluster:", max(df_op["cluster"]))
-    print(utils.elapsed_time("Total time for clustering:", start), "\n" + sep)
+    print(sep,
+          utils.elapsed_time("Total time for clustering:", start),
+          sep,
+          sep="\n")
     # Traveling salesman
-    start = time.time()
+    start = time.time_ns()
     df_ip = pd.read_csv(path + "input/us_city.csv")
     df_ip = df_ip.iloc[:10, :]
     tsp = lib.opt.TSP()
     opt = tsp.solve(loc=df_ip["city"].tolist(),
-                    x=df_ip["lat"].tolist(),
-                    y=df_ip["lng"].tolist(),
-                    debug=0)
+                    lat=df_ip["lat"].tolist(),
+                    lon=df_ip["lng"].tolist(),
+                    debug=False)
     df_op = pd.DataFrame(data=list(opt[2]), columns=["city", "dist"])
     df_op = pd.merge(df_op,
                      df_ip,
@@ -121,5 +103,8 @@ if __name__ == '__main__':
                                      "Latitude", "Longitude"],
                              precision=3))
     plt.plot(df_op["lat"], df_op["lng"], marker='o', color='b', zorder=1)
-    print(utils.elapsed_time("Total time for TSP:", start), "\n" + sep)
+    print(sep,
+          utils.elapsed_time("Total time for TSP:", start),
+          sep,
+          sep="\n")
     plt.show()

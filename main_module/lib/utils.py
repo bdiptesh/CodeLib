@@ -17,8 +17,8 @@ Author
 ------
 ::
 
-    Author: Diptesh.Basak
-    Date: Aug 11, 2019
+    Author: Diptesh Basak
+    Date: Apr 06, 2020
     License: BSD 3-Clause
 """
 
@@ -28,6 +28,8 @@ Author
 
 import time
 import copy
+
+from typing import List, Any
 
 import pandas as pd
 import numpy as np
@@ -47,46 +49,61 @@ from openpyxl import load_workbook
 # =============================================================================
 
 
-def elapsed_time(text, start_t):
+def elapsed_time(text: str,
+                 start_t: int,
+                 sept: int = 70
+                 ) -> str:
     """
     Return elapsed time.
 
     Parameters
     ----------
     :text: str
+
         Text to be printed
 
-    :start_t: float
-        Generated from time.time()
+    :start_t: int
+
+        Generated from time.time_ns()
+
+    :sept: int
+
+        Length of text
 
     Returns
     -------
     str
-        A string containing arg "text" followed by hours, minutes, seconds
+        A string containing arg "text" followed by hours, minutes, seconds,
+        milliseconds.
 
     Example usage
     -------------
 
     >>> import time
-    >>> start = time.time()
+    >>> start = time.time_ns()
     >>> time.sleep(2)
     >>> elapsed_time("Time taken:", start)
-    Time taken: 00:00:02
+    Time taken: 00:00:02 000 ms
 
     """
-    minute, second = divmod(round(time.time() - start_t, 2), 60)
+    second, ms = divmod(round((time.time_ns() / 1e6) - (start_t / 1e6), 0),
+                        1000)
+    minute, second = divmod(second, 60)
     hour, minute = divmod(minute, 60)
-    fn_op = text + " " + "%02d:%02d:%02d" % (hour, minute, second)
+    fn_op = text + str("%02d:%02d:%02d %03d ms" % (hour, minute, second, ms))\
+        .rjust(sept - len(text))
     return fn_op
 
 
-def prime_list(limit):
+def prime_list(limit: int = 2) -> List[int]:
     """
     Generate a list of prime numbers till limit.
 
     Parameters
     ----------
     :limit: int
+
+        An integer till which we need to generate primes
 
     Returns
     -------
@@ -95,7 +112,7 @@ def prime_list(limit):
 
     Example usage
     -------------
-    >>> prime_numbers = prime_list(100)
+    >>> prime_numbers = prime_list(20)
 
     """
     is_prime = np.ones(limit + 1, dtype=np.bool)
@@ -105,8 +122,12 @@ def prime_list(limit):
     return list(np.nonzero(is_prime)[0][2:])
 
 
-def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None,
-                       **to_excel_kwargs):
+def append_df_to_excel(filename: str,
+                       df: pd.DataFrame,
+                       sheet_name: str = 'Sheet1',
+                       startrow: int = None,
+                       **to_excel_kwargs: Any
+                       ) -> None:
     """
     Append dataframe to spreadsheet.
 
@@ -124,13 +145,13 @@ def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None,
 
         dataframe to save to workbook
 
-    :sheet_name: str
+    :sheet_name: str, optional, default : 'Sheet1'
 
-        Name of sheet which will contain DataFrame. `default:` ``Sheet1``
+        Name of sheet which will contain DataFrame
 
-    :startrow: int
+    :startrow: int, optional, default : None
 
-        upper left cell row to dump data frame. `default:` ``None``
+        upper left cell row to dump data frame.
         calculate the last row in the existing DF and write to the next row.
 
     :to_excel_kwargs:
@@ -170,7 +191,7 @@ def append_df_to_excel(filename, df, sheet_name='Sheet1', startrow=None,
     writer.save()
 
 
-def df_size(df):
+def df_size(df: pd.DataFrame) -> str:
     """
     Determine size of a pandas.DataFrame.
 
@@ -193,7 +214,11 @@ def df_size(df):
     return op
 
 
-def table_output(df, col, header, precision=3):
+def table_output(df: pd.DataFrame,
+                 col: List[str],
+                 header: List[str],
+                 precision: int = 3
+                 ) -> PrettyTable():
     """
     Return prettytable object.
 

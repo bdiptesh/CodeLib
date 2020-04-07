@@ -15,8 +15,8 @@ Author
 ------
 ::
 
-    Author: Diptesh
-    Date Jun 14, 2019
+    Author: Diptesh Basak
+    Date: Apr 06, 2020
     License: BSD 3-Clause
 """
 
@@ -25,6 +25,7 @@ Author
 # =============================================================================
 
 from dataclasses import dataclass
+from typing import List, Tuple, Dict
 
 import copy
 import math
@@ -50,18 +51,19 @@ class TSP:
     """
     Travelling salesman problem.
 
-    Module for **Travelling salesman problem** using integer programming or
-    nearest neighbour algorithm.
+    Module for `Travelling salesman problem
+    <https://en.wikipedia.org/wiki/Travelling_salesman_problem>`_ using
+    integer programming or nearest neighbour algorithm.
 
     Main Features
     -------------
-    :class:`TSP.integer_program`
+    :func:`~opt.TSP.integer_program`
       Determining optimal path using integer programming.
 
-    :class:`TSP.nearest_neighbour`
+    :func:`~opt.TSP.nearest_neighbour`
       Determining optimal path using nearest neighbour algorithm.
 
-    :class:`TSP.solve`
+    :func:`~opt.TSP.solve`
       Determining optimal path using integer programming or nearest neighbour
       algorithm based on count of locations.
     """
@@ -71,12 +73,17 @@ class TSP:
         self._paired_loc = None
 
     @staticmethod
-    def haversine_np(lon1, lat1, lon2, lat2):
+    def haversine_np(lon1: List[float],
+                     lat1: List[float],
+                     lon2: List[float],
+                     lat2: List[float]
+                     ) -> np.ndarray:
         """
         Haversine distance formula.
 
         Calculate the euclidean distance in miles between two points
-        specified in decimal degrees using Haversine formula.
+        specified in decimal degrees using
+        `Haversine formula <https://en.wikipedia.org/wiki/Haversine_formula>`_.
 
         Parameters
         ----------
@@ -86,7 +93,7 @@ class TSP:
 
         Returns
         -------
-        series
+        numpy.ndarray
             Euclidean distance between two points in miles.
 
         """
@@ -100,7 +107,12 @@ class TSP:
         return mile
 
     @staticmethod
-    def pair_dist(loc, x, y):
+    def pair_dist(loc: List[str],
+                  lat: List[float],
+                  lon: List[float]
+                  ) -> Tuple[List[str],
+                             Dict[Tuple[str, str],
+                                  float]]:
         """
         Create pairwise euclidean distance in miles between all locations.
 
@@ -110,13 +122,14 @@ class TSP:
 
             A list containing the location names.
 
-        :x: float
+        :lat: list
 
-            Latitude in decimal degrees.
+            List of latitude in decimal degrees.
 
-        :y: float
+        :lon: list
 
-            Longitude in decimal degrees.
+            List of longitude in decimal degrees.
+
         Returns
         -------
         :loc: list
@@ -129,7 +142,7 @@ class TSP:
             as values.
 
         """
-        df = pd.DataFrame(data={'loc': loc, 'x': x, 'y': y})
+        df = pd.DataFrame(data={'loc': loc, 'x': lat, 'y': lon})
         df["key"] = 1
         df = pd.merge(df,
                       df,
@@ -145,7 +158,13 @@ class TSP:
         return (loc, df)
 
     @staticmethod
-    def integer_program(loc, dist, debug_mode=0):
+    def integer_program(loc: List[str],
+                        dist: Dict[Tuple[str, str],
+                                   float],
+                        debug_mode: bool = False
+                        ) -> Tuple[str,
+                                   float,
+                                   zip]:
         """
         Travelling Salesman Problem using integer programming.
 
@@ -160,17 +179,21 @@ class TSP:
             A dictionary containg the pairwise locations as Key and distances
             as values.
 
-        :debug_mode: int (binary), optional, default : 1
+        :debug_mode: bool, optional, default : False
 
-            Print log in console when 1, 0 otherwise.
+            Print log in console.
 
         Returns
         -------
         tuple containing the following::
 
           Optimization solution status : str
-          Objective function value in real number : int
-          Optimal path with distance : list of tuples
+          Objective function value : float
+          Optimal path with distance : zip object containing
+
+          list of tuples
+          locations : str
+          distances : float
 
         """
         # Initiate IP formulation model
@@ -197,6 +220,7 @@ class TSP:
                    (i, j) in dv_leg:
                     model += u[i] - u[j] <= (len(loc))*(1 - dv_leg[(i, j)]) - 1
         # Solve
+        debug_mode = int(debug_mode is True)
         model.solve(pulp.GLPK(msg=debug_mode))
         # Generate optimal path
         loc_left = copy.copy(loc)
@@ -216,7 +240,11 @@ class TSP:
                 zip(tour, tour_legs))
 
     @staticmethod
-    def nearest_neighbour(loc_dict):
+    def nearest_neighbour(loc_dict: Dict[Tuple[str, str],
+                                         float]
+                          ) -> Tuple[str,
+                                     float,
+                                     zip]:
         """
         Travelling Salesman Problem using nearest neighbour algorithm.
 
@@ -232,8 +260,12 @@ class TSP:
         tuple containing the following::
 
           Algorithm used : str
-          Objective function value in real number : int
-          Optimal path with distance : list of tuples
+          Objective function value : float
+          Optimal path with distance : zip object containing
+
+          list of tuples
+          locations : str
+          distances : float
 
         """
         loc_df = pd.concat([pd.DataFrame(loc_dict.keys(), columns=["loc1",
@@ -269,7 +301,14 @@ class TSP:
                 op_visited = visited
         return ("Nearest Neighbour", sum(op_dist), zip(op_visited, op_dist))
 
-    def solve(self, loc, x, y, debug=0):
+    def solve(self,
+              loc: List[str],
+              lat: List[float],
+              lon: List[float],
+              debug: bool = False
+              ) -> Tuple[str,
+                         float,
+                         zip]:
         """
         Solve for TSP.
 
@@ -283,25 +322,32 @@ class TSP:
 
             A list containing the location names.
 
-        :dist: dict
+        :lat: list
 
-            A dictionary containg the pairwise locations as Key and distances
-            as values.
+            List of latitude in decimal degrees.
 
-        :debug: int (binary), optional, default : 1
+        :lon: list
 
-            Print log in console when 1, 0 otherwise.
+            List of longitude in decimal degrees.
+
+        :debug: bool, optional, default : False
+
+            Print log in console.
 
         Returns
         -------
         tuple containing the following::
 
           Algorithm used : str
-          Objective function value in real number : int
-          Optimal path with distance : list of tuples
+          Objective function value : float
+          Optimal path with distance : zip object containing
+
+          list of tuples
+          locations : str
+          distances : float
 
         """
-        self._paired_loc = self.pair_dist(loc, x, y)
+        self._paired_loc = self.pair_dist(loc, lat, lon)
         if len(loc) < 50:
             op = self.integer_program(self._paired_loc[0],
                                       self._paired_loc[1],
@@ -344,51 +390,15 @@ class Transport():
 
     """
 
-    def __init__(self, loc, demand, supply, lat, lon, cost):
-        """Initialize variables for module ``Transport``."""
-        self._loc = loc
-        self._demand = demand
-        self._supply = supply
-        self._lat = lat
-        self._lon = lon
-        self._cost = cost
-        self._ori_demand = demand
-        self._ori_supply = supply
-        self._inputs = None
-        self.output = None
-
-    @staticmethod
-    def haversine_np(lon1, lat1, lon2, lat2):
+    def __init__(self,
+                 loc: List[str],
+                 demand: List[int],
+                 supply: List[int],
+                 lat: List[float],
+                 lon: List[float],
+                 cost: int):
         """
-        Haversine distance formula.
-
-        Calculate the euclidean distance in miles between two points
-        specified in decimal degrees using Haversine formula.
-
-        Parameters
-        ----------
-        :lon1, lat1, lon2, lat2: float
-
-            Pair of Latitude and Longitude. All args must be of equal length.
-
-        Returns
-        -------
-        series
-            Euclidean distance between two points in miles.
-
-        """
-        lon1, lat1, lon2, lat2 = map(np.radians, [lon1, lat1, lon2, lat2])
-        dlon = lon2 - lon1
-        dlat = lat2 - lat1
-        a = (np.sin(dlat / 2.0) ** 2 +
-             np.cos(lat1) * np.cos(lat2) *
-             np.sin(dlon / 2.0) ** 2)
-        mile = 3961 * 2 * np.arcsin(np.sqrt(a))
-        return mile
-
-    def _opt_ip(self):
-        """
-        Create inputs dicts for **transport_prob()**.
+        Initialize module `TP`.
 
         Parameters
         ----------
@@ -412,10 +422,66 @@ class Transport():
 
             A list containing the longitude for each node.
 
+        :cost: int
+
+            Cost associated.
+
+        """
+        self._loc = loc
+        self._demand = demand
+        self._supply = supply
+        self._lat = lat
+        self._lon = lon
+        self._cost = cost
+        self._ori_demand = demand
+        self._ori_supply = supply
+        self._inputs = None
+        self.output = None
+
+    @staticmethod
+    def haversine_np(lon1: List[float],
+                     lat1: List[float],
+                     lon2: List[float],
+                     lat2: List[float]
+                     ) -> np.ndarray:
+        """
+        Haversine distance formula.
+
+        Calculate the euclidean distance in miles between two points
+        specified in decimal degrees using
+        `Haversine formula <https://en.wikipedia.org/wiki/Haversine_formula>`_.
+
+        Parameters
+        ----------
+        :lon1, lat1, lon2, lat2: float
+
+            Pair of Latitude and Longitude. All args must be of equal length.
+
         Returns
         -------
-        list
-            A list containing the following::
+        numpy.ndarray
+            Euclidean distance between two points in miles.
+
+        """
+        lon1, lat1, lon2, lat2 = map(np.radians, [lon1, lat1, lon2, lat2])
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+        a = (np.sin(dlat / 2.0) ** 2 +
+             np.cos(lat1) * np.cos(lat2) *
+             np.sin(dlon / 2.0) ** 2)
+        mile = 3961 * 2 * np.arcsin(np.sqrt(a))
+        return mile
+
+    def _opt_ip(self) -> Tuple[Dict[str, int],
+                               Dict[str, int],
+                               Dict[Tuple[str, str], float]]:
+        """
+        Create inputs dicts for :func:`transport_prob`.
+
+        Returns
+        -------
+        tuple
+            A tuple containing the following::
 
                 demand : dict
                         Dict containing location, demand as key value pair.
@@ -474,10 +540,18 @@ class Transport():
                              df_demand["demand"]))
         df_wt = df_wt[["loc_x", "loc_y", "cost"]]
         ip_costs = df_wt.set_index(["loc_x", "loc_y"]).cost.to_dict()
-        return [ip_demand, ip_supply, ip_costs]
+        return (ip_demand, ip_supply, ip_costs)
 
     @staticmethod
-    def integer_program(demand, supply, costs, debug=0):
+    def integer_program(demand: Dict[str, int],
+                        supply: Dict[str, int],
+                        costs: Dict[Tuple[str, str], float],
+                        debug: bool = False
+                        ) -> Tuple[str,
+                                   float,
+                                   List[Tuple[str,
+                                              str,
+                                              int]]]:
         """
         Transportation Problem using Integer programming.
 
@@ -496,9 +570,9 @@ class Transport():
                 Dict containing (suppy_node, demand_node), costs
                 as key value pair.
 
-        :debug: int (binary), optional, default : 0
+        :debug: bool, optional, default : False
 
-            Print log in console when 1, 0 otherwise.
+            Print log in console.
 
         Returns
         -------
@@ -506,7 +580,7 @@ class Transport():
             Containing the following::
 
               Optimization solution status : str
-              Objective function value in real number : int
+              Objective function value in real number : float
               Optimal path with costs : list of tuples
                   (supply_node, demand_node, units)
 
@@ -544,15 +618,16 @@ class Transport():
             model += pulp.lpSum([route_vars[s][d]
                                  for s in supply_node]) >= demand[d]
         # Solve
+        debug = int(debug is True)
         model.solve(pulp.GLPK(msg=debug))
         route_list = [(v.name.split("_")[1], v.name.split("_")[2], v.varValue)
                       for v in model.variables() if v.varValue > 0]
-        ip_op = [pulp.LpStatus[model.status],
+        ip_op = (pulp.LpStatus[model.status],
                  model.objective.value(),
-                 route_list]
+                 route_list)
         return ip_op
 
-    def solve(self, debug=0):
+    def solve(self, debug: bool = False) -> List[Tuple[str, str, int]]:
         """
         Transportation Problem using Integer programming.
 

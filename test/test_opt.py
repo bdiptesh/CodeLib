@@ -27,8 +27,7 @@ from __init__ import Transport
 
 
 class Test_TSP(unittest.TestCase):
-    """
-    Test suite for TSP module
+    """ Test suite for TSP module.
     """
 
     def setUp(self):
@@ -42,9 +41,9 @@ class Test_TSP(unittest.TestCase):
         df_ip = df_ip.iloc[:10, :]
         tsp = TSP()
         opt = tsp.solve(loc=df_ip["city"].tolist(),
-                        x=df_ip["lat"].tolist(),
-                        y=df_ip["lng"].tolist(),
-                        debug=0)
+                        lat=df_ip["lat"].tolist(),
+                        lon=df_ip["lng"].tolist(),
+                        debug=False)
         self.assertEqual(np.round(opt[1], 0), 626.0)
 
     def test_nn(self):
@@ -54,14 +53,14 @@ class Test_TSP(unittest.TestCase):
         df_ip = df_ip.iloc[:50, :]
         tsp = TSP()
         opt = tsp.solve(loc=df_ip["city"].tolist(),
-                        x=df_ip["lat"].tolist(),
-                        y=df_ip["lng"].tolist(),
-                        debug=0)
+                        lat=df_ip["lat"].tolist(),
+                        lon=df_ip["lng"].tolist(),
+                        debug=False)
         self.assertEqual(np.round(opt[1], 0), 1402.0)
 
 
 class Test_TP(unittest.TestCase):
-    """ Unit tests for UDFs
+    """ Test suite for transportation problem.
     """
 
     def setUp(self):
@@ -71,7 +70,7 @@ class Test_TP(unittest.TestCase):
     def test_transport_balanced(self):
         """ Test for balanced Transportation problem.
         """
-        c_loc = [1, 5, 10, 11, 100, 127, 324]
+        c_loc = ["1", "5", "10", "11", "100", "127", "324"]
         c_demand = [20, 10, 15, 0, 0, 25, 0]
         c_supply = [0, 0, 0, 30, 12, 0, 28]
         c_lat = [42.1, 43.0, 40.3, 46.8, 43.9, 41.6, 45.2]
@@ -90,7 +89,7 @@ class Test_TP(unittest.TestCase):
     def test_transport_unbalanced_demand(self):
         """ Test for unbalanced Transportation problem when Demand > Supply.
         """
-        c_loc = [1, 5, 10, 11, 100, 127, 324]
+        c_loc = ["1", "5", "10", "11", "100", "127", "324"]
         c_demand = [20, 10, 15, 0, 0, 250, 0]
         c_supply = [0, 0, 0, 30, 12, 0, 28]
         c_lat = [42.1, 43.0, 40.3, 46.8, 43.9, 41.6, 45.2]
@@ -110,7 +109,7 @@ class Test_TP(unittest.TestCase):
     def test_transport_unbalanced_supply(self):
         """ Test for unbalanced Transportation problem when Supply > Demand.
         """
-        c_loc = [1, 5, 10, 11, 100, 127, 324]
+        c_loc = ["1", "5", "10", "11", "100", "127", "324"]
         c_demand = [20, 10, 15, 0, 0, 25, 0]
         c_supply = [0, 0, 0, 30, 12, 0, 280]
         c_lat = [42.1, 43.0, 40.3, 46.8, 43.9, 41.6, 45.2]
