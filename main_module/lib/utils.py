@@ -17,7 +17,7 @@ Author
 ------
 ::
 
-    Author: Diptesh.Basak
+    Author: Diptesh Basak
     Date: Apr 06, 2020
     License: BSD 3-Clause
 """
@@ -51,7 +51,8 @@ from openpyxl import load_workbook
 
 def elapsed_time(text: str,
                  start_t: int,
-                 sept: int = 70) -> str:
+                 sept: int = 70
+                 ) -> str:
     """
     Return elapsed time.
 
@@ -125,7 +126,8 @@ def append_df_to_excel(filename: str,
                        df: pd.DataFrame,
                        sheet_name: str = 'Sheet1',
                        startrow: int = None,
-                       **to_excel_kwargs: Any) -> None:
+                       **to_excel_kwargs: Any
+                       ) -> None:
     """
     Append dataframe to spreadsheet.
 
@@ -213,9 +215,10 @@ def df_size(df: pd.DataFrame) -> str:
 
 
 def table_output(df: pd.DataFrame,
-                 col: List,
-                 header: List,
-                 precision: int = 3) -> PrettyTable():
+                 col: List[str],
+                 header: List[str],
+                 precision: int = 3
+                 ) -> PrettyTable():
     """
     Return prettytable object.
 

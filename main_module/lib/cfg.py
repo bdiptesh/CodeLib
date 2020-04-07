@@ -30,8 +30,8 @@ Author
 ------
 ::
 
-    Author: Diptesh
-    Date: Mar 03, 2020
+    Author: Diptesh Basak
+    Date: Apr 06, 2020
     License: BSD 3-Clause
 """
 

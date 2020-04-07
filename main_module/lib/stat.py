@@ -26,7 +26,7 @@ Author
 ::
 
     Author: Diptesh Basak
-    Date: Nov 29, 2019
+    Date: Apr 06, 2020
     License: BSD 3-Clause
 """
 
@@ -104,7 +104,8 @@ class Model():
                   df: pd.DataFrame,
                   y_var: List[str],
                   x_var: List[str],
-                  strata: str = None) -> Dict[str, float]:
+                  strata: str = None
+                  ) -> Dict[str, float]:
         """
         Glmnet cross validation module (sklearn).
 
@@ -207,7 +208,8 @@ class Cluster():
     @staticmethod
     def _Compact(data: np.array,
                  centers: List[float],
-                 labels: List[int]) -> float:
+                 labels: List[int]
+                 ) -> float:
         """Compute compactness of given clustering solution."""
         k_sum = 0.0
         for i in enumerate(data):
@@ -278,7 +280,8 @@ class Cluster():
     def gap(self,
             df: pd.DataFrame,
             stop: str = "globalMax",
-            n_trial: int = 10) -> pd.DataFrame:
+            n_trial: int = 10
+            ) -> pd.DataFrame:
         """
         Gap statistic module.
 
@@ -416,7 +419,8 @@ class Knn():
     def fit(self,
             grid_params: Optional[Dict[str,
                                        List[Union[str, int]]]] = None,
-            n_fold: int = 5) -> Dict[str, Any]:
+            n_fold: int = 5
+            ) -> Dict[str, Any]:
         """Fit KNN model."""
         max_k = max(int(len(self.df)/(n_fold * 2)), 1)
         if grid_params is None:
@@ -506,7 +510,8 @@ class RandomForest():
             grid_param: Optional[Dict[str, Union[bool, int, str]]] = None,
             n_jobs: int = -1,
             verbose: int = 0,
-            seed: int = 123456789) -> Dict[str, Any]:
+            seed: int = 123456789
+            ) -> Dict[str, Union[str, int, bool]]:
         """Fit random forest model.
 
         Parameters
@@ -591,8 +596,7 @@ class RandomForest():
         self.model.fit(X=self.df[self.x_var], y=self.df[self.y_var])
         return grid.best_params_
 
-    def predict(self,
-                x_pred: pd.DataFrame) -> pd.DataFrame:
+    def predict(self, x_pred: pd.DataFrame) -> pd.DataFrame:
         """Predict values."""
         return self.model.predict(pd.get_dummies(x_pred))
 
@@ -689,7 +693,8 @@ class XGBoost():
 
     @staticmethod
     def rmse(y: List[Union[int, float]],
-             y_hat: List[Union[int, float]]) -> float:
+             y_hat: List[Union[int, float]]
+             ) -> float:
         """Determine root mean squared of error.
 
         Parameters
@@ -712,7 +717,8 @@ class XGBoost():
 
     @staticmethod
     def mse(y: List[Union[int, float]],
-            y_hat: List[Union[int, float]]) -> float:
+            y_hat: List[Union[int, float]]
+            ) -> float:
         """Determine mean squared of error.
 
         Parameters

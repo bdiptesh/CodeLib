@@ -15,8 +15,8 @@ Author
 ------
 ::
 
-    Author: Diptesh
-    Date Jun 14, 2019
+    Author: Diptesh Basak
+    Date: Apr 06, 2020
     License: BSD 3-Clause
 """
 
@@ -76,7 +76,8 @@ class TSP:
     def haversine_np(lon1: List[float],
                      lat1: List[float],
                      lon2: List[float],
-                     lat2: List[float]) -> np.ndarray:
+                     lat2: List[float]
+                     ) -> np.ndarray:
         """
         Haversine distance formula.
 
@@ -108,9 +109,10 @@ class TSP:
     @staticmethod
     def pair_dist(loc: List[str],
                   lat: List[float],
-                  lon: List[float]) -> Tuple[List[str],
-                                             Dict[Tuple[str, str],
-                                                  float]]:
+                  lon: List[float]
+                  ) -> Tuple[List[str],
+                             Dict[Tuple[str, str],
+                                  float]]:
         """
         Create pairwise euclidean distance in miles between all locations.
 
@@ -159,9 +161,10 @@ class TSP:
     def integer_program(loc: List[str],
                         dist: Dict[Tuple[str, str],
                                    float],
-                        debug_mode: bool = False) -> Tuple[str,
-                                                           float,
-                                                           zip]:
+                        debug_mode: bool = False
+                        ) -> Tuple[str,
+                                   float,
+                                   zip]:
         """
         Travelling Salesman Problem using integer programming.
 
@@ -238,9 +241,10 @@ class TSP:
 
     @staticmethod
     def nearest_neighbour(loc_dict: Dict[Tuple[str, str],
-                                         float]) -> Tuple[str,
-                                                          float,
-                                                          zip]:
+                                         float]
+                          ) -> Tuple[str,
+                                     float,
+                                     zip]:
         """
         Travelling Salesman Problem using nearest neighbour algorithm.
 
@@ -301,9 +305,10 @@ class TSP:
               loc: List[str],
               lat: List[float],
               lon: List[float],
-              debug: bool = False) -> Tuple[str,
-                                            float,
-                                            zip]:
+              debug: bool = False
+              ) -> Tuple[str,
+                         float,
+                         zip]:
         """
         Solve for TSP.
 
@@ -437,7 +442,8 @@ class Transport():
     def haversine_np(lon1: List[float],
                      lat1: List[float],
                      lon2: List[float],
-                     lat2: List[float]) -> np.ndarray:
+                     lat2: List[float]
+                     ) -> np.ndarray:
         """
         Haversine distance formula.
 
@@ -540,11 +546,12 @@ class Transport():
     def integer_program(demand: Dict[str, int],
                         supply: Dict[str, int],
                         costs: Dict[Tuple[str, str], float],
-                        debug: bool = False) -> Tuple[str,
-                                                      float,
-                                                      List[Tuple[str,
-                                                                 str,
-                                                                 int]]]:
+                        debug: bool = False
+                        ) -> Tuple[str,
+                                   float,
+                                   List[Tuple[str,
+                                              str,
+                                              int]]]:
         """
         Transportation Problem using Integer programming.
 
