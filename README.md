@@ -147,9 +147,9 @@ project directory:
 Available options:
 
 ```console
--a default, runs both code rating and unit tests.
--u unit tests.
--r code rating.
+-a : default, runs both code rating and unit tests.
+-u : unit tests.
+-r : code rating.
 ```
 The pylint ratings for each python script can be found at
 [log/pylint/](./log/pylint/)
