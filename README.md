@@ -98,7 +98,7 @@ A composite pylint ratings for all the codes are automatically computed when we 
 
 #### Version control
 
-We use semantic versionning ([SemVer](https://semver.org/)) for version control. You can read about semantic versioning [here](https://semver.org/).
+We use semantic versioning ([SemVer](https://semver.org/)) for version control. You can read about semantic versioning [here](https://semver.org/).
 
 ## Initial setup
 
@@ -117,7 +117,7 @@ chmod +x install.sh
 ./install.sh
 ```
 
-Anaconda python 3.7.3 was used for development of this module.
+Anaconda python 3.7 was used for development of this module.
 
 The code was tested in the following environments.
 1. [Anaconda python 3.7.3 64-Bit](https://www.anaconda.com/distribution/)
