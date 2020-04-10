@@ -31,7 +31,7 @@ Author
 ::
 
     Author: Diptesh Basak
-    Date: Apr 06, 2020
+    Date: Apr 10, 2020
     License: BSD 3-Clause
 """
 
@@ -42,7 +42,7 @@ import os
 import socket
 import re
 
-__version__: str = "0.2.0"
+__version__: str = "0.2.4"
 __doc__: str = "Code library for python 3.7"
 module: str = "main_module"
 
@@ -51,5 +51,4 @@ hdfs: bool = bool(re.match(r"[a-z0-9]+\.email\.com", socket.gethostname()))
 
 # Set module path
 path: str = os.path.abspath(os.path.dirname(sys.argv[0]))
-path = re.sub(r"(.+)(\/" + module + ".*)", r"\1", path)
-path = path + "/"
+path = re.sub(r"(.+)(\/" + module + ".*)", r"\1/", path)

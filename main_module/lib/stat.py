@@ -26,7 +26,7 @@ Author
 ::
 
     Author: Diptesh Basak
-    Date: Apr 06, 2020
+    Date: Apr 10, 2020
     License: BSD 3-Clause
 """
 
@@ -59,6 +59,7 @@ from sklearn.model_selection import RandomizedSearchCV
 
 # pylint: disable=invalid-name
 # pylint: disable-msg=too-many-arguments
+# pylint: disable=too-many-instance-attributes
 
 # =============================================================================
 # --- User defined functions
@@ -622,7 +623,7 @@ class XGBoost():
         Pandas series containing testing data containing the `y_var`
         variable.
 
-    :x_train: pandas.core.frame.DataFrame
+    :x_test: pandas.core.frame.DataFrame
 
         Pandas dataframe containing testing data containing the `x_var`
         variable.
@@ -655,8 +656,8 @@ class XGBoost():
     def __init__(self,
                  y_train: pd.Series,
                  x_train: pd.DataFrame,
-                 y_test: Optional[pd.Series] = None,
-                 x_test: Optional[pd.DataFrame] = None,
+                 y_test: pd.Series,
+                 x_test: pd.DataFrame,
                  opts: Optional[Dict[str, Union[str, int]]] = None,
                  params: Optional[Dict[str,
                                        List[Union[str,
@@ -690,6 +691,7 @@ class XGBoost():
         else:
             self.params = params
         self.xgb_model = None
+        self.one_se = True
 
     @staticmethod
     def rmse(y: List[Union[int, float]],
@@ -791,8 +793,15 @@ class XGBoost():
         opt_param = one_se_op.index(min(one_se_op))
         return (obj["params"][opt_param], one_se)
 
-    def fit(self) -> bool:
+    def fit(self):
         """Fit XGBoost model.
+
+        Parameters
+        ----------
+        :force: bool, `optional`, `default:` ``False``
+
+            When True, the module will return best model irrespective of one
+            standard error rule.
 
         Returns
         -------
@@ -809,6 +818,8 @@ class XGBoost():
         if self.opts["method"] == "time_series":
             self.opts["fold"] = tssplit(n_splits=self.opts["k_fold"])\
                 .split(X=self.x_train, y=self.y_train)
+        elif self.opts["method"] == "normal":
+            self.opts["fold"] = self.opts["k_fold"]
         rs_xgb = RandomizedSearchCV(estimator=est_xgb,
                                     param_distributions=self.params,
                                     n_jobs=self.opts["n_jobs"],
@@ -820,8 +831,10 @@ class XGBoost():
         rs_xgb.fit(self.x_train, self.y_train)
         tmp = self._best_param(rs_xgb.cv_results_)
         if tmp == -1:
-            return False
-        fit_param = self._best_param(rs_xgb.cv_results_)[0]
+            self.one_se = False
+            fit_param = rs_xgb.best_params_
+        else:
+            fit_param = self._best_param(rs_xgb.cv_results_)[0]
         self.xgb_model = xgb.XGBRegressor(n_jobs=self.opts["n_jobs"],
                                           verbosity=0,
                                           silent=True,
@@ -830,7 +843,6 @@ class XGBoost():
                                           **fit_param)
         self.xgb_model.fit(self.x_train.append(self.x_test),
                            self.y_train.append(self.y_test))
-        return True
 
     def predict(self, x_pred: pd.DataFrame) -> List[Union[int, float]]:
         """Predict using the XGBoost model built.
