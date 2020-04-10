@@ -61,7 +61,6 @@ project_name/
 ├── log/
 │   ├── hive_queries.out
 │   ├── main_module.out
-│   │
 │   └── pylint/
 │       ├── main_module-__init__-py.out
 │       ├── main_module-__main__-py.out
@@ -70,7 +69,6 @@ project_name/
 ├── main_module/
 │   ├── __init__.py
 │   ├── __main__.py
-│   │
 │   └── lib/
 │       ├── cfg.py
 │       ├── stat.py
