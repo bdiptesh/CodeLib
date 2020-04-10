@@ -52,7 +52,6 @@ project_name/
 ├── doc/
 │   ├── problem_statement.md
 │   ├── approach.pdf
-│   │
 │   └── latex/
 │
 ├── hive/
