@@ -92,7 +92,7 @@ It's good practice to follow accepted standards while coding in python:
 1. [PEP 8 standards](https://www.python.org/dev/peps/pep-0008/): For code styles.
 1. [PEP 257 standards](https://www.python.org/dev/peps/pep-0257/): For docstrings standards.
 
-However, it's a good idea to rate all our python scripts with pylint. If we score anything less than 8/10, we should consider redesigning the code architecture.
+However, it's a good idea to rate all our python scripts with [pylint](https://www.pylint.org/). If we score anything less than 8/10, we should consider redesigning the code architecture.
 
 A composite pylint ratings for all the codes are automatically computed when we [run the tests](./bin/runTests.sh) and prepended on top of this file.
 
