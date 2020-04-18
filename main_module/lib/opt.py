@@ -21,6 +21,14 @@ Author
 """
 
 # =============================================================================
+# --- DO NOT CHANGE ANYTHING FROM HERE
+# =============================================================================
+
+# pylint: disable=invalid-name
+# pylint: disable-msg=too-many-arguments
+# pylint: disable=too-many-instance-attributes
+
+# =============================================================================
 # --- Import libraries
 # =============================================================================
 
@@ -32,14 +40,6 @@ import math
 import pandas as pd
 import numpy as np
 import pulp
-
-# =============================================================================
-# --- DO NOT CHANGE ANYTHING FROM HERE
-# =============================================================================
-
-# pylint: disable=invalid-name
-# pylint: disable-msg=too-many-arguments
-# pylint: disable=too-many-instance-attributes
 
 # =============================================================================
 # --- User defined functions
@@ -76,7 +76,8 @@ class TSP:
     def haversine_np(lon1: List[float],
                      lat1: List[float],
                      lon2: List[float],
-                     lat2: List[float]
+                     lat2: List[float],
+                     dist: str = "mi"
                      ) -> np.ndarray:
         """
         Haversine distance formula.
@@ -91,20 +92,28 @@ class TSP:
 
             Pair of Latitude and Longitude. All args must be of equal length.
 
+        :dist: str, `optional`, ``default : 'mi'``
+
+            Output distance in miles ('mi') or kilometers ('km')
+
         Returns
         -------
         numpy.ndarray
             Euclidean distance between two points in miles.
 
         """
+        if dist == "km":
+            R = 6372.8
+        else:
+            R = 3959.87433
         lon1, lat1, lon2, lat2 = map(np.radians, [lon1, lat1, lon2, lat2])
         dlon = lon2 - lon1
         dlat = lat2 - lat1
         a = (np.sin(dlat / 2.0) ** 2 +
              np.cos(lat1) * np.cos(lat2) *
              np.sin(dlon / 2.0) ** 2)
-        mile = 3961 * 2 * np.arcsin(np.sqrt(a))
-        return mile
+        op = R * 2 * np.arcsin(np.sqrt(a))
+        return op
 
     @staticmethod
     def pair_dist(loc: List[str],
@@ -442,7 +451,8 @@ class Transport():
     def haversine_np(lon1: List[float],
                      lat1: List[float],
                      lon2: List[float],
-                     lat2: List[float]
+                     lat2: List[float],
+                     dist: str = "mi"
                      ) -> np.ndarray:
         """
         Haversine distance formula.
@@ -457,20 +467,28 @@ class Transport():
 
             Pair of Latitude and Longitude. All args must be of equal length.
 
+        :dist: str, `optional`, ``default : 'mi'``
+
+            Output distance in miles ('mi') or kilometers ('km')
+
         Returns
         -------
         numpy.ndarray
             Euclidean distance between two points in miles.
 
         """
+        if dist == "km":
+            R = 6372.8
+        else:
+            R = 3959.87433
         lon1, lat1, lon2, lat2 = map(np.radians, [lon1, lat1, lon2, lat2])
         dlon = lon2 - lon1
         dlat = lat2 - lat1
         a = (np.sin(dlat / 2.0) ** 2 +
              np.cos(lat1) * np.cos(lat2) *
              np.sin(dlon / 2.0) ** 2)
-        mile = 3961 * 2 * np.arcsin(np.sqrt(a))
-        return mile
+        op = R * 2 * np.arcsin(np.sqrt(a))
+        return op
 
     def _opt_ip(self) -> Tuple[Dict[str, int],
                                Dict[str, int],

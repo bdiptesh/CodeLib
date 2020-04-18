@@ -5,7 +5,7 @@ Author
 ------
 ::
 
-    Author: Diptesh.Basak
+    Author: Diptesh Basak
     Date: Jun 16, 2019
     License: BSD 3-Clause
 """
@@ -17,9 +17,9 @@ import warnings
 import pandas as pd
 import numpy as np
 
-from __init__ import TSP
 from __init__ import path
-from __init__ import Transport
+from main_module.lib.opt import TSP
+from main_module.lib.opt import Transport
 
 # =============================================================================
 # --- User defined functions
@@ -77,7 +77,7 @@ class Test_TP(unittest.TestCase):
         c_lon = [-102.1, -103.0, -100.3, -106.8, -103.9, -101.6, -105.2]
         prob = Transport(c_loc, c_demand, c_supply, c_lat, c_lon, 1)
         opt_out = prob.solve(0)
-        self.assertEqual(np.round(prob.output[1], decimals=2), 23863.17)
+        self.assertEqual(np.round(prob.output[1], decimals=2), 23856.39)
         exp_op = [('100', '1', 2),
                   ('100', '5', 10),
                   ('11', '10', 15),
@@ -96,7 +96,7 @@ class Test_TP(unittest.TestCase):
         c_lon = [-102.1, -103.0, -100.3, -106.8, -103.9, -101.6, -105.2]
         prob = Transport(c_loc, c_demand, c_supply, c_lat, c_lon, 1)
         opt_out = prob.solve(0)
-        self.assertEqual(np.round(prob.output[1], decimals=2), 22176.56)
+        self.assertEqual(np.round(prob.output[1], decimals=2), 22170.26)
         exp_op = [('100', '1', 2),
                   ('100', '5', 10),
                   ('11', '127', 30),
@@ -116,7 +116,7 @@ class Test_TP(unittest.TestCase):
         c_lon = [-102.1, -103.0, -100.3, -106.8, -103.9, -101.6, -105.2]
         prob = Transport(c_loc, c_demand, c_supply, c_lat, c_lon, 1)
         opt_out = prob.solve(0)
-        self.assertEqual(np.round(prob.output[1], decimals=2), 19828.23)
+        self.assertEqual(np.round(prob.output[1], decimals=2), 19822.6)
         exp_op = [('100', '1', 2),
                   ('100', '5', 10),
                   ('11', 'Dummy', 30),

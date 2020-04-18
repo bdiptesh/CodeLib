@@ -31,7 +31,7 @@ Author
 ::
 
     Author: Diptesh Basak
-    Date: Apr 10, 2020
+    Date: Apr 17, 2020
     License: BSD 3-Clause
 """
 
@@ -42,7 +42,7 @@ import os
 import socket
 import re
 
-__version__: str = "0.2.4"
+__version__: str = "0.2.5"
 __doc__: str = "Code library for python 3.7"
 module: str = "main_module"
 
