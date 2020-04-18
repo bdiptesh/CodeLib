@@ -79,9 +79,8 @@ project_name/
 │       │	├── metrics.so
 │       │	├── metrics.c
 │       │	├── setup.py
-│       │	├── build.sh
-│       │	└── pylint.out
-│		│
+│       │	└── build.sh
+│       │
 │       ├── metrics.so
 │       ├── cfg.py
 │       ├── stat.py
