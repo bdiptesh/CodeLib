@@ -70,18 +70,18 @@ project_name/
 │   ├── __init__.py
 │   ├── __main__.py
 │   └── lib/
-│   	├── tmp/
-│       │   ├── build/
-│       │   ├── metrics.pyx
-│       │   ├── metrics.so
-│       │   ├── metrics.c
-│       │   ├── setup.py
-│       │   └── build.sh
 │       ├── metrics.so
 │       ├── cfg.py
 │       ├── stat.py
 │       ├── opt.py
-│       └── utils.py
+│       ├── utils.py
+│   	└── tmp/
+│           ├── build/
+│           ├── metrics.pyx
+│           ├── metrics.so
+│           ├── metrics.c
+│           ├── setup.py
+│           └── build.sh
 │
 ├── test/
 │   ├── __init__.py
