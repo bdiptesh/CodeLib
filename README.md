@@ -52,6 +52,7 @@ project_name/
 ├── doc/
 │   ├── problem_statement.md
 │   ├── approach.pdf
+│   │
 │   └── latex/
 │
 ├── hive/
@@ -61,6 +62,7 @@ project_name/
 ├── log/
 │   ├── hive_queries.out
 │   ├── main_module.out
+│   │
 │   └── pylint/
 │       ├── main_module-__init__-py.out
 │       ├── main_module-__main__-py.out
@@ -69,7 +71,18 @@ project_name/
 ├── main_module/
 │   ├── __init__.py
 │   ├── __main__.py
+│   │
 │   └── lib/
+│   	├── tmp/
+│       │	├── build/
+│       │	├── metrics.pyx
+│       │	├── metrics.so
+│       │	├── metrics.c
+│       │	├── setup.py
+│       │	├── build.sh
+│       │	└── pylint.out
+│		│
+│       ├── metrics.so
 │       ├── cfg.py
 │       ├── stat.py
 │       ├── opt.py
@@ -92,13 +105,13 @@ It's good practice to follow accepted standards while coding in python:
 1. [PEP 8 standards](https://www.python.org/dev/peps/pep-0008/): For code styles.
 1. [PEP 257 standards](https://www.python.org/dev/peps/pep-0257/): For docstrings standards.
 
-However, it's a good idea to rate all our python scripts with [pylint](https://www.pylint.org/). If we score anything less than 8/10, we should consider redesigning the code architecture.
+However, it's a good idea to rate all our python scripts with pylint. If we score anything less than 8/10, we should consider redesigning the code architecture.
 
 A composite pylint ratings for all the codes are automatically computed when we [run the tests](./bin/runTests.sh) and prepended on top of this file.
 
 #### Version control
 
-We use semantic versioning ([SemVer](https://semver.org/)) for version control. You can read about semantic versioning [here](https://semver.org/).
+We use semantic versionning ([SemVer](https://semver.org/)) for version control. You can read about semantic versioning [here](https://semver.org/).
 
 ## Initial setup
 
@@ -117,7 +130,7 @@ chmod +x install.sh
 ./install.sh
 ```
 
-Anaconda python 3.7 was used for development of this module.
+Anaconda python 3.7.3 was used for development of this module.
 
 The code was tested in the following environments.
 1. [Anaconda python 3.7.3 64-Bit](https://www.anaconda.com/distribution/)
@@ -147,9 +160,9 @@ project directory:
 Available options:
 
 ```console
--a : default, runs both code rating and unit tests.
--u : unit tests.
--r : code rating.
+-a default, runs both code rating and unit tests.
+-u unit tests.
+-r code rating.
 ```
 The pylint ratings for each python script can be found at
 [log/pylint/](./log/pylint/)

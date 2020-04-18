@@ -18,11 +18,11 @@ import numpy as np
 
 from sklearn.model_selection import train_test_split as split
 
-from __init__ import Model
-from __init__ import Cluster
-from __init__ import Knn
-from __init__ import RandomForest
 from __init__ import path
+from main_module.lib.stat import Model
+from main_module.lib.stat import Cluster
+from main_module.lib.stat import Knn
+from main_module.lib.stat import RandomForest
 
 
 # =============================================================================

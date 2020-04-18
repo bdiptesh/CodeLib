@@ -26,9 +26,19 @@ Author
 ::
 
     Author: Diptesh Basak
-    Date: Apr 10, 2020
+    Date: Apr 17, 2020
     License: BSD 3-Clause
 """
+
+# =============================================================================
+# --- DO NOT CHANGE ANYTHING FROM HERE
+# =============================================================================
+
+# pylint: disable=invalid-name
+# pylint: disable-msg=too-many-arguments
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=wrong-import-position
+# pylint: disable=import-error
 
 # =============================================================================
 # --- Import libraries
@@ -37,6 +47,8 @@ Author
 from dataclasses import dataclass
 from typing import List, Tuple, Dict, Optional, Union, Any
 
+import os
+import sys
 import copy
 import pandas as pd
 import numpy as np
@@ -53,13 +65,11 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import scale
 from sklearn.model_selection import RandomizedSearchCV
 
-# =============================================================================
-# --- DO NOT CHANGE ANYTHING FROM HERE
-# =============================================================================
+sys.path.insert(0,
+                os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                             '..')))
 
-# pylint: disable=invalid-name
-# pylint: disable-msg=too-many-arguments
-# pylint: disable=too-many-instance-attributes
+from lib import metrics  # noqa: E402
 
 # =============================================================================
 # --- User defined functions
@@ -693,54 +703,6 @@ class XGBoost():
         self.xgb_model = None
         self.one_se = True
 
-    @staticmethod
-    def rmse(y: List[Union[int, float]],
-             y_hat: List[Union[int, float]]
-             ) -> float:
-        """Determine root mean squared of error.
-
-        Parameters
-        ----------
-        :y: list
-
-            A list containing actual values of dependant variable.
-
-        :y_hat: list
-
-            A list containing predicted values of dependant variable.
-
-        Returns
-        -------
-        :rmse: float
-
-        """
-        return round(np.sqrt(np.mean([(a - b) ** 2
-                                      for a, b in zip(y, y_hat)])), 2)
-
-    @staticmethod
-    def mse(y: List[Union[int, float]],
-            y_hat: List[Union[int, float]]
-            ) -> float:
-        """Determine mean squared of error.
-
-        Parameters
-        ----------
-        :y: list
-
-            A list containing actual values of dependant variable.
-
-        :y_hat: list
-
-            A list containing predicted values of dependant variable.
-
-        Returns
-        -------
-        :mse: float
-
-        """
-        return round(np.mean([(a - b) ** 2
-                              for a, b in zip(y, y_hat)]), 2)
-
     def _best_param(self,
                     obj: Dict[str,
                               Union[List[Union[float,
@@ -785,7 +747,8 @@ class XGBoost():
             one_se.append([mean_test_score[i], std_test_score[i],
                            mean_test_score[i] + std_test_score[i],
                            max(mean_test_score[i] - std_test_score[i], 0),
-                           self.mse(self.y_test, y_tmp)])
+                           metrics.mse(self.y_test.tolist(),
+                                       y_tmp)])
         one_se_op = [i[4] if (i[2] >= i[4] >= i[3]) else np.Inf
                      for i in one_se]
         if min(one_se_op) == np.Inf:
@@ -856,7 +819,9 @@ class XGBoost():
 
         Returns
         -------
-        :Target predicted: list
+        list
+
+            Target predicted
 
         """
         return list(self.xgb_model.predict(x_pred))

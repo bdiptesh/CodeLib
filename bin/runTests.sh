@@ -62,7 +62,7 @@ then
     tot_score=$(echo "scale=1; $score/$cnt" | bc)
     printf "\nTotal score: $tot_score\n"
     # Add pylint badge to README.md
-    sed -i "1s/.*/\!\[pylint Score\]\(https\:\/\/mperlet\.github\.io\/pybadge\/badges\/$tot_score.svg\)/" "/home/ph33r/Project/CodeLib/README.md"
+    sed -i "1s/.*/\!\[pylint Score\]\(https\:\/\/mperlet\.github\.io\/pybadge\/badges\/$tot_score.svg\)/" "$proj_dir/README.md"
     printf "=%.0s" {1..70}
     printf "\n"
 fi

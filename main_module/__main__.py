@@ -6,7 +6,7 @@ Author
 ::
 
     Author: Diptesh
-    Date: Jun 14, 2019
+    Date: Apr 17
     License: BSD 3-Clause
 """
 
@@ -20,12 +20,14 @@ import time
 import argparse
 
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
 import lib.cfg
 import lib.stat
 import lib.opt
 
+from lib import metrics
 from lib import utils
 
 # =============================================================================
@@ -58,11 +60,11 @@ args = CLI.parse_args()
 cnt = args.count[0]
 
 # =============================================================================
-# -- Main
+# --- Main
 # =============================================================================
 
-if __name__ == '__main__':
-    # Clustering
+if __name__ == '__main__1':
+    # ---- Clustering
     start = time.time_ns()
     fn_ip = "store.csv"
     df_ip = pd.read_csv(path + "input/" + fn_ip)
@@ -80,7 +82,7 @@ if __name__ == '__main__':
           utils.elapsed_time("Total time for clustering:", start),
           sep,
           sep="\n")
-    # Traveling salesman
+    # ---- Traveling salesman
     start = time.time_ns()
     df_ip = pd.read_csv(path + "input/us_city.csv")
     df_ip = df_ip.iloc[:10, :]
@@ -108,3 +110,46 @@ if __name__ == '__main__':
           sep,
           sep="\n")
     plt.show()
+    # ---- Time series using XGBoost
+    start = time.time_ns()
+    n_per = 30
+    df_ip = pd.read_csv(path + "input/data_ts_vars.csv")
+    t_per = len(df_ip)
+    df_pred = df_ip.iloc[t_per - n_per:, :]
+    df_train = df_ip.iloc[0:t_per - n_per - 10, :]
+    df_test = df_ip.iloc[t_per - n_per - 10:t_per - n_per, :]
+    y_var = 'sales_q'
+    x_var = ['sales_dollars', 'cost']
+    xgb_mod = lib.stat.XGBoost(y_train=df_train[y_var],
+                               x_train=df_train[x_var],
+                               y_test=df_test[y_var],
+                               x_test=df_test[x_var],
+                               opts={"seed": 123456789,
+                                     "n_jobs": -1,
+                                     "k_fold": 10,
+                                     "method": "time_series",
+                                     "n_iter": 10})
+    xgb_mod.fit()
+    y_hat = xgb_mod.predict(df_ip[x_var])
+    y_hat = [int(np.round(x)) for x in y_hat]
+    df_ip.loc[:, "pred"] = y_hat
+    df_ip[[y_var, "pred"]].plot()
+    tmp = df_ip.dropna()
+    xgb_op = pd.DataFrame(data=[["RSQ",
+                                 metrics.rsq(tmp[y_var].tolist(),
+                                             tmp["pred"].tolist())],
+                                ["RMSE",
+                                 metrics.rmse(tmp[y_var].tolist(),
+                                              tmp["pred"].tolist())],
+                                ["MSE",
+                                 metrics.mse(tmp[y_var].tolist(),
+                                             tmp["pred"].tolist())]],
+                          columns=["Metric", "Value"])
+    print(utils.table_output(df=xgb_op,
+                             col=list(xgb_op.columns),
+                             header=list(xgb_op.columns),
+                             precision=3))
+    print(sep,
+          utils.elapsed_time("Total time for XGBoost:", start),
+          sep,
+          sep="\n")
