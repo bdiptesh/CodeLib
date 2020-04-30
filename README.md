@@ -121,8 +121,7 @@ Extract the project in a local directory. Example:
 Run the following in project directory:
 
 ```console
-chmod +x install.sh
-./install.sh
+bash install.sh
 ```
 
 Anaconda python 3.7.3 was used for development of this module.
