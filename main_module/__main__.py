@@ -63,7 +63,7 @@ cnt = args.count[0]
 # --- Main
 # =============================================================================
 
-if __name__ == '__main__':
+if __name__ == '__main__1':
     # ---- Clustering
     start = time.time_ns()
     fn_ip = "store.csv"

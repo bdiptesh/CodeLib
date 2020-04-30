@@ -22,7 +22,7 @@ standards.
 rating of atleast 8/10.
 - Ensure to profile your modules and move any bottlenecks to a low lantency system/module.
 - Ensure to add unit tests with corner cases.
-- Limit the use of third party libraries.
+- Limit the use of third party libraries. If you do have to use them, ensure that it exists in [bigRED environment](https://wiki.target.com/tgtwiki/index.php/Portal:BigRED/_Software_Libraries).
 - Follow [pull request](PULL_REQUEST_TEMPLATE.md) guidelines.
 
 ### Guidelines

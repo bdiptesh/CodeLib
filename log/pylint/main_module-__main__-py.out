@@ -1,4 +1,8 @@
+************* Module main_module.__main__
+__main__.py:139:33: I1101: Module 'lib.metrics' has no 'rsq' member, but source is unavailable. Consider adding this module to extension-pkg-whitelist if you want to perform analysis based on run-time introspection of living objects. (c-extension-no-member)
+__main__.py:142:33: I1101: Module 'lib.metrics' has no 'rmse' member, but source is unavailable. Consider adding this module to extension-pkg-whitelist if you want to perform analysis based on run-time introspection of living objects. (c-extension-no-member)
+__main__.py:145:33: I1101: Module 'lib.metrics' has no 'mse' member, but source is unavailable. Consider adding this module to extension-pkg-whitelist if you want to perform analysis based on run-time introspection of living objects. (c-extension-no-member)
 
---------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+------------------------------------
+Your code has been rated at 10.00/10
 

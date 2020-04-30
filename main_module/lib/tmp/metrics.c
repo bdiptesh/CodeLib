@@ -1395,7 +1395,7 @@ static const char __pyx_k_y_hat_arr[] = "y_hat_arr";
 static const char __pyx_k_MemoryError[] = "MemoryError";
 static const char __pyx_k_metrics_pyx[] = "metrics.pyx";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_Common_metrics_required_in_mach[] = "\nCommon metrics required in machine learning modules.\n\nAvailable functions:\n    - ``rsq``: R-Squared\n    - ``rmse``: Root mean squareed error\n    - ``mse``: Mean squareed error\n\nAuthor\n------\n::\n\n    Author: Diptesh Basak\n    Date: Thu Apr 16 15:19:33 2020\n    License: BSD 3-Clause\n";
+static const char __pyx_k_Common_metrics_required_in_mach[] = "\nCommon metrics required in machine learning modules.\n\nAvailable functions:\n    - ``rsq``: R-Squared\n    - ``rmse``: Root mean squared error\n    - ``mse``: Mean squared error\n\nAuthor\n------\n::\n\n    Author: Diptesh Basak\n    Date: Thu Apr 16, 2020\n    License: BSD 3-Clause\n";
 static PyObject *__pyx_n_s_MemoryError;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_corrcoef;

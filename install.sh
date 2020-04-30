@@ -41,16 +41,18 @@ mod()
 path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)\
 /$(basename "${BASH_SOURCE[0]}")"
 
-proj_dir=$(sed -E 's/(.+\/)(.+)/\1bin\//' <<< $path)
+proj_dir=$(sed -E 's/(.+\/)(.+)/\1/' <<< $path)
 
-for i in $(find "$proj_dir" -name "*.sh")
+for i in $(find "$proj_dir" -maxdepth 10 -name "*.sh")
 do
-  file_name=$(sed -E 's/(.+\/)(.+)/\2/' <<< $i)
-  mod "chmod +x" "bin/$file_name"
+  file_name=${i#$proj_dir}
+  mod "chmod +x" "$file_name"
   if [[ "$file_name" == "programs.sh" ]]; then
-    ./bin/programs.sh
+    bash bin/programs.sh
   fi
 done
+
+mod "chmod +x" "install.sh"
 
 printf "%-72s %s" "Installation"
 if [[ $error -gt 0 ]]; then

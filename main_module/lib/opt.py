@@ -230,7 +230,8 @@ class TSP:
                     model += u[i] - u[j] <= (len(loc))*(1 - dv_leg[(i, j)]) - 1
         # Solve
         debug_mode = int(debug_mode is True)
-        model.solve(pulp.GLPK(msg=debug_mode))
+        pulp.LpSolverDefault.msg = debug_mode
+        model.solve()
         # Generate optimal path
         loc_left = copy.copy(loc)
         org = loc[0]
@@ -637,7 +638,8 @@ class Transport():
                                  for s in supply_node]) >= demand[d]
         # Solve
         debug = int(debug is True)
-        model.solve(pulp.GLPK(msg=debug))
+        pulp.LpSolverDefault.msg = debug
+        model.solve()
         route_list = [(v.name.split("_")[1], v.name.split("_")[2], v.varValue)
                       for v in model.variables() if v.varValue > 0]
         ip_op = (pulp.LpStatus[model.status],

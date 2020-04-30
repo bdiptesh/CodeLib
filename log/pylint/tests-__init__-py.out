@@ -1,0 +1,6 @@
+************* Module tests
+__init__.py:26:0: C0413: Import "import main_module" should be placed at the top of the module (wrong-import-position)
+
+-------------------------------------------------------------------
+Your code has been rated at 8.57/10 (previous run: 10.00/10, -1.43)
+
