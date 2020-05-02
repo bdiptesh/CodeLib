@@ -6,7 +6,7 @@
 
 1. [Introduction](./README.md#introduction)
     1. [Objective](./README.md#objective)
-    1. [Project structure](./README.md#project-structure)
+    1. [Project directory structure](./README.md#project-directory-structure)
     1. [Programming style](./README.md#programming-style)
     1. [Version control](./README.md#version-control)
 1. [Project documents](./doc)
@@ -28,79 +28,18 @@ The objective of this repository is to:
 1. Reduce development time for machine learning projects.
 1. Provide a scalable solution for all machine learning projects.
 
-#### Project structure
+#### Project directory structure
 
-This repository provides a sample structure of a project. Since we would like to have a common structure for all our projects, the structure should be able to scale with large of applications with internal packages.
-
-In larger applications, we may have one or more internal packages that are either tied together with a wrapper shell script or that provide specific functionality to a larger library we are packaging. We will lay out the conventions to accommodate for this:
-
-```
-project_name/
-│
-├── bin/
-│   ├── hiveQueries.sh
-│   └── runTests.sh
-│
-├── data/
-│   ├── input/
-│   │   ├── raw_data.csv
-│   │   └── input.csv
-│   └── output/
-│       ├── model_output.csv
-│       └── model_diagnostics.csv
-│
-├── doc/
-│   ├── problem_statement.md
-│   ├── approach.pdf
-│   └── latex/
-│
-├── hive/
-│   ├── hive_query_1.hql
-│   └── hive_query_2.hql
-│
-├── log/
-│   ├── hive_queries.out
-│   ├── main_module.out
-│   └── pylint/
-│       ├── main_module-__init__-py.out
-│       ├── main_module-__main__-py.out
-│       └── pylint.out
-│
-├── main_module/
-│   ├── __init__.py
-│   ├── __main__.py
-│   └── lib/
-│       ├── metrics.so
-│       ├── cfg.py
-│       ├── stat.py
-│       ├── opt.py
-│       ├── utils.py
-│   	└── tmp/
-│           ├── build/
-│           ├── metrics.pyx
-│           ├── metrics.so
-│           ├── metrics.c
-│           ├── setup.py
-│           └── build.sh
-│
-├── test/
-│   ├── __init__.py
-│   ├── test_stat.py
-│   └── test_opt.py
-│
-├── install.sh
-├── LICENSE
-├── README.md
-└── requirements.txt
-```
+Please go through our [project directory structure](../doc/Directory_structure.md) here.
 
 #### Programming style
 
 It's good practice to follow accepted standards while coding in python:
 1. [PEP 8 standards](https://www.python.org/dev/peps/pep-0008/): For code styles.
 1. [PEP 257 standards](https://www.python.org/dev/peps/pep-0257/): For docstrings standards.
+1. [PEP 484 standards](https://www.python.org/dev/peps/pep-0484/) For function annotations standards.
 
-However, it's a good idea to rate all our python scripts with pylint. If we score anything less than 8/10, we should consider redesigning the code architecture.
+Also, it's a good idea to rate all our python scripts with [Pylint](https://www.pylint.org/). If we score anything less than 8/10, we should consider redesigning the code architecture.
 
 A composite pylint ratings for all the codes are automatically computed when we [run the tests](./bin/runTests.sh) and prepended on top of this file.
 
