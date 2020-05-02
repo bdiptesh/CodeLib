@@ -105,11 +105,11 @@ if __name__ == '__main__':
                                      "Latitude", "Longitude"],
                              precision=3))
     plt.plot(df_op["lat"], df_op["lng"], marker='o', color='b', zorder=1)
+    plt.show()
     print(sep,
           utils.elapsed_time("Total time for TSP:", start),
           sep,
           sep="\n")
-    plt.show()
     # ---- Time series using XGBoost
     start = time.time_ns()
     n_per = 30

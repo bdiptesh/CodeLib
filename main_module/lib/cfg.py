@@ -42,7 +42,7 @@ import os
 import socket
 import re
 
-__version__: str = "0.2.7"
+__version__: str = "0.2.8"
 __doc__: str = "Code library for python 3.7"
 module: str = "main_module"
 
