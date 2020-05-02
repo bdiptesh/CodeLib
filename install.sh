@@ -1,12 +1,12 @@
 #!/bin/bash
 # =============================================================================
-# Ratings model installation file
+# Installation file
 #
-# Version: 0.1.0
+# Version: 0.2.0
 #
 # Author: Diptesh.Basak
 #
-# Date: May 15, 2019
+# Date: May 03, 2020
 #
 # =============================================================================
 
@@ -15,6 +15,7 @@
 # =============================================================================
 
 error=0
+__version__="0.2.0"
 
 # =============================================================================
 # User defined functions
@@ -24,14 +25,12 @@ mod()
 {
   exec=$1
   file=$2
-  printf "%-72s %s" "$2"
-  if $exec $file; then
-    state="[ OK ]"
-  else
+  state="[ OK ]"
+  if ! $exec $file; then
     state="[fail]"
     error=$((error + 1))
-  fi
-  printf "$state\n"
+  fi  
+  printf "%-72s %s\n" "$2" "$state"
 }
 
 # =============================================================================
@@ -43,7 +42,9 @@ path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)\
 
 proj_dir=$(sed -E 's/(.+\/)(.+)/\1/' <<< $path)
 
-for i in $(find "$proj_dir" -maxdepth 10 -name "*.sh")
+printf "Installing v$__version__ ...\n\n"
+
+for i in $(find "$proj_dir" -maxdepth 20 -name "*.sh")
 do
   file_name=${i#$proj_dir}
   mod "chmod +x" "$file_name"
@@ -52,14 +53,12 @@ do
   fi
 done
 
-mod "chmod +x" "install.sh"
-
-printf "%-72s %s" "Installation"
+state="[Done]"
 if [[ $error -gt 0 ]]; then
   state="[fail]"
-else
-  state="[Done]"
 fi
-printf "$state\n"
+
+printf "%-72s %s\n" "Installation" "$state"
 
 exit $error
+
