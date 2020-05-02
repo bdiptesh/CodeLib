@@ -14,7 +14,7 @@
 1. [Pull request guidelines](./.github/PULL_REQUEST_TEMPLATE.md)
 1. [Initial setup](./README.md#initial-setup)
 1. [Execution](./README.md#execution)
-1. [Unit tests](./README.md#run-unit-tests)
+1. [Unit tests](./README.md#run-unit-tests-and-pylint-ratings)
 ***
 
 ## Introduction
