@@ -30,7 +30,7 @@ The objective of this repository is to:
 
 #### Project directory structure
 
-Please go through our [project directory structure](../doc/Directory_structure.md) here.
+Please go through our [project directory structure](./doc/Directory_structure.md) here.
 
 #### Programming style
 
