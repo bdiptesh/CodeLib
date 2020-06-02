@@ -44,6 +44,7 @@ project_name/
 ├── doc/
 │   ├── problem_statement.md
 │   ├── approach.pdf
+│   ├── Directory_structure.md
 │   └── latex/
 │
 ├── hive/
