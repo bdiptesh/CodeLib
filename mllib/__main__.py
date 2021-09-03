@@ -23,6 +23,9 @@ Credits
 import argparse
 import pandas as pd
 
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import scale
+
 from lib import (
                  cfg,
                  utils
@@ -65,6 +68,3 @@ fn_ip = "store.csv"
 
 if __name__ == '__main__':
     pass
-
-df_ip = pd.read_csv(path + "input/" + fn_ip)
-df_ip
