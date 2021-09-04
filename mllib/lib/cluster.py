@@ -10,7 +10,7 @@ path = "/media/ph33r/Data/Project/mllib/dev/data/input/"
 
 fn_ip = "store.csv"
 
-x_var = ["x1"]
+x_var = ["x1", "x3"]
 max_cluster = 10
 # method = "one_se"
 method = "gap_max"
@@ -73,6 +73,12 @@ sks = np.zeros(max_cluster)
 
 df_result = pd.DataFrame({"cluster": [], "gap": [], "sk": []})
 
+dict_nref = dict()
+
+for i in range(nrefs):
+    # Create new random reference set
+    dict_nref[i] = _nref(df)
+
 for gap_index, k in enumerate(range(1, max_cluster+1)):
     # Holder for reference dispersion results
     ref_disps = np.zeros(nrefs)
@@ -80,7 +86,7 @@ for gap_index, k in enumerate(range(1, max_cluster+1)):
     # resulting dispersion of each loop
     for i in range(nrefs):
         # Create new random reference set
-        random_ref = _nref(df)
+        random_ref = dict_nref[i]
         # Fit to it
         km = KMeans(k, random_state=seed)
         km.fit(random_ref)
@@ -92,7 +98,8 @@ for gap_index, k in enumerate(range(1, max_cluster+1)):
     orig_disp = km.inertia_
     # Calculate gap statistic
     if orig_disp > 0.0:
-        gap = np.log(np.mean(ref_disps)) - np.log(orig_disp)
+        # gap = np.log(np.mean(ref_disps)) - np.log(orig_disp)
+        gap = np.mean(np.log(ref_disps)) - np.log(orig_disp)
     else:
         gap = np.inf
     # Standard error
@@ -121,4 +128,5 @@ for gap_index, k in enumerate(range(1, max_cluster+1)):
         km.fit(df_clus_ip)
         clus_op = km.labels_
 
-df_result
+print("optimal k:", opt_k)
+print(df_result)
