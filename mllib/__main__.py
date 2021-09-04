@@ -21,15 +21,12 @@ Credits
 # =============================================================================
 
 import argparse
+import time
+
 import pandas as pd
 
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import scale
-
-from lib import (
-                 cfg,
-                 utils
-                )  # noqa: F841
+from lib import cfg, utils  # noqa: F841
+from lib.cluster import Cluster  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -59,12 +56,19 @@ CLI.add_argument("-f", "--filename",
 
 args = CLI.parse_args()
 
-# fn_ip = args.filename[0]
-fn_ip = "store.csv"
+fn_ip = args.filename[0]
 
 # =============================================================================
 # --- Main
 # =============================================================================
 
 if __name__ == '__main__':
-    pass
+    start = time.time_ns()
+    # --- Clustering
+    df_ip = pd.read_csv(path + "input/" + fn_ip)
+    clus_sol = Cluster(df=df_ip, x_var=["x1"])
+    clus_sol.opt_k()
+    print("Clustering\n",
+          "optimal k = " + str(clus_sol.optimal_k),
+          elapsed_time("Time", start),
+          sep="\n")
