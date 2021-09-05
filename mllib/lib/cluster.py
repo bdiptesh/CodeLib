@@ -81,7 +81,7 @@ class Cluster():
         min(`max_cluster`, number of unique records)
 
     - In case of categorical variables, when `max_cluster` is lesser than the
-      number of unique records, the final solution is a single cluster.
+      number of unique records, the final solution may be a single cluster.
       Since the module uses Gap statistic, this phenomenon is expected.
       Hence, the end user must research alternate ways to determine optimal
       number of clusters.

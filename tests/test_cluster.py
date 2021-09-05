@@ -110,6 +110,16 @@ class TestIntegrationCluster(unittest.TestCase):
         self.assertLessEqual(clus_sol.optimal_k, 10)
         self.assertEqual(clus_sol.method, "one_se")
 
+    def test_gap_max_less_max_clus(self):
+        """Cluster: Test for gap_max where optimal k < max_cluster."""
+        df_ip = pd.read_csv(path + "store.csv")
+        clus_sol = Cluster(df=df_ip, x_var=["x5"],
+                           max_cluster=5,
+                           nrefs=10,
+                           method="gap_max")
+        clus_sol.opt_k()
+        self.assertLess(clus_sol.optimal_k, 5)
+
 
 # =============================================================================
 # --- Main
