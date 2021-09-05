@@ -37,7 +37,7 @@ It's good practice to follow accepted standards while coding in python:
 
 Also, it's a good idea to rate all our python scripts with [Pylint](https://www.pylint.org/). If we score anything less than 8/10, we should consider redesigning the code architecture.
 
-A composite pylint ratings for all the codes are automatically computed when we [run the tests](./bin/runTests.sh) and prepended on top of this file.
+A composite pylint ratings for all the codes are automatically computed when we [run the tests](./bin/run_tests.sh) and prepended on top of this file.
 
 #### Version control
 
