@@ -65,6 +65,27 @@ class Cluster():
 
         Stopping criterion (`one_se` or `gap_max`). The default is `one_se`.
 
+    Manual
+    ------
+    Points to be noted for `method`:
+
+    - Default method is `one_se`.
+
+    - In case the clustering variables `x_var` contains `any` categorical or
+      boolean values, the default method switches to `gap_max`
+
+    Points to be noted for `max_cluster`:
+
+    - Maximum number of clusters are defined as
+
+        min(`max_cluster`, number of unique records)
+
+    - In case of categorical variables, when `max_cluster` is lesser than the
+      number of unique records, the final solution is a single cluster.
+      Since the module uses Gap statistic, this phenomenon is expected.
+      Hence, the end user must research alternate ways to determine optimal
+      number of clusters.
+
     """
 
     def __init__(self,
@@ -82,15 +103,17 @@ class Cluster():
         self.seed = seed
         self.clus_op: pd.DataFrame = None
         self.optimal_k: int = None
-        self.df_gap: pd.DataFrame = None
+        self.df_summary: pd.DataFrame = None
         self.df = self.df[self.x_var]
+        self.method = method
+        self._pre_processing()
+
+    def _pre_processing(self):
         self.max_cluster = min(self.max_cluster,
                                len(self.df.drop_duplicates()))
         x_cat = self.df.select_dtypes(include=['object', 'bool'])
         if not x_cat.empty:
             self.method = "gap_max"
-        else:
-            self.method = method
 
     def _nref(self):
         """Create random reference data."""
@@ -133,6 +156,75 @@ class Cluster():
         df_sample = pd.DataFrame(scale(df_sample))
         return df_sample
 
+    def _gap_statistic(self):
+        """Compute optimal number of clusters using gap statistic."""
+        df = self.df
+        # One hot encoding of categorical variables
+        df_clus = pd.get_dummies(data=df, drop_first=True)
+        # Scale the data
+        df_clus_ip = pd.DataFrame(scale(df_clus))
+        # Create arrays for gap and sk
+        gaps = np.zeros(self.max_cluster)
+        sks = np.zeros(self.max_cluster)
+        # Create results dataframe
+        df_summary = pd.DataFrame({"cluster": [], "gap": [], "sk": []})
+        # Create new random reference set
+        dict_nref = dict()
+        for nref_index in range(self.nrefs):
+            dict_nref[nref_index] = self._nref()
+        # Compute gap statistic
+        for gap_index, k in enumerate(range(1, self.max_cluster + 1)):
+            # Holder for reference dispersion results
+            ref_disps = np.zeros(self.nrefs)
+            # For n references, generate random sample and perform kmeans
+            # getting resulting dispersion of each loop
+            for nref_index in range(self.nrefs):
+                # Create new random reference set
+                random_ref = dict_nref[nref_index]
+                # Fit to it
+                kmeans_ref = KMeans(k, random_state=self.seed)
+                kmeans_ref.fit(random_ref)
+                ref_disp = kmeans_ref.inertia_
+                ref_disps[nref_index] = ref_disp
+            # Fit cluster to original data and create dispersion
+            kmeans_orig = KMeans(k, random_state=self.seed)
+            kmeans_orig.fit(df_clus_ip)
+            orig_disp = kmeans_orig.inertia_
+            # Calculate gap statistic
+            gap = np.inf
+            if orig_disp > 0.0:
+                gap = np.mean(np.log(ref_disps)) - np.log(orig_disp)
+            # Compute standard error
+            sk = 0.0
+            if sum(ref_disps) != 0.0:
+                sdk = np.std(np.log(ref_disps))
+                sk = sdk * np.sqrt(1.0 + 1.0 / self.nrefs)
+            # Assign this loop's gap statistic and sk to gaps and sks
+            gaps[gap_index] = gap
+            sks[gap_index] = sk
+            df_summary = df_summary.append({"cluster": k,
+                                            "gap": gap,
+                                            "sk": sk},
+                                           ignore_index=True)
+            # Stopping criteria
+            if self.method == "one_se":
+                if k > 1 and gaps[gap_index-1] >= gap - sk:
+                    opt_k = k-1
+                    km = KMeans(opt_k, random_state=self.seed)
+                    km.fit(df_clus_ip)
+                    clus_op = km.labels_
+                    break
+            opt_k = np.argmax(gaps) + 1
+            km = KMeans(opt_k, random_state=self.seed)
+            km.fit(df_clus_ip)
+            clus_op = km.labels_
+        self.df_summary = df_summary
+        self.optimal_k = opt_k
+        self.clus_op = pd.concat([self.df,
+                                  pd.DataFrame(data=clus_op,
+                                               columns=["cluster"])],
+                                 axis=1)
+
     def opt_k(self):
         """Compute optimal number of clusters using gap statistic.
 
@@ -146,70 +238,5 @@ class Cluster():
                 cluster
 
         """
-        df = self.df
-        # One hot encoding of categorical variables
-        df_clus = pd.get_dummies(data=df, drop_first=True)
-        # Scale the data
-        df_clus_ip = pd.DataFrame(scale(df_clus))
-        # Create arrays for gap and sk
-        gaps = np.zeros(self.max_cluster)
-        sks = np.zeros(self.max_cluster)
-        # Create results dataframe
-        df_result = pd.DataFrame({"cluster": [], "gap": [], "sk": []})
-        # Create new random reference set
-        dict_nref = dict()
-        for i in range(self.nrefs):
-            dict_nref[i] = self._nref()
-        # Compute gap statistic
-        for gap_index, k in enumerate(range(1, self.max_cluster + 1)):
-            # Holder for reference dispersion results
-            ref_disps = np.zeros(self.nrefs)
-            # For n references, generate random sample and perform kmeans
-            # getting resulting dispersion of each loop
-            for i in range(self.nrefs):
-                # Create new random reference set
-                random_ref = dict_nref[i]
-                # Fit to it
-                km = KMeans(k, random_state=self.seed)
-                km.fit(random_ref)
-                ref_disp = km.inertia_
-                ref_disps[i] = ref_disp
-            # Fit cluster to original data and create dispersion
-            km = KMeans(k, random_state=self.seed)
-            km.fit(df_clus_ip)
-            orig_disp = km.inertia_
-            # Calculate gap statistic
-            gap = np.inf
-            if orig_disp > 0.0:
-                gap = np.mean(np.log(ref_disps)) - np.log(orig_disp)
-            # Compute standard error
-            sk = 0.0
-            if sum(ref_disps) != 0.0:
-                sdk = np.std(np.log(ref_disps))
-                sk = sdk * np.sqrt(1.0 + 1.0 / self.nrefs)
-            # Assign this loop's gap statistic and sk to gaps and sks
-            gaps[gap_index] = gap
-            sks[gap_index] = sk
-            df_result = df_result.append({"cluster": k,
-                                          "gap": gap,
-                                          "sk": sk},
-                                         ignore_index=True)
-            # Stopping criteria
-            if self.method == "one_se":
-                if k > 1 and gaps[gap_index-1] >= gap - sk:
-                    opt_k = k-1
-                    km = KMeans(opt_k, random_state=self.seed)
-                    km.fit(df_clus_ip)
-                    clus_op = km.labels_
-                    break
-            opt_k = np.argmax(gaps) + 1
-            km = KMeans(opt_k, random_state=self.seed)
-            km.fit(df_clus_ip)
-            clus_op = km.labels_
-        self.df_gap = df_result
-        self.optimal_k = opt_k
-        self.clus_op = pd.concat([self.df,
-                                  pd.DataFrame(data=clus_op,
-                                               columns=["cluster"])],
-                                 axis=1)
+        self._gap_statistic()
         return self.clus_op
