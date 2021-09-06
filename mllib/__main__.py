@@ -27,6 +27,7 @@ import pandas as pd
 
 from lib import cfg, utils  # noqa: F841
 from lib.cluster import Cluster  # noqa: F841
+from lib.glmnet import GLMNet  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -72,3 +73,8 @@ if __name__ == '__main__':
           "optimal k = " + str(clus_sol.optimal_k),
           elapsed_time("Time", start),
           sep="\n")
+    # --- GLMNet
+    df_ip = pd.read_csv(path + "input/test_glmnet.csv")
+    glm_mod = GLMNet(df=df_ip,
+                     y_var=["y"],
+                     x_var=["x1", "x2", "x3"])
