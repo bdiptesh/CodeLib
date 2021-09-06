@@ -1,5 +1,7 @@
+[![Python](https://github.com/bdiptesh/mllib/actions/workflows/python.yml/badge.svg)](https://github.com/bdiptesh/mllib/actions/workflows/python.yml)
 [![pylint Score](https://mperlet.github.io/pybadge/badges/10.0.svg)](./log/pylint/)
 [![Coverage score](https://img.shields.io/badge/coverage-100%25-dagreen.svg)](./log/cov.out)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 ***
 
 ## Table of contents

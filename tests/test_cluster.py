@@ -61,7 +61,7 @@ class TestIntegrationCluster(unittest.TestCase):
 
     def test_categorical(self):
         """Cluster: Test for categorical variables."""
-        df_ip = pd.read_csv(path + "store.csv")
+        df_ip = pd.read_csv(path + "test_cluster.csv")
         clus_sol = Cluster(df=df_ip, x_var=["x1"],
                            max_cluster=6,
                            nrefs=5)
@@ -71,9 +71,9 @@ class TestIntegrationCluster(unittest.TestCase):
 
     def test_categorical_multiple(self):
         """Cluster: Test for multiple categorical variables."""
-        df_ip = pd.read_csv(path + "store.csv")
-        clus_sol = Cluster(df=df_ip, x_var=["x1", "x8"],
-                           max_cluster=6,
+        df_ip = pd.read_csv(path + "test_cluster.csv")
+        clus_sol = Cluster(df=df_ip, x_var=["x1", "x4"],
+                           max_cluster=10,
                            nrefs=5)
         clus_sol.opt_k()
         self.assertEqual(clus_sol.optimal_k, 4)
@@ -81,44 +81,44 @@ class TestIntegrationCluster(unittest.TestCase):
 
     def test_categorical_continuos(self):
         """Cluster: Test for categorical and continuos variables."""
-        df_ip = pd.read_csv(path + "store.csv")
-        clus_sol = Cluster(df=df_ip, x_var=["x1", "x3"],
+        df_ip = pd.read_csv(path + "test_cluster.csv")
+        clus_sol = Cluster(df=df_ip, x_var=["x1", "x2"],
                            max_cluster=6,
                            nrefs=5)
         clus_sol.opt_k()
-        self.assertEqual(clus_sol.optimal_k, 5)
+        self.assertEqual(clus_sol.optimal_k, 4)
         self.assertEqual(clus_sol.method, "gap_max")
 
     def test_continuos_gap_max(self):
         """Cluster: Test for continuos variables gap_max."""
-        df_ip = pd.read_csv(path + "store.csv")
-        clus_sol = Cluster(df=df_ip, x_var=["x3", "x4"],
+        df_ip = pd.read_csv(path + "test_cluster.csv")
+        clus_sol = Cluster(df=df_ip, x_var=["x2"],
                            max_cluster=5,
                            nrefs=5,
                            method="gap_max")
         clus_sol.opt_k()
-        self.assertEqual(clus_sol.optimal_k, 5)
+        self.assertEqual(clus_sol.optimal_k, 4)
         self.assertEqual(clus_sol.method, "gap_max")
 
     def test_continuos_one_se(self):
         """Cluster: Test for continuos variables one_se."""
-        df_ip = pd.read_csv(path + "store.csv")
-        clus_sol = Cluster(df=df_ip, x_var=["x3"],
-                           max_cluster=10,
+        df_ip = pd.read_csv(path + "test_cluster.csv")
+        clus_sol = Cluster(df=df_ip, x_var=["x2", "x3"],
+                           max_cluster=3,
                            nrefs=10)
         clus_sol.opt_k()
-        self.assertLessEqual(clus_sol.optimal_k, 10)
+        self.assertLessEqual(clus_sol.optimal_k, 2)
         self.assertEqual(clus_sol.method, "one_se")
 
     def test_gap_max_less_max_clus(self):
         """Cluster: Test for gap_max where optimal k < max_cluster."""
-        df_ip = pd.read_csv(path + "store.csv")
-        clus_sol = Cluster(df=df_ip, x_var=["x5"],
-                           max_cluster=5,
+        df_ip = pd.read_csv(path + "test_cluster.csv")
+        clus_sol = Cluster(df=df_ip, x_var=["x3"],
+                           max_cluster=3,
                            nrefs=10,
                            method="gap_max")
         clus_sol.opt_k()
-        self.assertLess(clus_sol.optimal_k, 5)
+        self.assertLess(clus_sol.optimal_k, 3)
 
 
 # =============================================================================
