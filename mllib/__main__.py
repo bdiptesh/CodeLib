@@ -79,3 +79,4 @@ if __name__ == '__main__':
     glm_mod = GLMNet(df=df_ip,
                      y_var=["y"],
                      x_var=["x1", "x2", "x3"])
+    glm_mod.fit()
