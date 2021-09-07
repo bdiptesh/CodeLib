@@ -1,10 +1,9 @@
 """
-GLMNet module.
+Module for commonly used machine learning modelling algorithms.
 
-Objective:
-    - Build
-      `GLMNet <https://web.stanford.edu/~hastie/Papers/glmnet.pdf>`_
-      model using optimal alpha and lambda
+**Available routines:**
+
+- class ``GLMNet``: Builds GLMnet model using cross validation.
 
 Credits
 -------
@@ -29,6 +28,56 @@ import numpy as np
 # =============================================================================
 
 
+def create_lag_vars(df: pd.DataFrame,
+                    y_var: List[str],
+                    x_var: List[str],
+                    n_interval: str = None) -> pd.DataFrame:
+    """Create lag variables for time series data.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+
+        Pandas dataframe containing `y_var`, `x_var` and `n_interval`
+        (if provided).
+
+    y_var : List[str]
+
+        Dependant variable.
+
+    x_var : List[str]
+        Independant variables.
+
+    n_interval : str, optional
+
+        Column name of the time interval variable (the default is None).
+
+    Returns
+    -------
+    pd.DataFrame
+
+        Pandas dataframe containing `y_var`, lag variables (`lag_xx`) and
+        `x_var`.
+
+    """
+    if n_interval is None:
+        y_lag = df[y_var].reset_index(drop=True)
+    else:
+        y_lag = df.sort_values(by=n_interval)
+        y_lag = y_lag[y_var].reset_index(drop=True)
+    time_int = len(y_lag)
+    lag_interval = []
+    while time_int > 8:
+        time_int = int(np.floor(time_int/2))
+        lag_interval.extend([time_int])
+    lag_interval.extend([4, 3, 2, 1])
+    for lag in lag_interval:
+        y_lag.loc[:, "lag_" + str(lag)] = y_lag["y"].shift(lag)
+    y_lag = y_lag.join(df[x_var])
+    op = y_lag.dropna().reset_index(drop=True)
+    return op
+
+
 class GLMNet():
     """GLMNet module.
 
@@ -45,7 +94,7 @@ class GLMNet():
 
     y_var : List[str]
 
-        Dependant variables.
+        Dependant variable.
 
     x_var : List[str]
 
@@ -89,9 +138,9 @@ class GLMNet():
                      "lambda_param": [1e-5, 1e-4, 1e-3, 1e-2, 1e-1,
                                       1.0, 10.0, 100.0]}
         self.param = param
-        self.param["l1_range"] = list(np.array(range(5, 105,
-                                                     int(self.param["a_inc"]
-                                                         * 100.0))) / 100.0)
+        self.param["l1_range"] = list(np.round(np.arange(0.0, 1.01,
+                                                         self.param["a_inc"]),
+                                               10))
         self.param["timeseries"] = timeseries
 
     def fit(self):

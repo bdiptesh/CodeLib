@@ -27,7 +27,7 @@ import pandas as pd
 
 from lib import cfg, utils  # noqa: F841
 from lib.cluster import Cluster  # noqa: F841
-from lib.glmnet import GLMNet  # noqa: F841
+from lib.model import GLMNet  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -58,6 +58,7 @@ CLI.add_argument("-f", "--filename",
 args = CLI.parse_args()
 
 fn_ip = args.filename[0]
+fn_ip = "store.csv"
 
 # =============================================================================
 # --- Main
