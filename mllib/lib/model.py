@@ -3,6 +3,7 @@ Module for commonly used machine learning modelling algorithms.
 
 **Available routines:**
 
+- udf ``create_lag_vars``: Create lag variables for time series data.
 - class ``GLMNet``: Builds GLMnet model using cross validation.
 
 Credits
