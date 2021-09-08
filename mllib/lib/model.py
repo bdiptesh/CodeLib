@@ -23,10 +23,9 @@ from typing import List, Dict
 
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import TimeSeriesSplit as ts_split
-from sklearn.linear_model import ElasticNet
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.model_selection import GridSearchCV
+
+from sklearn.linear_model import ElasticNetCV
+from sklearn.model_selection import train_test_split as split
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -105,18 +104,9 @@ class GLMNet():
 
         Independant variables.
 
-    timeseries : bool, optional
+    strata : pd.DataFrame, optional
 
-        Boolean value to indicate time-series inputs (the default is False).
-
-    search_method : str, optional
-
-        String to indicate the hyper parameter search method. Possible values
-        are "grid", "random" (the default is "random")
-
-    n_interval : str, optional
-
-        Column name of the time interval variable (the default is None).
+        A pandas dataframe column defining the strata (the default is None).
 
     param : Dict, optional
 
@@ -128,9 +118,6 @@ class GLMNet():
             test_perc: 0.25
             n_jobs: -1
             k_fold: 10
-            lambda_param: [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0]
-            timeseries: False
-            search_method: "random"
 
     """
 
@@ -138,66 +125,50 @@ class GLMNet():
                  df: pd.DataFrame,
                  y_var: List[str],
                  x_var: List[str],
-                 timeseries: bool = False,
-                 search_method: str = "random",
-                 n_interval: str = None,
+                 strata: str = None,
                  param: Dict = None):
         """Initialize variables for module ``GLMNet``."""
-        self.df = df[y_var].join(df[x_var])
+        self.df = df[y_var + x_var]
         self.y_var = y_var
         self.x_var = x_var
-        self.model = None
-        self.n_interval = n_interval
+        self.strata = strata
         if param is None:
             param = {"seed": 1,
                      "a_inc": 0.05,
                      "test_perc": 0.25,
                      "n_jobs": -1,
-                     "k_fold": 10,
-                     "lambda_param": [1e-5, 1e-4, 1e-3, 1e-2, 1e-1,
-                                      1.0, 10.0, 100.0]}
+                     "k_fold": 10}
         self.param = param
-        self.param["l1_range"] = list(np.round(np.arange(0.0, 1.01,
+        self.param["l1_range"] = list(np.round(np.arange(0.0001, 1.01,
                                                          self.param["a_inc"]),
                                                10))
-        self.param["timeseries"] = timeseries
-        self.param["search_method"] = search_method
+        self._fit()
 
-    def fit(self):
+    def _fit(self) -> None:
         """Fit the best GLMNet model."""
-        train_x = self.df[self.x_var]
-        train_x = pd.get_dummies(data=train_x, drop_first=True)
-        train_y = self.df[self.y_var]
-        if self.param["timeseries"]:
-            folds = ts_split(n_splits=self.param["k_fold"])
-            folds = folds.split(X=train_y)
-        else:
-            folds = self.param["k_fold"]
-        est_glmnet = ElasticNet(random_state=self.param["seed"])
-        grid = {"l1_ratio": self.param["l1_range"],
-                "alpha": self.param["lambda_param"]}
-        if self.param["search_method"] == "grid":
-            self.model = GridSearchCV(estimator=est_glmnet,
-                                      param_grid=grid,
-                                      n_jobs=-1,
-                                      cv=folds,
-                                      verbose=0,
-                                      scoring="neg_mean_squared_error")
-            self.model.fit(train_x, train_y)
-        if self.param["search_method"] == "random":
-            # n_iter =  30% of grid hyper parameter combinations
-            sample_perc = 0.3
-            n_iter = int(np.ceil(len(self.param["l1_range"])
-                                 * len(self.param["lambda_param"])
-                                 * sample_perc))
-            self.model = RandomizedSearchCV(estimator=est_glmnet,
-                                            param_distributions=grid,
-                                            n_jobs=self.param["n_jobs"],
-                                            n_iter=n_iter,
-                                            cv=folds,
-                                            verbose=1,
-                                            scoring="neg_mean_squared_error")
-            self.model.fit(train_x, train_y)
+        train_x, test_x,\
+            train_y, test_y = split(self.df[self.x_var],
+                                    self.df[self.y_var],
+                                    test_size=self.param["test_perc"],
+                                    random_state=self.param["seed"],
+                                    stratify=self.strata)
+        mod = ElasticNetCV(l1_ratio=self.param["l1_range"],
+                           fit_intercept=True,
+                           alphas=[1e-5, 1e-4, 1e-3, 1e-2, 1e-1,
+                                   1.0, 10.0, 100.0],
+                           normalize=True,
+                           cv=self.param["k_fold"],
+                           n_jobs=self.param["n_jobs"],
+                           random_state=self.param["seed"])
+        mod.fit(train_x, train_y.values.ravel())
+        opt = {"alpha": mod.l1_ratio_,
+               "lambda": mod.alpha_,
+               "intercept": mod.intercept_,
+               "coef": mod.coef_,
+               "train_v": mod.score(train_x, train_y),
+               "test_v": mod.score(test_x, test_y)}
+        self.model = mod
+        self.opt = opt
 
     def predict(self, df_predict: pd.DataFrame) -> pd.DataFrame:
         """Predict y_var/target variable.
@@ -215,9 +186,7 @@ class GLMNet():
             Pandas dataframe containing predicted `y_var` and `x_var`.
 
         """
-        df_predict_cp = df_predict.copy(deep=True)
-        df_predict = pd.get_dummies(data=df_predict, drop_first=True)
-        df_op = pd.DataFrame(self.model.predict(df_predict))
-        df_op.columns = ["y_hat"]
-        df_op = df_op.join(df_predict_cp)
-        return df_op
+        y_hat = self.model.predict(df_predict)
+        df_predict = df_predict.copy()
+        df_predict["y"] = y_hat
+        return df_predict
