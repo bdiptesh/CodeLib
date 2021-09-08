@@ -27,6 +27,7 @@ from sklearn.model_selection import TimeSeriesSplit as ts_split
 from sklearn.linear_model import ElasticNet
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import GridSearchCV
+
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
 # =============================================================================
@@ -110,9 +111,9 @@ class GLMNet():
 
     search_method : str, optional
 
-        String to indicate the hyper parameter search method. Possible values 
-                               are "grid", "random" (the default is "random")
-                               
+        String to indicate the hyper parameter search method. Possible values
+        are "grid", "random" (the default is "random")
+
     n_interval : str, optional
 
         Column name of the time interval variable (the default is None).
@@ -145,6 +146,8 @@ class GLMNet():
         self.df = df[y_var].join(df[x_var])
         self.y_var = y_var
         self.x_var = x_var
+        self.model = None
+        self.n_interval = n_interval
         if param is None:
             param = {"seed": 1,
                      "a_inc": 0.05,
@@ -152,18 +155,14 @@ class GLMNet():
                      "n_jobs": -1,
                      "k_fold": 10,
                      "lambda_param": [1e-5, 1e-4, 1e-3, 1e-2, 1e-1,
-                                      1.0, 10.0, 100.0]}   
+                                      1.0, 10.0, 100.0]}
         self.param = param
-        self.param["l1_range"] = \
-            [x*self.param["a_inc"] for x in range(\
-                                            1, int(1/self.param["a_inc"])+1)]
+        self.param["l1_range"] = list(np.round(np.arange(0.0, 1.01,
+                                                         self.param["a_inc"]),
+                                               10))
         self.param["timeseries"] = timeseries
         self.param["search_method"] = search_method
-        # if self.param["timeseries"]:
-        #     self.df = create_lag_vars(self.df, y_var, x_var, n_interval)
-        #     self.x_var = list(self.df)
-        #     self.y_var = [self.x_var.pop(0)]
-        
+
     def fit(self):
         """Fit the best GLMNet model."""
         train_x = self.df[self.x_var]
@@ -175,9 +174,9 @@ class GLMNet():
         else:
             folds = self.param["k_fold"]
         est_glmnet = ElasticNet(random_state=self.param["seed"])
-        grid = {"l1_ratio":self.param["l1_range"],
-                "alpha":self.param["lambda_param"]}
-        if self.param["search_method"]=="grid":
+        grid = {"l1_ratio": self.param["l1_range"],
+                "alpha": self.param["lambda_param"]}
+        if self.param["search_method"] == "grid":
             self.model = GridSearchCV(estimator=est_glmnet,
                                       param_grid=grid,
                                       n_jobs=-1,
@@ -185,11 +184,12 @@ class GLMNet():
                                       verbose=0,
                                       scoring="neg_mean_squared_error")
             self.model.fit(train_x, train_y)
-        if  self.param["search_method"]=="random":
+        if self.param["search_method"] == "random":
             # n_iter =  30% of grid hyper parameter combinations
             sample_perc = 0.3
-            n_iter = int(np.ceil(len(self.param["l1_range"])*\
-                                 len(self.param["lambda_param"])*sample_perc))
+            n_iter = int(np.ceil(len(self.param["l1_range"])
+                                 * len(self.param["lambda_param"])
+                                 * sample_perc))
             self.model = RandomizedSearchCV(estimator=est_glmnet,
                                             param_distributions=grid,
                                             n_jobs=self.param["n_jobs"],
@@ -200,7 +200,7 @@ class GLMNet():
             self.model.fit(train_x, train_y)
 
     def predict(self, df_predict: pd.DataFrame) -> pd.DataFrame:
-        """Short summary.
+        """Predict y_var/target variable.
 
         Parameters
         ----------
