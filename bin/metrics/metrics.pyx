@@ -1,18 +1,20 @@
 """
 Common metrics required in machine learning modules.
 
-Available functions:
+**Available functions:**
     - ``rsq``: R-Squared
     - ``mse``: Mean squared error
     - ``rmse``: Root mean squared error
     - ``mae``: Mean absolute error
     - ``mape``: Mean absolute percentage error
 
-Author
-------
+Credits
+-------
 ::
 
-    Author: Diptesh Basak
+    Authors:
+        - Diptesh
+
     Date: Sep 10, 2021
 """
 
