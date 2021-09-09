@@ -50,6 +50,7 @@ def create_lag_vars(df: pd.DataFrame,
         Dependant variable.
 
     x_var : List[str]
+
         Independant variables.
 
     n_interval : str, optional

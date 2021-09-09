@@ -1,0 +1,55 @@
+************* Module mllib.lib.glmnet_ts
+glmnet_ts.py:70:5: C0326: Exactly one space required around assignment
+y_var=["y"]
+     ^ (bad-whitespace)
+glmnet_ts.py:71:5: C0326: Exactly one space required around assignment
+x_var=["x1", "x2"]
+     ^ (bad-whitespace)
+glmnet_ts.py:82:0: C0303: Trailing whitespace (trailing-whitespace)
+glmnet_ts.py:116:0: C0303: Trailing whitespace (trailing-whitespace)
+glmnet_ts.py:131:13: C0303: Trailing whitespace (trailing-whitespace)
+glmnet_ts.py:136:16: C0326: Exactly one space required after comma
+for i in range(0,len(df_test)):
+                ^ (bad-whitespace)
+glmnet_ts.py:139:0: C0301: Line too long (102/100) (line-too-long)
+glmnet_ts.py:140:20: C0326: Exactly one space required after comma
+    for j in range(1,len(lag_var)):
+                    ^ (bad-whitespace)
+glmnet_ts.py:141:0: C0301: Line too long (103/100) (line-too-long)
+glmnet_ts.py:148:16: C0326: Exactly one space required around assignment
+    df_pred_data=df_pred_data.append(df_tmp).reset_index(drop=True)
+                ^ (bad-whitespace)
+glmnet_ts.py:150:0: C0305: Trailing newlines (trailing-newlines)
+glmnet_ts.py:19:20: W0621: Redefining name 'y_var' from outer scope (line 70) (redefined-outer-name)
+glmnet_ts.py:20:20: W0621: Redefining name 'x_var' from outer scope (line 71) (redefined-outer-name)
+glmnet_ts.py:18:0: C0103: Argument name "df" doesn't conform to snake_case naming style (invalid-name)
+glmnet_ts.py:64:4: C0103: Variable name "op" doesn't conform to snake_case naming style (invalid-name)
+glmnet_ts.py:68:0: C0103: Constant name "df_ip" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:70:0: C0103: Constant name "y_var" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:71:0: C0103: Constant name "x_var" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:73:0: C0103: Constant name "param" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:84:0: C0103: Constant name "df_ip" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:86:0: C0103: Constant name "lag_var" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:87:0: C0103: Constant name "x_var" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:90:0: C0103: Constant name "max_epoch" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:93:0: C0103: Constant name "df_pred_data" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:95:0: C0103: Constant name "df_train" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:96:0: C0103: Constant name "df_test" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:98:0: C0103: Constant name "train_x" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:99:0: C0103: Constant name "train_y" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:101:0: C0103: Constant name "test_x" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:102:0: C0103: Constant name "test_y" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:108:0: C0103: Constant name "mod" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:119:0: C0103: Constant name "opt" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:125:0: C0103: Constant name "model" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:126:0: W0127: Assigning the same variable 'opt' to itself (self-assigning-variable)
+glmnet_ts.py:126:0: C0103: Constant name "opt" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:130:0: C0103: Constant name "df_predict" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:132:0: C0103: Constant name "df_predict" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:133:0: C0103: Constant name "df_predict" doesn't conform to UPPER_CASE naming style (invalid-name)
+glmnet_ts.py:9:0: W0611: Unused Dict imported from typing (unused-import)
+glmnet_ts.py:15:0: W0611: Unused train_test_split imported from sklearn.model_selection as split (unused-import)
+
+------------------------------------------------------------------
+Your code has been rated at 4.20/10 (previous run: 4.20/10, +0.00)
+
