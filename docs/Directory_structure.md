@@ -31,7 +31,14 @@ project_name/
 │
 ├── bin/
 │   ├── hive_queries.sh
-│   └── run_tests.sh
+│   ├── run_tests.sh
+│   └── metrics/
+│       ├── build/
+│       ├── metrics.pyx
+│       ├── metrics.so
+│       ├── metrics.c
+│       ├── setup.py
+│       └── build.sh
 │
 ├── data/
 │   ├── input/
@@ -42,7 +49,7 @@ project_name/
 │       └── model_diagnostics.csv
 │
 ├── docs/
-│   ├── problem_statement.md
+│   ├── Branch.md
 │   ├── Approach.pdf
 │   └── latex/
 │
@@ -67,14 +74,7 @@ project_name/
 │       ├── stat.py
 │       ├── opt.py
 │       ├── utils.py
-│       ├── data_types.py
-│   	  └── tmp/
-│           ├── build/
-│           ├── metrics.pyx
-│           ├── metrics.so
-│           ├── metrics.c
-│           ├── setup.py
-│           └── build.sh
+│       └── data_types.py
 │
 ├── tests/
 │   ├── __init__.py
