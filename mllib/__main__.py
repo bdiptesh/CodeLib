@@ -81,8 +81,11 @@ if __name__ == '__main__':
     glm_mod = GLMNet(df=df_ip,
                      y_var=["y"],
                      x_var=["x1", "x2", "x3"])
-    print("\nGLMNet\n",
-          elapsed_time("Time", start_t),
+    print("\nGLMNet\n")
+    model_summary = glm_mod.model_summary
+    for k, v in model_summary.items():
+        print(k, v)
+    print(elapsed_time("Time", start_t),
           sep="\n")
     # --- EOF
     print(sep, elapsed_time("Total time", start), sep, sep="\n")

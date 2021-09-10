@@ -17,15 +17,26 @@ Credits
 """
 
 # pylint: disable=invalid-name
-# pylint: disable=R0902,R0903,R0913,R0914
+# pylint: disable=R0902,R0903,R0913,R0914,C0413
 
 from typing import List, Dict
+
+import re
+import sys
+from inspect import getsourcefile
+from os.path import abspath
 
 import pandas as pd
 import numpy as np
 
 from sklearn.linear_model import ElasticNetCV
 from sklearn.model_selection import train_test_split as split
+
+path = abspath(getsourcefile(lambda: 0))
+path = re.sub(r"(.+\/)(.+.py)", "\\1", path)
+sys.path.insert(0, path)
+
+import metrics  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -133,6 +144,7 @@ class GLMNet():
         self.y_var = y_var
         self.x_var = x_var
         self.strata = strata
+        self.model_summary = None
         if param is None:
             param = {"seed": 1,
                      "a_inc": 0.05,
@@ -142,8 +154,9 @@ class GLMNet():
         self.param = param
         self.param["l1_range"] = list(np.round(np.arange(0.0001, 1.01,
                                                          self.param["a_inc"]),
-                                               10))
+                                               2))
         self._fit()
+        self._compute_metrics()
 
     def _fit(self) -> None:
         """Fit the best GLMNet model."""
@@ -170,6 +183,17 @@ class GLMNet():
                "test_v": mod.score(test_x, test_y)}
         self.model = mod
         self.opt = opt
+
+    def _compute_metrics(self):
+        """Compute commonly used metrics to evaluate the model."""
+        y = self.df[self.y_var].iloc[:, 0].values.tolist()
+        y_hat = list(self.predict(self.df[self.x_var])["y"].values)
+        model_summary = {"rsq": metrics.rsq(y, y_hat),
+                         "mae": metrics.mae(y, y_hat),
+                         "mape": metrics.mape(y, y_hat),
+                         "rmse": metrics.rmse(y, y_hat)}
+        model_summary["mse"] = model_summary["rmse"] ** 2
+        self.model_summary = model_summary
 
     def predict(self, df_predict: pd.DataFrame) -> pd.DataFrame:
         """Predict y_var/target variable.
