@@ -152,7 +152,8 @@ class GLMNet():
                      "n_jobs": -1,
                      "k_fold": 10}
         self.param = param
-        self.param["l1_range"] = list(np.round(np.arange(0.0001, 1.01,
+        self.param["l1_range"] = list(np.round(np.arange(self.param["a_inc"],
+                                                         1.01,
                                                          self.param["a_inc"]),
                                                2))
         self._fit()
@@ -188,11 +189,11 @@ class GLMNet():
         """Compute commonly used metrics to evaluate the model."""
         y = self.df[self.y_var].iloc[:, 0].values.tolist()
         y_hat = list(self.predict(self.df[self.x_var])["y"].values)
-        model_summary = {"rsq": metrics.rsq(y, y_hat),
-                         "mae": metrics.mae(y, y_hat),
-                         "mape": metrics.mape(y, y_hat),
-                         "rmse": metrics.rmse(y, y_hat)}
-        model_summary["mse"] = model_summary["rmse"] ** 2
+        model_summary = {"rsq": np.round(metrics.rsq(y, y_hat), 3),
+                         "mae": np.round(metrics.mae(y, y_hat), 3),
+                         "mape": np.round(metrics.mape(y, y_hat), 3),
+                         "rmse": np.round(metrics.rmse(y, y_hat), 3)}
+        model_summary["mse"] = np.round(model_summary["rmse"] ** 2, 3)
         self.model_summary = model_summary
 
     def predict(self, df_predict: pd.DataFrame) -> pd.DataFrame:

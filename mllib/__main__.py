@@ -80,11 +80,10 @@ if __name__ == '__main__':
     df_ip = pd.read_csv(path + "input/test_glmnet.csv")
     glm_mod = GLMNet(df=df_ip,
                      y_var=["y"],
-                     x_var=["x1", "x2", "x3"])
+                     x_var=["x1", "x3"])
     print("\nGLMNet\n")
-    model_summary = glm_mod.model_summary
-    for k, v in model_summary.items():
-        print(k, v)
+    for k, v in glm_mod.model_summary.items():
+        print(k, str(v).rjust(69 - len(k)))
     print(elapsed_time("Time", start_t),
           sep="\n")
     # --- EOF
