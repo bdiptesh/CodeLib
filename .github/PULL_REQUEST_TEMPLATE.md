@@ -19,7 +19,7 @@ Please select option(s) that are relevant.
 
 Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration
 
-- [ ] Unit tests in the code
+- [ ] Unit/Integration tests in the code
 - [ ] Code runs locally without any warnings/errors with test files
 
 ## Checklist:
