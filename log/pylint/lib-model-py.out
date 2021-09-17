@@ -1,9 +1,0 @@
-************* Module mllib.lib.model
-model.py:191:32: I1101: Module 'metrics' has no 'rsq' member, but source is unavailable. Consider adding this module to extension-pkg-whitelist if you want to perform analysis based on run-time introspection of living objects. (c-extension-no-member)
-model.py:192:32: I1101: Module 'metrics' has no 'mae' member, but source is unavailable. Consider adding this module to extension-pkg-whitelist if you want to perform analysis based on run-time introspection of living objects. (c-extension-no-member)
-model.py:193:33: I1101: Module 'metrics' has no 'mape' member, but source is unavailable. Consider adding this module to extension-pkg-whitelist if you want to perform analysis based on run-time introspection of living objects. (c-extension-no-member)
-model.py:194:33: I1101: Module 'metrics' has no 'rmse' member, but source is unavailable. Consider adding this module to extension-pkg-whitelist if you want to perform analysis based on run-time introspection of living objects. (c-extension-no-member)
-
---------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
-

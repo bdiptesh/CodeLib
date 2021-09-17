@@ -1,6 +1,6 @@
 [![Build](../../actions/workflows/build.yml/badge.svg)](../../actions/workflows/build.yml)
-[![pylint Score](https://mperlet.github.io/pybadge/badges/9.5.svg)](./log/pylint/)
-[![Coverage score](https://img.shields.io/badge/coverage-100%25-dagreen.svg)](./log/cov.out)
+[![pylint Score](https://mperlet.github.io/pybadge/badges/9.6.svg)](./logs/pylint/)
+[![Coverage score](https://img.shields.io/badge/coverage-100%25-dagreen.svg)](./logs/cov.out)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](./LICENSE)
 ***
 
@@ -75,7 +75,7 @@ Available options:
 -r code rating.
 ```
 The pylint ratings for each python script can be found at
-[log/pylint/](./log/pylint/)
+[logs/pylint/](./logs/pylint/)
 ***
 
 ## Important links
