@@ -3,6 +3,6 @@ Name                                                           Stmts   Miss  Cov
 /media/ph33r/Data/Project/mllib/GitHub/mllib/__init__.py           7      0   100%
 /media/ph33r/Data/Project/mllib/GitHub/mllib/lib/__init__.py       7      0   100%
 /media/ph33r/Data/Project/mllib/GitHub/mllib/lib/cluster.py      103      0   100%
-/media/ph33r/Data/Project/mllib/GitHub/mllib/lib/model.py         59      0   100%
+/media/ph33r/Data/Project/mllib/GitHub/mllib/lib/model.py        137     65    53%   87, 285-304, 308-343, 347-354, 372-409
 --------------------------------------------------------------------------------------------
-TOTAL                                                            176      0   100%
+TOTAL                                                            254     65    74%

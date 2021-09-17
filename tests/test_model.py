@@ -64,21 +64,23 @@ class TestCreateLagVars(unittest.TestCase):
     def test_no_interval_specified(self):
         """Lag vars: Test when no interval is specified."""
         df_ip = pd.read_csv(path + "test_lag_var.csv")
-        df_op = create_lag_vars(df=df_ip,
-                                y_var=["y"],
-                                x_var=["x1", "x2"])
+        lst_lag, df_op = create_lag_vars(df=df_ip,
+                                         y_var=["y"],
+                                         x_var=["x1", "x2"])
         exp_op = df_ip[list(df_ip.columns[1:])].dropna().reset_index(drop=True)
         self.assertEqual(df_op.equals(exp_op), True)
+        self.assertEqual([6, 4, 3, 2, 1], lst_lag)
 
     def test_interval_specified(self):
         """Lag vars: Test when interval is specified."""
         df_ip = pd.read_csv(path + "test_lag_var.csv")
-        df_op = create_lag_vars(df=df_ip,
-                                y_var=["y"],
-                                x_var=["x1", "x2"],
-                                n_interval="week")
+        lst_lag, df_op = create_lag_vars(df=df_ip,
+                                         y_var=["y"],
+                                         x_var=["x1", "x2"],
+                                         n_interval="week")
         exp_op = df_ip[list(df_ip.columns[1:])].dropna().reset_index(drop=True)
         self.assertEqual(df_op.equals(exp_op), True)
+        self.assertEqual([6, 4, 3, 2, 1], lst_lag)
 
 
 class TestGLMNet(unittest.TestCase):

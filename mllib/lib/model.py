@@ -102,9 +102,8 @@ def create_lag_vars(df: pd.DataFrame,
     if n_interval:
         y_lag = y_lag.join(df[n_interval])
         y_lag = y_lag.set_index(n_interval)
-    op = y_lag.dropna()
+    op = y_lag.dropna().reset_index(drop=True)
     return lst_lag, op
-
 
 
 class GLMNet():
@@ -229,6 +228,7 @@ class GLMNet():
         df_predict = df_predict.copy()
         df_predict["y"] = y_hat
         return df_predict
+
 
 class GLMNet_ts():
     """GLMNet time series module.
