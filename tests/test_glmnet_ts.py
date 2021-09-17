@@ -1,11 +1,12 @@
 """
-Test suite module for ``model``.
+Test suite module for ``glmnet_ts``.
 
 Credits
 -------
 ::
 
     Authors:
+        - Madhu
         - Diptesh
 
     Date: Sep 07, 2021
@@ -31,7 +32,8 @@ path = re.sub(r"(.+)(\/tests.*)", "\\1", path)
 
 sys.path.insert(0, path)
 
-from mllib.lib.model import GLMNet  # noqa: F841
+from mllib.lib.glmnet_ts import create_lag_vars  # noqa: F841
+from mllib.lib.glmnet_ts import GLMNet_ts  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -52,6 +54,34 @@ def ignore_warnings(test_func):
             warnings.simplefilter("ignore")
             test_func(self, *args, **kwargs)
     return do_test
+
+
+class TestCreateLagVars(unittest.TestCase):
+    """Test suite for UDF ``create_lag_vars``."""
+
+    def setUp(self):
+        """Set up for UDF ``create_lag_vars``."""
+
+    def test_no_interval_specified(self):
+        """Lag vars: Test when no interval is specified."""
+        df_ip = pd.read_csv(path + "test_lag_var.csv")
+        lst_lag, df_op = create_lag_vars(df=df_ip,
+                                         y_var=["y"],
+                                         x_var=["x1", "x2"])
+        exp_op = df_ip[list(df_ip.columns[1:])].dropna().reset_index(drop=True)
+        self.assertEqual(df_op.equals(exp_op), True)
+        self.assertEqual([6, 4, 3, 2, 1], lst_lag)
+
+    def test_interval_specified(self):
+        """Lag vars: Test when interval is specified."""
+        df_ip = pd.read_csv(path + "test_lag_var.csv")
+        lst_lag, df_op = create_lag_vars(df=df_ip,
+                                         y_var=["y"],
+                                         x_var=["x1", "x2"],
+                                         n_interval="week")
+        exp_op = df_ip[list(df_ip.columns[1:])].dropna().reset_index(drop=True)
+        self.assertEqual(df_op.equals(exp_op), True)
+        self.assertEqual([6, 4, 3, 2, 1], lst_lag)
 
 
 class TestGLMNet(unittest.TestCase):
