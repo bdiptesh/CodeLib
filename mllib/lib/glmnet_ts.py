@@ -158,7 +158,7 @@ class GLMNet_ts():
                  n_interval: str = None,
                  param: Dict = None):
         """Initialize variables for module ``GLMNet``."""
-        self.df = df.sort_values(by=n_interval)[y_var + x_var]
+        self.df = df[y_var + x_var]
         self.y_var = y_var
         self.x_var = x_var
         self.lst_lag = lst_lag
@@ -190,7 +190,7 @@ class GLMNet_ts():
                                               self.x_var,
                                               self.lst_lag,
                                               self.n_interval)
-        self.x_var = list(self.df.columns)
+        self.x_var = list(df_ip.columns)
         self.x_var.remove(self.y_var[0])
         df_train = df_ip.iloc[0:int(len(df_ip) * (1-self.param["test_perc"]))]
         df_test = df_ip.iloc[int(len(df_ip) * (1-self.param["test_perc"])):]
@@ -236,7 +236,7 @@ class GLMNet_ts():
         ----------
         df_predict : pd.DataFrame
 
-            Pandas dataframe containing `x_var`.
+            Pandas dataframe containing `x_var`, 'n_interval' (optional)
 
         Returns
         -------
