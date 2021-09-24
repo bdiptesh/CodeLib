@@ -17,6 +17,7 @@
 1. [Initial setup](./README.md#initial-setup)
 1. [Unit tests](./README.md#run-unit-tests-and-pylint-ratings)
 1. [Important links](./README.md#important-links)
+1. [License](./LICENSE)
 ***
 
 ## Introduction
