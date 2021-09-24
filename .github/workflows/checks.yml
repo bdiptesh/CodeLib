@@ -21,7 +21,6 @@ on:
     branches:
       - 'stable'
       - 'testing'
-      - 'dev*'
       - 'feature*'
       - '!maintenance*'
   pull_request:
