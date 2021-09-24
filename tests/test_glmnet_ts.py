@@ -9,7 +9,7 @@ Credits
         - Madhu
         - Diptesh
 
-    Date: Sep 07, 2021
+    Date: Sep 24, 2021
 """
 
 # pylint: disable=invalid-name
@@ -25,6 +25,7 @@ from os.path import abspath
 
 import pandas as pd
 import numpy as np
+import pytest
 
 # Set base path
 path = abspath(getsourcefile(lambda: 0))
@@ -94,39 +95,100 @@ class TestCreateLagVars(unittest.TestCase):
         self.assertEqual(df_op.equals(exp_op), True)
         self.assertEqual([3, 2, 1], lst_lag)
 
-# class TestGLMNet_ts(unittest.TestCase):
-#     """Test suite for module ``GLMNet_ts``."""
+class TestGLMNet_ts(unittest.TestCase):
+    """Test suite for module ``GLMNet_ts``."""
 
-#     def setUp(self):
-#         """Set up for module ``GLMNet_ts``."""
+    def setUp(self):
+        """Set up for module ``GLMNet_ts``."""
 
-#     def test_known_equation(self):
-#         """GLMNet_ts: Test a known equation."""
-#         df_ip = pd.read_csv(path + "test_glmnet_ts.csv")
-#         df_train_ip =  df_ip.iloc[7:100]
-#         mod = GLMNet_ts(df=df_train_ip,
-#                         y_var=["y"],
-#                         x_var=["x1", "x2"],
-#                         lst_lag=[7,1])
-#         op = mod.opt
-#         self.assertEqual(np.round(op.get('intercept'), 0), 100.0)
-#         self.assertEqual(np.round(op.get('coef')[0], 0), 2.0)
-#         self.assertEqual(np.round(op.get('coef')[1], 0), 3.0)
-#         self.assertEqual(np.round(op.get('coef')[2], 0), 0.0)
+    def test_known_equation(self):
+        """GLMNet_ts: Test a known equation with/without n_interval."""
+        df_ip = pd.read_csv(path + "test_glmnet_ts1.csv")
+        df_train_ip = df_ip.iloc[0:len(df_ip)]
+        mod = GLMNet_ts(df=df_train_ip,
+                        y_var=["y"],
+                        x_var=["x1", "x2"],
+                        lst_lag=[3, 1])
+        op = mod.opt
+        self.assertTrue(0.5 <= np.round(op.get('intercept'), 0) <= 1.5)
+        self.assertTrue(0.15 <= np.round(op.get('coef')[0], 2) <= 0.25)
+        self.assertTrue(0.65 <= np.round(op.get('coef')[1], 2) <= 0.75)
+        self.assertTrue(0.75 <= np.round(op.get('coef')[2], 2) <= 0.85)
+        self.assertTrue(0.45 <= np.round(op.get('coef')[3], 2) <= 0.55)
+        mod = GLMNet_ts(df=df_train_ip,
+                        y_var=["y"],
+                        x_var=["x1", "x2"],
+                        lst_lag=[3, 1],
+                        n_interval="week")
+        op = mod.opt
+        self.assertTrue(0.5 <= np.round(op.get('intercept'), 0) <= 1.5)
+        self.assertTrue(0.15 <= np.round(op.get('coef')[0], 2) <= 0.25)
+        self.assertTrue(0.65 <= np.round(op.get('coef')[1], 2) <= 0.75)
+        self.assertTrue(0.75 <= np.round(op.get('coef')[2], 2) <= 0.85)
+        self.assertTrue(0.45 <= np.round(op.get('coef')[3], 2) <= 0.55)
 
-#     def test_predict_target_variable(self):
-#         """GLMNet_ts: Test to predict a target variable."""
-#         df_ip = pd.read_csv(path + "test_glmnet.csv")
-#         mod = GLMNet_ts(df=df_ip,
-#                       y_var=["y"],
-#                       x_var=["x1", "x2", "x3"])
-#         df_predict = pd.DataFrame({"x1": [10, 20],
-#                                     "x2": [5, 10],
-#                                     "x3": [100, 0]})
-#         op = mod.predict(df_predict)
-#         op = np.round(np.array(op["y"]), 1)
-#         exp_op = np.array([135.0, 170.0])
-#         self.assertEqual((op == exp_op).all(), True)
+
+    def test_predict_target_variable(self):
+        """GLMNet_ts: Test to predict a target variable with/without n_interval."""
+        df_ip = pd.read_csv(path + "test_glmnet_ts1.csv")
+        # without n_interval
+        df_train_ip = df_ip.iloc[0:95]
+        mod = GLMNet_ts(df=df_train_ip,
+                        y_var=["y"],
+                        x_var=["x1", "x2"],
+                        lst_lag=[3, 1])
+        op = mod.opt
+        df_predict = df_ip.iloc[95:len(df_ip)]
+        y_pred = mod.predict(df_predict)
+        y_pred = np.round(np.array(y_pred["y"]), 1)
+        df_exp = df_ip.copy(deep=True)
+        df_exp['lag_3'] = df_exp["y"].shift(3)
+        df_exp['lag_1'] = df_exp["y"].shift(1)
+        df_exp = df_exp[["lag_3", "lag_1", "x1", "x2"]]
+        df_exp = df_exp.iloc[95:len(df_ip)]
+        df_exp["y"] = op.get('intercept') + op.get('coef')[0]  * df_exp["lag_3"] \
+                        + op.get('coef')[1]  * df_exp["lag_1"] \
+                        + op.get('coef')[2]  * df_exp["x1"] \
+                        + op.get('coef')[3]  * df_exp["x2"]
+        y_exp = np.round(np.array(df_exp["y"]), 1)
+        for i, j in zip(y_pred, y_exp):
+            self.assertTrue(j - 0.1 <= i <= j + 0.1)
+        # with n_interval
+        mod = GLMNet_ts(df=df_train_ip,
+                        y_var=["y"],
+                        x_var=["x1", "x2"],
+                        lst_lag=[3, 1],
+                        n_interval="week")
+        op = mod.opt
+        df_predict = df_ip.iloc[95:len(df_ip)]
+        y_pred = mod.predict(df_predict)
+        y_pred = np.round(np.array(y_pred["y"]), 1)
+        df_exp = df_ip.copy(deep=True)
+        df_exp['lag_3'] = df_exp["y"].shift(3)
+        df_exp['lag_1'] = df_exp["y"].shift(1)
+        df_exp = df_exp[["lag_3", "lag_1", "x1", "x2"]]
+        df_exp = df_exp.iloc[95:len(df_ip)]
+        df_exp["y"] = op.get('intercept') + op.get('coef')[0]  * df_exp["lag_3"] \
+                        + op.get('coef')[1]  * df_exp["lag_1"] \
+                        + op.get('coef')[2]  * df_exp["x1"] \
+                        + op.get('coef')[3]  * df_exp["x2"]
+        y_exp = np.round(np.array(df_exp["y"]), 1)
+        for i, j in zip(y_pred, y_exp):
+            self.assertTrue(j - 0.1 <= i <= j + 0.1)
+
+    def test_exit(self):
+        """GLMNet_ts: Test for missing time instance."""
+        df_ip = pd.read_csv(path + "test_glmnet_ts1.csv")
+        # without n_interval
+        df_train_ip = df_ip.iloc[0:95]
+        mod = GLMNet_ts(df=df_train_ip,
+                        y_var=["y"],
+                        x_var=["x1", "x2"],
+                        lst_lag=[3, 1],
+                        n_interval="week")
+        df_predict = df_ip.iloc[96:len(df_ip)]
+        with pytest.raises(SystemExit):
+            df_predict = mod.predict(df_predict)
 
 
 # =============================================================================

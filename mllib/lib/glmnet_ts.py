@@ -63,11 +63,12 @@ def create_lag_vars(df: pd.DataFrame,
         Dependant variable.
 
     x_var : List[str]
+
         Independant variables.
 
     lst_lag : List[int]
 
-        Lag values list (the default is None)
+        Lag variables list (the default is None)
 
     n_interval : str, optional
 
@@ -130,7 +131,7 @@ class GLMNet_ts():
 
     lst_lag : List[int]
 
-        Lag values list (the default is None)
+        Lag variables list (the default is None)
 
     n_interval : str, optional
 
@@ -158,7 +159,10 @@ class GLMNet_ts():
                  n_interval: str = None,
                  param: Dict = None):
         """Initialize variables for module ``GLMNet``."""
-        self.df = df[y_var + x_var]
+        if n_interval is None:
+            self.df = df[y_var + x_var]
+        else:
+            self.df = df[y_var + x_var + [n_interval]]
         self.y_var = y_var
         self.x_var = x_var
         self.lst_lag = lst_lag
@@ -190,13 +194,13 @@ class GLMNet_ts():
                                               self.x_var,
                                               self.lst_lag,
                                               self.n_interval)
-        self.x_var = list(df_ip.columns)
-        self.x_var.remove(self.y_var[0])
+        x_var = list(df_ip.columns)
+        x_var.remove(self.y_var[0])
         df_train = df_ip.iloc[0:int(len(df_ip) * (1-self.param["test_perc"]))]
         df_test = df_ip.iloc[int(len(df_ip) * (1-self.param["test_perc"])):]
-        train_x = df_train[self.x_var]
+        train_x = df_train[x_var]
         train_y = df_train[self.y_var]
-        test_x = df_test[self.x_var]
+        test_x = df_test[x_var]
         test_y = df_test[self.y_var]
         self.param["k_fold"] = ts_split(n_splits=self.param["k_fold"])
         self.param["k_fold"] = self.param["k_fold"].split(X=train_y)
@@ -204,7 +208,7 @@ class GLMNet_ts():
                            fit_intercept=True,
                            alphas=[1e-5, 1e-4, 1e-3, 1e-2, 1e-1,
                                    1.0, 10.0, 100.0],
-                           normalize=True,
+                           normalize=False,
                            cv=self.param["k_fold"],
                            n_jobs=self.param["n_jobs"],
                            random_state=self.param["seed"])
@@ -220,8 +224,14 @@ class GLMNet_ts():
 
     def _compute_metrics(self):
         """Compute commonly used metrics to evaluate the model."""
-        y = self.df[self.y_var].iloc[:, 0].values.tolist()
-        y_hat = list(self.predict(self.df[self.x_var])["y"].values)
+        y = self.df[self.y_var].iloc[\
+                        max(self.lst_lag):len(self.df), 0].values.tolist()
+        if self.n_interval is None:
+            y_hat = list(self.predict(self.df[\
+                    self.x_var][max(self.lst_lag):len(self.df)])["y"].values)
+        else:
+            y_hat = list(self.predict(self.df[self.x_var +\
+               [self.n_interval]][max(self.lst_lag):len(self.df)])["y"].values)
         model_summary = {"rsq": np.round(metrics.rsq(y, y_hat), 3),
                          "mae": np.round(metrics.mae(y, y_hat), 3),
                          "mape": np.round(metrics.mape(y, y_hat), 3),
@@ -246,6 +256,11 @@ class GLMNet_ts():
 
         """
         if self.n_interval is None:
+            df_predict = df_predict[self.x_var]
+        else:
+            df_predict = df_predict[self.x_var + [self.n_interval]]
+        if self.n_interval is None:
+            df_ip = self.df
             df_predict = df_predict.reset_index(drop=True)
             df_predict = \
                 df_predict.set_index(df_predict.index+self.max_epoch+1)
@@ -262,18 +277,17 @@ class GLMNet_ts():
         df_predict = df_predict[self.x_var]
         df_predict["y"] = -1
         for i in range(0, len(df_predict)):
-            # for i in range(0, len(df_ip)):
             df_pred = pd.DataFrame(df_predict.iloc[i])
             df_pred = df_pred.T # Transpose
             period_val = df_pred.index
             df_pred = df_pred[self.x_var].reset_index(drop=True)
             df_pred_x = pd.DataFrame(
                 {"lag_"+str(self.lst_lag[0]): df_ip.iloc[len(df_ip)\
-                                                         -self.lst_lag[0]]})
+                                                -self.lst_lag[0]][self.y_var]})
             for j in range(1, len(self.lst_lag)):
                 df_tmp = pd.DataFrame(
                     {"lag_"+str(self.lst_lag[j]): \
-                     df_ip.iloc[len(df_ip)-self.lst_lag[j]]})
+                     df_ip.iloc[len(df_ip)-self.lst_lag[j]][self.y_var]})
                 df_pred_x = df_pred_x.join(df_tmp)
             df_pred_x = df_pred_x.reset_index(drop=True)
             df_pred_x = df_pred_x.join(df_pred)
