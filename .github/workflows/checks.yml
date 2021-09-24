@@ -1,5 +1,5 @@
 # =============================================================================
-# Build file
+# Workflow for checks
 #
 # Objective:
 #   - Install python dependencies
@@ -14,13 +14,14 @@
 #
 # =============================================================================
 
-name: Build
+name: checks
 
 on:
   push:
     branches:
       - 'stable'
       - 'testing'
+      - 'dev*'
       - 'feature*'
       - '!maintenance*'
   pull_request:
