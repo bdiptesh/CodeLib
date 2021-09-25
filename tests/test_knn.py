@@ -26,6 +26,7 @@ from os.path import abspath
 import pandas as pd
 
 from sklearn.model_selection import train_test_split as split
+from sklearn import metrics as sk_metrics
 
 # Set base path
 path = abspath(getsourcefile(lambda: 0))
@@ -71,9 +72,9 @@ class Test_Knn(unittest.TestCase):
                                   test_size=0.1,
                                   random_state=42)
         mod = KNN(df_train, "y", ["x1", "x2"], method="classify")
-        y_hat = mod.predict(df_test[["x1", "x2"]]).tolist()
+        y_hat = mod.predict(df_test[["x1", "x2"]])["y"].tolist()
         y = df_test["y"].values.tolist()
-        acc = round(len([i for i, j in zip(y, y_hat) if i == j]) / len(y), 2)
+        acc = round(sk_metrics.accuracy_score(y, y_hat), 2)
         self.assertGreaterEqual(acc, 0.93)
 
     def test_knn_reg(self):
@@ -85,10 +86,10 @@ class Test_Knn(unittest.TestCase):
                                   test_size=0.1,
                                   random_state=42)
         mod = KNN(df_train, "y", ["x1", "x2"], method="regression")
-        y_hat = mod.predict(df_test[["x1", "x2"]]).tolist()
+        y_hat = mod.predict(df_test[["x1", "x2"]])["y"].tolist()
         y = df_test["y"].values.tolist()
-        acc = round(len([i for i, j in zip(y, y_hat) if i == j]) / len(y), 2)
-        self.assertGreaterEqual(acc, 0.87)
+        acc = round(sk_metrics.mean_squared_error(y, y_hat), 2)
+        self.assertLessEqual(acc, 0.1)
 
 
 # =============================================================================

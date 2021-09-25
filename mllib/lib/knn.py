@@ -19,6 +19,8 @@ Credits
 # pylint: disable=invalid-name
 # pylint: disable=too-many-arguments
 # pylint: disable=too-few-public-methods
+# pylint: disable=R0902
+# pylint: disable=wrong-import-position
 
 from typing import List, Dict, Any
 
@@ -28,15 +30,19 @@ from inspect import getsourcefile
 from os.path import abspath
 
 import pandas as pd
+import numpy as np
 
 from sklearn import neighbors as sn
 from sklearn.preprocessing import scale
+from sklearn import metrics as sk_metrics
+
 from sklearn.model_selection import GridSearchCV
 
 path = abspath(getsourcefile(lambda: 0))
 path = re.sub(r"(.+\/)(.+.py)", "\\1", path)
 sys.path.insert(0, path)
 
+import metrics  # noqa: F841
 
 class KNN():
     """K-Nearest Neighbour (KNN) module.
@@ -102,9 +108,9 @@ class KNN():
                  k_fold: int = 5,
                  param: Dict = None):
         """Initialize variables for module ``KNN``."""
-        self.df = df.reset_index(drop=True)
         self.y_var = y_var
         self.x_var = x_var
+        self.df = df[[self.y_var] + self.x_var].reset_index(drop=True)
         self.method = method
         self.model = None
         self.k_fold = k_fold
@@ -115,7 +121,9 @@ class KNN():
                      "metric": ["euclidean", "manhattan"]}
         self.param = param
         self._pre_process()
-        self._fit()
+        self.best_params_ = self._fit()
+        self.model_summary = None
+        self._compute_metrics()
 
     def _pre_process(self):
         """Pre-process the data, one hot encoding and scaling."""
@@ -128,14 +136,16 @@ class KNN():
     def _fit(self) -> Dict[str, Any]:
         """Fit KNN model."""
         if self.method == "classify":
-            gs = GridSearchCV(sn.KNeighborsClassifier(),
-                              self.param,
+            gs = GridSearchCV(estimator=sn.KNeighborsClassifier(),
+                              param_grid=self.param,
+                              scoring='accuracy',
                               verbose=0,
                               cv=self.k_fold,
                               n_jobs=-1)
         elif self.method == "regression":
-            gs = GridSearchCV(sn.KNeighborsRegressor(),
-                              self.param,
+            gs = GridSearchCV(estimator=sn.KNeighborsRegressor(),
+                              param_grid=self.param,
+                              scoring='neg_root_mean_squared_error',
                               verbose=0,
                               cv=self.k_fold,
                               n_jobs=-1)
@@ -156,7 +166,42 @@ class KNN():
                                self.df[self.y_var])
         return gs_op.best_params_
 
-    def predict(self, x_pred: pd.DataFrame) -> pd.DataFrame:
-        """Prediction module."""
-        x_pred = pd.DataFrame(scale(pd.get_dummies(x_pred)))
-        return self.model.predict(x_pred)
+    def _compute_metrics(self):
+        """Compute commonly used metrics to evaluate the model."""
+        y = self.df.iloc[:, 0].values.tolist()
+        y_hat = list(self.predict(self.df[self.x_var])["y"].values)
+        if self.method == "regression":
+            model_summary = {"rsq": np.round(metrics.rsq(y, y_hat), 3),
+                             "mae": np.round(metrics.mae(y, y_hat), 3),
+                             "mape": np.round(metrics.mape(y, y_hat), 3),
+                             "rmse": np.round(metrics.rmse(y, y_hat), 3)}
+            model_summary["mse"] = np.round(model_summary["rmse"] ** 2, 3)
+        if self.method == "classify":
+            model_summary = {"acc": np.round(\
+                                     sk_metrics.accuracy_score(y, y_hat), 3),
+                             "f1": np.round(\
+                                     sk_metrics.f1_score(y,
+                                                         y_hat,
+                                                         average='micro'), 3)}
+        self.model_summary = model_summary
+
+    def predict(self, df_predict: pd.DataFrame) -> pd.DataFrame:
+        """Predict y_var/target variable.
+
+        Parameters
+        ----------
+        df_predict : pd.DataFrame
+
+            Pandas dataframe containing `x_var`.
+
+        Returns
+        -------
+        pd.DataFrame
+
+            Pandas dataframe containing predicted `y_var` and `x_var`.
+        """
+        df_predict = pd.DataFrame(scale(pd.get_dummies(df_predict)))
+        y_hat = self.model.predict(df_predict)
+        df_predict = df_predict.copy()
+        df_predict["y"] = y_hat
+        return df_predict
