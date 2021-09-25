@@ -91,9 +91,11 @@ class TestCreateLagVars(unittest.TestCase):
                                          y_var=["y"],
                                          x_var=["x1", "x2"],
                                          lst_lag=[3, 2, 1])
-        exp_op = df_ip.iloc[:, [1, 4, 5, 6, 7, 8]].dropna().reset_index(drop=True)
+        exp_op = df_ip.iloc[:, [1, 4, 5, 6, 7, 8]]\
+            .dropna().reset_index(drop=True)
         self.assertEqual(df_op.equals(exp_op), True)
         self.assertEqual([3, 2, 1], lst_lag)
+
 
 class TestGLMNet_ts(unittest.TestCase):
     """Test suite for module ``GLMNet_ts``."""
@@ -127,9 +129,8 @@ class TestGLMNet_ts(unittest.TestCase):
         self.assertTrue(0.75 <= np.round(op.get('coef')[2], 2) <= 0.85)
         self.assertTrue(0.45 <= np.round(op.get('coef')[3], 2) <= 0.55)
 
-
     def test_predict_target_variable(self):
-        """GLMNet_ts: Test to predict a target variable with/without n_interval."""
+        """GLMNet_ts: Test predictor with/without n_interval."""
         df_ip = pd.read_csv(path + "test_glmnet_ts1.csv")
         # without n_interval
         df_train_ip = df_ip.iloc[0:95]
@@ -146,10 +147,11 @@ class TestGLMNet_ts(unittest.TestCase):
         df_exp['lag_1'] = df_exp["y"].shift(1)
         df_exp = df_exp[["lag_3", "lag_1", "x1", "x2"]]
         df_exp = df_exp.iloc[95:len(df_ip)]
-        df_exp["y"] = op.get('intercept') + op.get('coef')[0]  * df_exp["lag_3"] \
-                        + op.get('coef')[1]  * df_exp["lag_1"] \
-                        + op.get('coef')[2]  * df_exp["x1"] \
-                        + op.get('coef')[3]  * df_exp["x2"]
+        df_exp["y"] = op.get('intercept')\
+            + op.get('coef')[0] * df_exp["lag_3"]\
+            + op.get('coef')[1] * df_exp["lag_1"]\
+            + op.get('coef')[2] * df_exp["x1"]\
+            + op.get('coef')[3] * df_exp["x2"]
         y_exp = np.round(np.array(df_exp["y"]), 1)
         for i, j in zip(y_pred, y_exp):
             self.assertTrue(j - 0.1 <= i <= j + 0.1)
@@ -168,15 +170,17 @@ class TestGLMNet_ts(unittest.TestCase):
         df_exp['lag_1'] = df_exp["y"].shift(1)
         df_exp = df_exp[["lag_3", "lag_1", "x1", "x2"]]
         df_exp = df_exp.iloc[95:len(df_ip)]
-        df_exp["y"] = op.get('intercept') + op.get('coef')[0]  * df_exp["lag_3"] \
-                        + op.get('coef')[1]  * df_exp["lag_1"] \
-                        + op.get('coef')[2]  * df_exp["x1"] \
-                        + op.get('coef')[3]  * df_exp["x2"]
+        df_exp["y"] = op.get('intercept')\
+            + op.get('coef')[0] * df_exp["lag_3"]\
+            + op.get('coef')[1] * df_exp["lag_1"]\
+            + op.get('coef')[2] * df_exp["x1"]\
+            + op.get('coef')[3] * df_exp["x2"]
         y_exp = np.round(np.array(df_exp["y"]), 1)
         for i, j in zip(y_pred, y_exp):
             self.assertTrue(j - 0.1 <= i <= j + 0.1)
 
-    def test_exit(self):
+    @staticmethod
+    def test_for_exit():
         """GLMNet_ts: Test for missing time instance."""
         df_ip = pd.read_csv(path + "test_glmnet_ts1.csv")
         # without n_interval

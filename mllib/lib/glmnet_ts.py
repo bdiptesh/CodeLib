@@ -224,14 +224,17 @@ class GLMNet_ts():
 
     def _compute_metrics(self):
         """Compute commonly used metrics to evaluate the model."""
-        y = self.df[self.y_var].iloc[\
-                        max(self.lst_lag):len(self.df), 0].values.tolist()
+        y = self.df[self.y_var].iloc[max(self.lst_lag):
+                                     len(self.df), 0].values.tolist()
         if self.n_interval is None:
-            y_hat = list(self.predict(self.df[\
-                    self.x_var][max(self.lst_lag):len(self.df)])["y"].values)
+            y_hat = list(self.predict(self.df[self.x_var][max(self.lst_lag):
+                                                          len(self.df)])["y"]
+                         .values)
         else:
-            y_hat = list(self.predict(self.df[self.x_var +\
-               [self.n_interval]][max(self.lst_lag):len(self.df)])["y"].values)
+            y_hat = list(self.predict(self.df[self.x_var
+                                              + [self.n_interval]]
+                                      [max(self.lst_lag):len(self.df)])["y"]
+                         .values)
         model_summary = {"rsq": np.round(metrics.rsq(y, y_hat), 3),
                          "mae": np.round(metrics.mae(y, y_hat), 3),
                          "mape": np.round(metrics.mape(y, y_hat), 3),
@@ -264,13 +267,13 @@ class GLMNet_ts():
             df_predict = df_predict.reset_index(drop=True)
             df_predict = \
                 df_predict.set_index(df_predict.index+self.max_epoch+1)
-        elif len(df_predict) != (df_predict[self.n_interval].max() \
-                                 - df_predict[self.n_interval].min() + 1) \
-                                or df_predict[self.n_interval].min() \
-                                    > self.max_epoch+1:
+        elif len(df_predict) != (df_predict[self.n_interval].max()
+                                 - df_predict[self.n_interval].min() + 1)\
+            or df_predict[self.n_interval].min()\
+                > self.max_epoch + 1:
             sys.exit("Missing time instance found in input data")
         else:
-            df_ip = self.df[self.df[self.n_interval] \
+            df_ip = self.df[self.df[self.n_interval]
                             <= df_predict[self.n_interval].min()]
             df_predict = df_predict.sort_values(by=self.n_interval)
             df_predict = df_predict.set_index(self.n_interval)
@@ -278,15 +281,15 @@ class GLMNet_ts():
         df_predict["y"] = -1
         for i in range(0, len(df_predict)):
             df_pred = pd.DataFrame(df_predict.iloc[i])
-            df_pred = df_pred.T # Transpose
+            df_pred = df_pred.T
             period_val = df_pred.index
             df_pred = df_pred[self.x_var].reset_index(drop=True)
             df_pred_x = pd.DataFrame(
-                {"lag_"+str(self.lst_lag[0]): df_ip.iloc[len(df_ip)\
-                                                -self.lst_lag[0]][self.y_var]})
+                {"lag_" + str(self.lst_lag[0]):
+                 df_ip.iloc[len(df_ip) - self.lst_lag[0]][self.y_var]})
             for j in range(1, len(self.lst_lag)):
                 df_tmp = pd.DataFrame(
-                    {"lag_"+str(self.lst_lag[j]): \
+                    {"lag_"+str(self.lst_lag[j]):
                      df_ip.iloc[len(df_ip)-self.lst_lag[j]][self.y_var]})
                 df_pred_x = df_pred_x.join(df_tmp)
             df_pred_x = df_pred_x.reset_index(drop=True)
