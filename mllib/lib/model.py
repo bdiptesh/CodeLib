@@ -1,5 +1,5 @@
 """
-Module for commonly used machine learning modelling algorithms.
+GLMNet module.
 
 **Available routines:**
 

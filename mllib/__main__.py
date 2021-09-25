@@ -28,6 +28,7 @@ import pandas as pd
 from lib import cfg, utils  # noqa: F841
 from lib.cluster import Cluster  # noqa: F841
 from lib.model import GLMNet  # noqa: F841
+from lib.knn import KNN  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -52,13 +53,13 @@ CLI = argparse.ArgumentParser()
 CLI.add_argument("-f", "--filename",
                  nargs=1,
                  type=str,
-                 default=["store.csv"],
+                 default=["iris.csv"],
                  help="input csv filename")
 
 args = CLI.parse_args()
 
 fn_ip = args.filename[0]
-fn_ip = "store.csv"
+fn_ip = "iris.csv"
 
 # =============================================================================
 # --- Main
@@ -84,6 +85,20 @@ if __name__ == '__main__':
     print("\nGLMNet\n")
     for k, v in glm_mod.model_summary.items():
         print(k, str(v).rjust(69 - len(k)))
+    print(elapsed_time("Time", start_t),
+          sep="\n")
+    # --- KNN
+    start_t = time.time_ns()
+    df_ip = pd.read_csv(path + "input/iris.csv")
+    df_ip = df_ip[["y", "x1", "x2"]]
+    df_train = df_ip.sample(frac=0.8, random_state=42)
+    df_test = df_ip.drop(df_train.index)
+    mod = KNN(df_train, "y", ["x1", "x2"], method="classify")
+    print("\nKNN\n")
+    y_hat = mod.predict(df_test[["x1", "x2"]]).tolist()
+    y = df_test["y"].values.tolist()
+    accuracy = round(len([i for i, j in zip(y, y_hat) if i == j]) / len(y), 2)
+    print("Accuracy:", accuracy)
     print(elapsed_time("Time", start_t),
           sep="\n")
     # --- EOF

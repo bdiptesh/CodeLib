@@ -33,7 +33,7 @@ path = re.sub(r"(.+)(\/tests.*)", "\\1", path)
 
 sys.path.insert(0, path)
 
-from mllib.lib.knn import Knn  # noqa: F841
+from mllib.lib.knn import KNN  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -63,30 +63,28 @@ class Test_Knn(unittest.TestCase):
         """Set up for module ``KNN``."""
 
     def test_knn_class(self):
-        """ Test KNN classification.
-        """
+        """KNN: Test for classification."""
         df_ip = pd.read_csv(path + "iris.csv")
         df_ip = df_ip[["y", "x1", "x2"]]
         df_train, df_test = split(df_ip,
                                   stratify=df_ip["y"],
                                   test_size=0.1,
                                   random_state=42)
-        mod = Knn(df_train, "y", ["x1", "x2"], method="classify")
+        mod = KNN(df_train, "y", ["x1", "x2"], method="classify")
         y_hat = mod.predict(df_test[["x1", "x2"]]).tolist()
         y = df_test["y"].values.tolist()
         acc = round(len([i for i, j in zip(y, y_hat) if i == j]) / len(y), 2)
         self.assertGreaterEqual(acc, 0.93)
 
     def test_knn_reg(self):
-        """ Test KNN regression.
-        """
+        """KNN: Test for regression."""
         df_ip = pd.read_csv(path + "iris.csv")
         df_ip = df_ip[["y", "x1", "x2"]]
         df_train, df_test = split(df_ip,
                                   stratify=df_ip["y"],
                                   test_size=0.1,
                                   random_state=42)
-        mod = Knn(df_train, "y", ["x1", "x2"], method="regression")
+        mod = KNN(df_train, "y", ["x1", "x2"], method="regression")
         y_hat = mod.predict(df_test[["x1", "x2"]]).tolist()
         y = df_test["y"].values.tolist()
         acc = round(len([i for i, j in zip(y, y_hat) if i == j]) / len(y), 2)
