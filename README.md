@@ -1,7 +1,7 @@
-[![Python](https://github.com/bdiptesh/mllib/actions/workflows/python.yml/badge.svg)](https://github.com/bdiptesh/mllib/actions/workflows/python.yml)
-[![pylint Score](https://mperlet.github.io/pybadge/badges/10.0.svg)](./log/pylint/)
-[![Coverage score](https://img.shields.io/badge/coverage-100%25-dagreen.svg)](./log/cov.out)
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![checks](../../actions/workflows/checks.yml/badge.svg)](../../actions/workflows/checks.yml)
+[![pylint Score](https://mperlet.github.io/pybadge/badges/10.0.svg)](./logs/pylint/)
+[![Coverage score](https://img.shields.io/badge/coverage-100%25-dagreen.svg)](./logs/cov.out)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](./LICENSE)
 ***
 
 ## Table of contents
@@ -17,6 +17,7 @@
 1. [Initial setup](./README.md#initial-setup)
 1. [Unit tests](./README.md#run-unit-tests-and-pylint-ratings)
 1. [Important links](./README.md#important-links)
+1. [License](./LICENSE)
 ***
 
 ## Introduction
@@ -75,7 +76,7 @@ Available options:
 -r code rating.
 ```
 The pylint ratings for each python script can be found at
-[log/pylint/](./log/pylint/)
+[logs/pylint/](./logs/pylint/)
 ***
 
 ## Important links

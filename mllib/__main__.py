@@ -27,6 +27,7 @@ import pandas as pd
 
 from lib import cfg, utils  # noqa: F841
 from lib.cluster import Cluster  # noqa: F841
+from lib.model import GLMNet  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -57,6 +58,7 @@ CLI.add_argument("-f", "--filename",
 args = CLI.parse_args()
 
 fn_ip = args.filename[0]
+fn_ip = "store.csv"
 
 # =============================================================================
 # --- Main
@@ -65,10 +67,24 @@ fn_ip = args.filename[0]
 if __name__ == '__main__':
     start = time.time_ns()
     # --- Clustering
+    start_t = time.time_ns()
     df_ip = pd.read_csv(path + "input/" + fn_ip)
     clus_sol = Cluster(df=df_ip, x_var=["x1"])
     clus_sol.opt_k()
     print("Clustering\n",
           "optimal k = " + str(clus_sol.optimal_k),
-          elapsed_time("Time", start),
+          elapsed_time("Time", start_t),
           sep="\n")
+    # --- GLMNet
+    start_t = time.time_ns()
+    df_ip = pd.read_csv(path + "input/test_glmnet.csv")
+    glm_mod = GLMNet(df=df_ip,
+                     y_var=["y"],
+                     x_var=["x1", "x3"])
+    print("\nGLMNet\n")
+    for k, v in glm_mod.model_summary.items():
+        print(k, str(v).rjust(69 - len(k)))
+    print(elapsed_time("Time", start_t),
+          sep="\n")
+    # --- EOF
+    print(sep, elapsed_time("Total time", start), sep, sep="\n")

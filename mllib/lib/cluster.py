@@ -51,22 +51,41 @@ class Cluster():
 
     max_cluster : int, optional
 
-        Maximum number of clusters. The default is 20.
+        Maximum number of clusters (the default is 20).
 
     nrefs : int, optional
 
-        Number of random references to be created. The default is 20.
+        Number of random references to be created (the default is 20).
 
     seed : int, optional
 
-        Random seed. The default is 1.
+        Random seed (the default is 1).
 
     method : str, optional
 
-        Stopping criterion (`one_se` or `gap_max`). The default is `one_se`.
+        Stopping criterion: `one_se` or `gap_max` (the default is "one_se").
 
-    Manual
-    ------
+    Returns
+    -------
+    optimal_k : int
+
+        Optimal number of clusters.
+
+    df_summary : pandas.DataFrame
+
+        DataFrame containing Gap statistic and standard error for all clusters.
+
+    Methods
+    -------
+    opt_k
+
+    Example
+    -------
+    >>> clus_sol = Cluster(df=df_ip, x_var=["x1"], max_cluster=6, nrefs=5)
+    >>> clus_op = clus_sol.opt_k()
+
+    Notes
+    -----
     Points to be noted for `method`:
 
     - Default method is `one_se`.
@@ -225,7 +244,7 @@ class Cluster():
                                                columns=["cluster"])],
                                  axis=1)
 
-    def opt_k(self):
+    def opt_k(self) -> pd.DataFrame:
         """Compute optimal number of clusters using gap statistic.
 
         Returns
