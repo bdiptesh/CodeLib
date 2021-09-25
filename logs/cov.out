@@ -1,0 +1,8 @@
+Name                                                        Stmts   Miss  Cover   Missing
+-----------------------------------------------------------------------------------------
+/media/ph33r/Data/Project/mllib/Git/mllib/__init__.py           7      0   100%
+/media/ph33r/Data/Project/mllib/Git/mllib/lib/__init__.py       7      0   100%
+/media/ph33r/Data/Project/mllib/Git/mllib/lib/cluster.py      103      0   100%
+/media/ph33r/Data/Project/mllib/Git/mllib/lib/model.py         44      0   100%
+-----------------------------------------------------------------------------------------
+TOTAL                                                         161      0   100%

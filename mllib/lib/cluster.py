@@ -65,8 +65,8 @@ class Cluster():
 
         Stopping criterion: `one_se` or `gap_max` (the default is "one_se").
 
-    README
-    ------
+    Notes
+    -----
     Points to be noted for `method`:
 
     - Default method is `one_se`.
