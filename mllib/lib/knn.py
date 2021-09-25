@@ -44,6 +44,7 @@ sys.path.insert(0, path)
 
 import metrics  # noqa: F841
 
+
 class KNN():
     """K-Nearest Neighbour (KNN) module.
 
@@ -177,12 +178,11 @@ class KNN():
                              "rmse": np.round(metrics.rmse(y, y_hat), 3)}
             model_summary["mse"] = np.round(model_summary["rmse"] ** 2, 3)
         if self.method == "classify":
-            model_summary = {"acc": np.round(\
-                                     sk_metrics.accuracy_score(y, y_hat), 3),
-                             "f1": np.round(\
-                                     sk_metrics.f1_score(y,
-                                                         y_hat,
-                                                         average='micro'), 3)}
+            accuracy = np.round(sk_metrics.accuracy_score(y, y_hat), 3)
+            f1_score = np.round(sk_metrics.f1_score(y, y_hat,
+                                                    average='micro'), 3)
+            model_summary = {"accuracy": accuracy,
+                             "f1": f1_score}
         self.model_summary = model_summary
 
     def predict(self, df_predict: pd.DataFrame) -> pd.DataFrame:
@@ -199,6 +199,7 @@ class KNN():
         pd.DataFrame
 
             Pandas dataframe containing predicted `y_var` and `x_var`.
+
         """
         df_predict = pd.DataFrame(scale(pd.get_dummies(df_predict)))
         y_hat = self.model.predict(df_predict)
