@@ -65,6 +65,25 @@ class Cluster():
 
         Stopping criterion: `one_se` or `gap_max` (the default is "one_se").
 
+    Returns
+    -------
+    optimal_k : int
+
+        Optimal number of clusters.
+
+    df_summary : pandas.DataFrame
+
+        DataFrame containing Gap statistic and standard error for all clusters.
+
+    Methods
+    -------
+    opt_k
+
+    Example
+    -------
+    >>> clus_sol = Cluster(df=df_ip, x_var=["x1"], max_cluster=6, nrefs=5)
+    >>> clus_op = clus_sol.opt_k()
+
     Notes
     -----
     Points to be noted for `method`:

@@ -16,7 +16,7 @@ Credits
 """
 
 # pylint: disable=invalid-name
-# pylint: disable=R0902,R0903,R0913,R0914,C0413
+# pylint: disable=R0902,R0903,R0913,C0413
 
 from typing import List, Dict
 
@@ -79,6 +79,31 @@ class GLMNet():
             n_jobs: -1
             k_fold: 10
 
+    Returns
+    -------
+    opt : Dict
+
+        Summary of the model built along with best paramameters
+        and estimators.
+
+    model : object
+
+        Final optimal model.
+
+    model_summary : Dict
+
+        Model summary containing key metrics like R-squared, RMSE, MSE, MAE,
+        MAPE
+
+    Methods
+    -------
+    predict
+
+    Example
+    -------
+    >>> mod = GLMNet(df=df_ip, y_var=["y"], x_var=["x1", "x2", "x3"])
+    >>> df_op = mod.predict(df_predict)
+
     """
 
     def __init__(self,
@@ -93,6 +118,7 @@ class GLMNet():
         self.x_var = x_var
         self.strata = strata
         self.model_summary = None
+        self.opt = None
         if param is None:
             param = {"seed": 1,
                      "a_inc": 0.05,
