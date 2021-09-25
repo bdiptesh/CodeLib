@@ -17,10 +17,7 @@ Credits
 """
 
 # pylint: disable=invalid-name
-# pylint: disable=too-many-arguments
-# pylint: disable=too-few-public-methods
-# pylint: disable=R0902
-# pylint: disable=wrong-import-position
+# pylint: disable=R0902,R0903,R0913,C0413
 
 from typing import List, Dict, Any
 
