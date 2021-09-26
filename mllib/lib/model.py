@@ -187,6 +187,5 @@ class GLMNet():
 
         """
         y_hat = self.model.predict(df_predict)
-        df_predict = df_predict.copy()
         df_predict.insert(loc=0, column=self.y_var, value=y_hat)
         return df_predict

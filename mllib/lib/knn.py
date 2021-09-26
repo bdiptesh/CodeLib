@@ -87,6 +87,12 @@ class KNN():
 
         Final optimal model.
 
+    model_summary : Dict
+
+        Model summary containing key metrics like R-squared, RMSE, MSE, MAE,
+        MAPE for regression and Accuracy, Precision, Recall, F1 score for
+        classification.
+
     Methods
     -------
     predict
@@ -177,10 +183,14 @@ class KNN():
                              "rmse": np.round(metrics.rmse(y, y_hat), 3)}
             model_summary["mse"] = np.round(model_summary["rmse"] ** 2, 3)
         if self.method == "classify":
-            model_summary = classification_report(y_hat,
-                                                  y,
-                                                  output_dict=True,
-                                                  zero_division=0)
+            class_report = classification_report(y_hat,
+                                                 y,
+                                                 output_dict=True,
+                                                 zero_division=0)
+            model_summary = class_report["weighted avg"]
+            model_summary["accuracy"] = class_report["accuracy"]
+            model_summary = {key: round(model_summary[key], 3)
+                             for key in model_summary}
         self.model_summary = model_summary
 
     def predict(self, df_predict: pd.DataFrame) -> pd.DataFrame:

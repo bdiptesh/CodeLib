@@ -80,8 +80,8 @@ if __name__ == '__main__':
     start_t = time.time_ns()
     df_ip = pd.read_csv(path + "input/test_glmnet.csv")
     glm_mod = GLMNet(df=df_ip,
-                     y_var=["y"],
-                     x_var=["x1", "x3"])
+                     y_var="y",
+                     x_var=["x1", "x2"])
     print("\nGLMNet\n")
     for k, v in glm_mod.model_summary.items():
         print(k, str(v).rjust(69 - len(k)))
@@ -95,10 +95,8 @@ if __name__ == '__main__':
     df_test = df_ip.drop(df_train.index)
     mod = KNN(df_train, "y", ["x1", "x2"], method="classify")
     print("\nKNN\n")
-    y_hat = mod.predict(df_test[["x1", "x2"]])["y"].tolist()
-    y = df_test["y"].values.tolist()
-    accuracy = round(len([i for i, j in zip(y, y_hat) if i == j]) / len(y), 2)
-    print("Accuracy:", accuracy)
+    for k, v in mod.model_summary.items():
+        print(k, str(v).rjust(69 - len(k)))
     print(elapsed_time("Time", start_t),
           sep="\n")
     # --- EOF
