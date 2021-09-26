@@ -38,7 +38,7 @@ from mllib.lib import metrics  # noqa: F841
 
 
 def ignore_warnings(test_func):
-    """Suppress deprecation warnings of pulp."""
+    """Suppress warnings."""
 
     def do_test(self, *args, **kwargs):
         with warnings.catch_warnings():

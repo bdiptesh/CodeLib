@@ -95,7 +95,7 @@ if __name__ == '__main__':
     df_test = df_ip.drop(df_train.index)
     mod = KNN(df_train, "y", ["x1", "x2"], method="classify")
     print("\nKNN\n")
-    y_hat = mod.predict(df_test[["x1", "x2"]]).tolist()
+    y_hat = mod.predict(df_test[["x1", "x2"]])["y"].tolist()
     y = df_test["y"].values.tolist()
     accuracy = round(len([i for i, j in zip(y, y_hat) if i == j]) / len(y), 2)
     print("Accuracy:", accuracy)

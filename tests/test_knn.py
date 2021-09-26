@@ -48,7 +48,7 @@ path = path + "/data/input/"
 
 
 def ignore_warnings(test_func):
-    """Suppress deprecation warnings."""
+    """Suppress warnings."""
 
     def do_test(self, *args, **kwargs):
         with warnings.catch_warnings():
@@ -77,6 +77,7 @@ class Test_Knn(unittest.TestCase):
         acc = round(sk_metrics.accuracy_score(y, y_hat), 2)
         self.assertGreaterEqual(acc, 0.93)
 
+    @ignore_warnings
     def test_knn_reg(self):
         """KNN: Test for regression."""
         df_ip = pd.read_csv(path + "iris.csv")
@@ -101,6 +102,7 @@ class Test_Knn(unittest.TestCase):
         df_predict_columns = mod.predict(df_predict).columns.tolist()
         df_predict_columns.pop(0)
         self.assertGreaterEqual(mod.x_var, df_predict_columns)
+
 
 # =============================================================================
 # --- Main

@@ -45,7 +45,7 @@ path = path + "/data/input/"
 
 
 def ignore_warnings(test_func):
-    """Suppress deprecation warnings."""
+    """Suppress warnings."""
 
     def do_test(self, *args, **kwargs):
         with warnings.catch_warnings():
