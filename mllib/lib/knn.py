@@ -31,7 +31,7 @@ import numpy as np
 
 from sklearn import neighbors as sn
 from sklearn.preprocessing import MinMaxScaler
-from sklearn import metrics as sk_metrics
+from sklearn.metrics import classification_report
 
 from sklearn.model_selection import GridSearchCV
 
@@ -62,11 +62,11 @@ class KNN():
 
     x_var : List[str]
 
-        Independant variables.
+        Independant variables
 
     method : str, optional
 
-        Can be either `classify` or `regression` (the default is classify)
+        Can be either `classify` or `regression` (the default is regression)
 
     k_fold : int, optional
 
@@ -93,7 +93,7 @@ class KNN():
 
     Example
     -------
-    >>> mod = KNN(df=df_ip, y_var=["y"], x_var=["x1", "x2", "x3"])
+    >>> mod = KNN(df=df_ip, y_var="y", x_var=["x1", "x2", "x3"])
     >>> df_op = mod.predict(df_predict)
 
     """
@@ -102,7 +102,7 @@ class KNN():
                  df: pd.DataFrame,
                  y_var: str,
                  x_var: List[str],
-                 method: str = "classify",
+                 method: str = "regression",
                  k_fold: int = 5,
                  param: Dict = None):
         """Initialize variables for module ``KNN``."""
@@ -168,8 +168,8 @@ class KNN():
 
     def _compute_metrics(self):
         """Compute commonly used metrics to evaluate the model."""
-        y = self.df.iloc[:, 0].values.tolist()
-        y_hat = list(self.predict(self.df[self.x_var])["y"].values)
+        y = self.df.loc[:, self.y_var].values.tolist()
+        y_hat = list(self.predict(self.df[self.x_var])[self.y_var].values)
         if self.method == "regression":
             model_summary = {"rsq": np.round(metrics.rsq(y, y_hat), 3),
                              "mae": np.round(metrics.mae(y, y_hat), 3),
@@ -177,11 +177,10 @@ class KNN():
                              "rmse": np.round(metrics.rmse(y, y_hat), 3)}
             model_summary["mse"] = np.round(model_summary["rmse"] ** 2, 3)
         if self.method == "classify":
-            accuracy = np.round(sk_metrics.accuracy_score(y, y_hat), 3)
-            f1_score = np.round(sk_metrics.f1_score(y, y_hat,
-                                                    average='micro'), 3)
-            model_summary = {"accuracy": accuracy,
-                             "f1": f1_score}
+            model_summary = classification_report(y_hat,
+                                                  y,
+                                                  output_dict=True,
+                                                  zero_division=0)
         self.model_summary = model_summary
 
     def predict(self, df_predict: pd.DataFrame) -> pd.DataFrame:
@@ -200,6 +199,7 @@ class KNN():
             Pandas dataframe containing predicted `y_var` and `x_var`.
 
         """
+        df_op = df_predict.copy(deep=True)
         df_predict = pd.get_dummies(df_predict)
         df_predict_tmp = pd.DataFrame(columns=self.x_var)
         df_predict = pd.concat([df_predict_tmp, df_predict])
@@ -207,7 +207,5 @@ class KNN():
         df_predict = pd.DataFrame(self.norm.transform(df_predict[self.x_var]))
         df_predict.columns = self.x_var
         y_hat = self.model.predict(df_predict)
-        df_predict = df_predict.copy()
-        df_predict["y"] = y_hat
-        df_predict = df_predict[[self.y_var] + self.x_var]
-        return df_predict
+        df_op.insert(loc=0, column=self.y_var, value=y_hat)
+        return df_op

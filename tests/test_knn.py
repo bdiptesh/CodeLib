@@ -65,40 +65,46 @@ class Test_Knn(unittest.TestCase):
 
     def test_knn_class(self):
         """KNN: Test for classification."""
+        x_var = ["x1", "x2"]
+        y_var = "y"
         df_ip = pd.read_csv(path + "iris.csv")
-        df_ip = df_ip[["y", "x1", "x2"]]
+        df_ip = df_ip[[y_var] + x_var]
         df_train, df_test = split(df_ip,
-                                  stratify=df_ip["y"],
+                                  stratify=df_ip[y_var],
                                   test_size=0.1,
                                   random_state=42)
-        mod = KNN(df_train, "y", ["x1", "x2"], method="classify")
-        y_hat = mod.predict(df_test[["x1", "x2"]])["y"].tolist()
-        y = df_test["y"].values.tolist()
+        mod = KNN(df_train, y_var, x_var, method="classify")
+        y_hat = mod.predict(df_test[x_var])[y_var].tolist()
+        y = df_test[y_var].values.tolist()
         acc = round(sk_metrics.accuracy_score(y, y_hat), 2)
         self.assertGreaterEqual(acc, 0.93)
 
     @ignore_warnings
     def test_knn_reg(self):
         """KNN: Test for regression."""
+        x_var = ["x1", "x2"]
+        y_var = "y"
         df_ip = pd.read_csv(path + "iris.csv")
-        df_ip = df_ip[["y", "x1", "x2"]]
+        df_ip = df_ip[[y_var] + x_var]
         df_train, df_test = split(df_ip,
-                                  stratify=df_ip["y"],
+                                  stratify=df_ip[y_var],
                                   test_size=0.1,
                                   random_state=42)
-        mod = KNN(df_train, "y", ["x1", "x2"], method="regression")
-        y_hat = mod.predict(df_test[["x1", "x2"]])["y"].tolist()
-        y = df_test["y"].values.tolist()
+        mod = KNN(df_train, y_var, x_var, method="regression")
+        y_hat = mod.predict(df_test[x_var])[y_var].tolist()
+        y = df_test[y_var].values.tolist()
         acc = round(sk_metrics.mean_squared_error(y, y_hat), 2)
         self.assertLessEqual(acc, 0.1)
 
     def test_knn_cat(self):
-        """KNN: Test for dummies in prediction dataset."""
+        """KNN: Test for one-hot encoding in prediction."""
+        x_var = ["x1", "x2"]
+        y_var = "y"
         df_ip = pd.read_csv(path + "iris.csv")
-        df_ip = df_ip[["y", "x1", "x5"]]
+        df_ip = df_ip[[y_var] + x_var]
         df_train = df_ip.iloc[1:140]
-        df_predict = df_ip.iloc[145:150]
-        mod = KNN(df_train, "y", ["x1", "x5"], method="classify")
+        df_predict = df_ip.iloc[145:150, 1:]
+        mod = KNN(df_train, y_var, x_var, method="classify")
         df_predict_columns = mod.predict(df_predict).columns.tolist()
         df_predict_columns.pop(0)
         self.assertGreaterEqual(mod.x_var, df_predict_columns)

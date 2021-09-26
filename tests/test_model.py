@@ -64,7 +64,7 @@ class TestGLMNet(unittest.TestCase):
         """GLMNet: Test a known equation."""
         df_ip = pd.read_csv(path + "test_glmnet.csv")
         mod = GLMNet(df=df_ip,
-                     y_var=["y"],
+                     y_var="y",
                      x_var=["x1", "x2", "x3"])
         op = mod.opt
         self.assertEqual(np.round(op.get('intercept'), 0), 100.0)
@@ -76,7 +76,7 @@ class TestGLMNet(unittest.TestCase):
         """GLMNet: Test to predict a target variable."""
         df_ip = pd.read_csv(path + "test_glmnet.csv")
         mod = GLMNet(df=df_ip,
-                     y_var=["y"],
+                     y_var="y",
                      x_var=["x1", "x2", "x3"])
         df_predict = pd.DataFrame({"x1": [10, 20],
                                    "x2": [5, 10],
