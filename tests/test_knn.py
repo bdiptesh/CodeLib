@@ -91,6 +91,16 @@ class Test_Knn(unittest.TestCase):
         acc = round(sk_metrics.mean_squared_error(y, y_hat), 2)
         self.assertLessEqual(acc, 0.1)
 
+    def test_knn_cat(self):
+        """KNN: Test for dummies in prediction dataset."""
+        df_ip = pd.read_csv(path + "iris.csv")
+        df_ip = df_ip[["y", "x1", "x5"]]
+        df_train = df_ip.iloc[1:140]
+        df_predict = df_ip.iloc[145:150]
+        mod = KNN(df_train, "y", ["x1", "x5"], method="classify")
+        df_predict_columns = mod.predict(df_predict).columns.tolist()
+        df_predict_columns.pop(0)
+        self.assertGreaterEqual(mod.x_var, df_predict_columns)
 
 # =============================================================================
 # --- Main

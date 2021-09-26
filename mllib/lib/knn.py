@@ -30,7 +30,7 @@ import pandas as pd
 import numpy as np
 
 from sklearn import neighbors as sn
-from sklearn.preprocessing import scale
+from sklearn.preprocessing import MinMaxScaler
 from sklearn import metrics as sk_metrics
 
 from sklearn.model_selection import GridSearchCV
@@ -108,7 +108,7 @@ class KNN():
         """Initialize variables for module ``KNN``."""
         self.y_var = y_var
         self.x_var = x_var
-        self.df = df[[self.y_var] + self.x_var].reset_index(drop=True)
+        self.df = df.reset_index(drop=True)
         self.method = method
         self.model = None
         self.k_fold = k_fold
@@ -124,10 +124,12 @@ class KNN():
         self._compute_metrics()
 
     def _pre_process(self):
-        """Pre-process the data, one hot encoding and scaling."""
+        """Pre-process the data, one hot encoding and Normalizing."""
         df_ip_x = pd.get_dummies(self.df[self.x_var])
         self.x_var = list(df_ip_x.columns)
-        df_ip_x = pd.DataFrame(scale(df_ip_x))
+        self.norm = MinMaxScaler()
+        self.norm.fit(df_ip_x)
+        df_ip_x = pd.DataFrame(self.norm.transform(df_ip_x[self.x_var]))
         df_ip_x.columns = self.x_var
         self.df = self.df[[self.y_var]].join(df_ip_x)
 
@@ -198,8 +200,14 @@ class KNN():
             Pandas dataframe containing predicted `y_var` and `x_var`.
 
         """
-        df_predict = pd.DataFrame(scale(pd.get_dummies(df_predict)))
+        df_predict = pd.get_dummies(df_predict)
+        df_predict_tmp = pd.DataFrame(columns=self.x_var)
+        df_predict = pd.concat([df_predict_tmp, df_predict])
+        df_predict = df_predict.fillna(0)
+        df_predict = pd.DataFrame(self.norm.transform(df_predict[self.x_var]))
+        df_predict.columns = self.x_var
         y_hat = self.model.predict(df_predict)
         df_predict = df_predict.copy()
         df_predict["y"] = y_hat
+        df_predict = df_predict[[self.y_var] + self.x_var]
         return df_predict
