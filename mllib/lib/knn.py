@@ -87,6 +87,10 @@ class KNN():
 
         Final optimal model.
 
+    best_params_ : Dict
+
+        Best parameters amongst the given parameters.
+
     model_summary : Dict
 
         Model summary containing key metrics like R-squared, RMSE, MSE, MAE,
