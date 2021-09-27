@@ -144,8 +144,10 @@ class KNN():
         if self.method == "classify":
             gs = GridSearchCV(estimator=sn.KNeighborsClassifier(),
                               param_grid=self.param,
-                              scoring='accuracy',
+                              scoring='f1_weighted',
                               verbose=0,
+                              refit=True,
+                              return_train_score=True,
                               cv=self.k_fold,
                               n_jobs=-1)
         elif self.method == "regression":
@@ -153,29 +155,19 @@ class KNN():
                               param_grid=self.param,
                               scoring='neg_root_mean_squared_error',
                               verbose=0,
+                              refit=True,
+                              return_train_score=True,
                               cv=self.k_fold,
                               n_jobs=-1)
         gs_op = gs.fit(self.df[self.x_var],
                        self.df[self.y_var])
-        opt_k = gs_op.best_params_.get("n_neighbors")
-        weight = gs_op.best_params_.get("weights")
-        metric = gs_op.best_params_.get("metric")
-        if self.method == "classify":
-            model = sn.KNeighborsClassifier(n_neighbors=opt_k,
-                                            weights=weight,
-                                            metric=metric)
-        elif self.method == "regression":
-            model = sn.KNeighborsRegressor(n_neighbors=opt_k,
-                                           weights=weight,
-                                           metric=metric)
-        self.model = model.fit(self.df[self.x_var],
-                               self.df[self.y_var])
+        self.model = gs_op
         return gs_op.best_params_
 
     def _compute_metrics(self):
         """Compute commonly used metrics to evaluate the model."""
         y = self.df.loc[:, self.y_var].values.tolist()
-        y_hat = list(self.predict(self.df[self.x_var])[self.y_var].values)
+        y_hat = list(self.model.predict(self.df[self.x_var]))
         if self.method == "regression":
             model_summary = {"rsq": np.round(metrics.rsq(y, y_hat), 3),
                              "mae": np.round(metrics.mae(y, y_hat), 3),
@@ -183,8 +175,8 @@ class KNN():
                              "rmse": np.round(metrics.rmse(y, y_hat), 3)}
             model_summary["mse"] = np.round(model_summary["rmse"] ** 2, 3)
         if self.method == "classify":
-            class_report = classification_report(y_hat,
-                                                 y,
+            class_report = classification_report(y,
+                                                 y_hat,
                                                  output_dict=True,
                                                  zero_division=0)
             model_summary = class_report["weighted avg"]

@@ -90,10 +90,7 @@ if __name__ == '__main__':
     # --- KNN
     start_t = time.time_ns()
     df_ip = pd.read_csv(path + "input/iris.csv")
-    df_ip = df_ip[["y", "x1", "x2"]]
-    df_train = df_ip.sample(frac=0.8, random_state=42)
-    df_test = df_ip.drop(df_train.index)
-    mod = KNN(df_train, "y", ["x1", "x2"], method="classify")
+    mod = KNN(df_ip, "y", ["x1", "x2", "x3", "x4"], method="classify")
     print("\nKNN\n")
     for k, v in mod.model_summary.items():
         print(k, str(v).rjust(69 - len(k)))
