@@ -3,6 +3,7 @@ Name                    Stmts   Miss  Cover   Missing
 mllib/__init__.py           7      0   100%
 mllib/lib/__init__.py       7      0   100%
 mllib/lib/cluster.py      103      0   100%
-mllib/lib/model.py         45      0   100%
+mllib/lib/knn.py           70      0   100%
+mllib/lib/model.py         44      0   100%
 -----------------------------------------------------
-TOTAL                     162      0   100%
+TOTAL                     231      0   100%

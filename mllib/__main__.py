@@ -28,6 +28,7 @@ import pandas as pd
 from lib import cfg, utils  # noqa: F841
 from lib.cluster import Cluster  # noqa: F841
 from lib.model import GLMNet  # noqa: F841
+from lib.knn import KNN  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -52,13 +53,13 @@ CLI = argparse.ArgumentParser()
 CLI.add_argument("-f", "--filename",
                  nargs=1,
                  type=str,
-                 default=["store.csv"],
+                 default=["iris.csv"],
                  help="input csv filename")
 
 args = CLI.parse_args()
 
 fn_ip = args.filename[0]
-fn_ip = "store.csv"
+fn_ip = "iris.csv"
 
 # =============================================================================
 # --- Main
@@ -79,10 +80,19 @@ if __name__ == '__main__':
     start_t = time.time_ns()
     df_ip = pd.read_csv(path + "input/test_glmnet.csv")
     glm_mod = GLMNet(df=df_ip,
-                     y_var=["y"],
-                     x_var=["x1", "x3"])
+                     y_var="y",
+                     x_var=["x1", "x2"])
     print("\nGLMNet\n")
     for k, v in glm_mod.model_summary.items():
+        print(k, str(v).rjust(69 - len(k)))
+    print(elapsed_time("Time", start_t),
+          sep="\n")
+    # --- KNN
+    start_t = time.time_ns()
+    df_ip = pd.read_csv(path + "input/iris.csv")
+    mod = KNN(df_ip, "y", ["x1", "x2", "x3", "x4"], method="classify")
+    print("\nKNN\n")
+    for k, v in mod.model_summary.items():
         print(k, str(v).rjust(69 - len(k)))
     print(elapsed_time("Time", start_t),
           sep="\n")

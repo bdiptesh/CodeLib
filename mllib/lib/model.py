@@ -1,5 +1,5 @@
 """
-Module for commonly used machine learning modelling algorithms.
+GLMNet module.
 
 **Available routines:**
 
@@ -56,7 +56,7 @@ class GLMNet():
 
         Pandas dataframe containing `y_var` and `x_var` variables.
 
-    y_var : List[str]
+    y_var : str
 
         Dependant variable.
 
@@ -108,12 +108,12 @@ class GLMNet():
 
     def __init__(self,
                  df: pd.DataFrame,
-                 y_var: List[str],
+                 y_var: str,
                  x_var: List[str],
                  strata: str = None,
                  param: Dict = None):
         """Initialize variables for module ``GLMNet``."""
-        self.df = df[y_var + x_var]
+        self.df = df[[y_var] + x_var]
         self.y_var = y_var
         self.x_var = x_var
         self.strata = strata
@@ -137,7 +137,7 @@ class GLMNet():
         """Fit the best GLMNet model."""
         train_x, test_x,\
             train_y, test_y = split(self.df[self.x_var],
-                                    self.df[self.y_var],
+                                    self.df[[self.y_var]],
                                     test_size=self.param["test_perc"],
                                     random_state=self.param["seed"],
                                     stratify=self.strata)
@@ -161,7 +161,7 @@ class GLMNet():
 
     def _compute_metrics(self):
         """Compute commonly used metrics to evaluate the model."""
-        y = self.df[self.y_var].iloc[:, 0].values.tolist()
+        y = self.df[[self.y_var]].iloc[:, 0].values.tolist()
         y_hat = list(self.predict(self.df[self.x_var])["y"].values)
         model_summary = {"rsq": np.round(metrics.rsq(y, y_hat), 3),
                          "mae": np.round(metrics.mae(y, y_hat), 3),
@@ -187,6 +187,5 @@ class GLMNet():
 
         """
         y_hat = self.model.predict(df_predict)
-        df_predict = df_predict.copy()
-        df_predict["y"] = y_hat
+        df_predict.insert(loc=0, column=self.y_var, value=y_hat)
         return df_predict
