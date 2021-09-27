@@ -134,7 +134,7 @@ class KNN():
         self._compute_metrics()
 
     def _pre_process(self):
-        """Pre-process the data, one hot encoding and Normalizing."""
+        """Pre-process the data, one hot encoding and normalizing."""
         df_ip_x = pd.get_dummies(self.df[self.x_var])
         self.x_var = list(df_ip_x.columns)
         self.norm = MinMaxScaler()
