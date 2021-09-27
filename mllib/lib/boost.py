@@ -1,5 +1,5 @@
 """
-Random Forest module.
+XGBoost module.
 
 **Available routines:**
 
@@ -30,7 +30,7 @@ import pandas as pd
 import numpy as np
 import xgboost as xgb
 
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import classification_report
 
 path = abspath(getsourcefile(lambda: 0))
@@ -41,11 +41,11 @@ import metrics  # noqa: F841
 
 
 class XGBoost():
-    """Random forest module.
+    """XGBoost module.
 
     Objective:
         - Build
-          `XGBoost < https://en.wikipedia.org/wiki/XGBoost >'
+          `XGBoost <https://en.wikipedia.org/wiki/XGBoost>`_
           model and determine optimal k
 
     Parameters
@@ -81,8 +81,8 @@ class XGBoost():
             colsample_bytree: [i/10 for i in range(1, 11)]
             min_child_weight: list(range(1, 11))
             max_depth: [1, len(x_var)]
-            gamma: list(range(1, len(x_var)))
-            objective: ["reg:squarederror"]
+            gamma: list(np.arange(0.0, 1.1, 0.25))
+            objective: ["reg:squarederror", "binary:logistic"]
 
     Returns
     -------
@@ -126,15 +126,15 @@ class XGBoost():
         self.model = None
         self.k_fold = k_fold
         self.seed = 1
-        if param is None:
+        if param is None:  # pragma: no cover
             param = {"n_estimators": [1000],
-                           "learning_rate": [i/1000 for i in range(2, 11)],
-                           "subsample": [i/10 for i in range(5, 10)],
-                           "colsample_bytree": [i/10 for i in range(1, 11)],
-                           "min_child_weight": list(range(1, 11)),
-                           "max_depth": list(range(1, len(x_var))),
-                           "gamma": list(range(0, 21)),
-                           }
+                     "learning_rate": [0.001, 0.01, 0.1, 0.2, 0.3],
+                     "subsample": [0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+                     "colsample_bytree": [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+                     "colsample_bylevel": [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+                     "min_child_weight": [0.5, 1.0, 3.0, 5.0, 7.0, 10.0],
+                     "max_depth": list(range(1, len(x_var))),
+                     "gamma": [0, 0.25, 0.5, 1.0]}
             if method == "classify":
                 param["objective"] = ["binary:logistic"]
             elif method == "regression":
@@ -169,23 +169,25 @@ class XGBoost():
         """Fit XGBoost model."""
         if self.method == "classify":
             tmp_model = xgb.XGBClassifier(n_jobs=-1,
-                                         verbosity=0,
-                                         silent=True,
-                                         random_state=self.seed,
-                                         seed=self.seed)
+                                          verbosity=0,
+                                          silent=True,
+                                          random_state=self.seed,
+                                          seed=self.seed,
+                                          use_label_encoder=False)
         elif self.method == "regression":
             tmp_model = xgb.XGBRegressor(n_jobs=-1,
                                          verbosity=0,
                                          silent=True,
                                          random_state=self.seed,
                                          seed=self.seed)
-        gs = GridSearchCV(estimator=tmp_model,
-                          param_grid=self.param,
-                          n_jobs=-1,
-                          verbose=0,
-                          refit=True,
-                          return_train_score=True,
-                          cv=self.k_fold)
+        gs = RandomizedSearchCV(estimator=tmp_model,
+                                param_distributions=self.param,
+                                n_jobs=-1,
+                                verbose=0,
+                                refit=True,
+                                return_train_score=True,
+                                cv=self.k_fold,
+                                random_state=self.seed)
         gs_op = gs.fit(self.df[self.x_var],
                        self.df[self.y_var])
         self.model = gs_op

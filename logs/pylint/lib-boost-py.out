@@ -1,0 +1,9 @@
+************* Module mllib.lib.boost
+boost.py:152:45: I1101: Module 'metrics' has no 'rsq' member, but source is unavailable. Consider adding this module to extension-pkg-whitelist if you want to perform analysis based on run-time introspection of living objects. (c-extension-no-member)
+boost.py:153:45: I1101: Module 'metrics' has no 'mae' member, but source is unavailable. Consider adding this module to extension-pkg-whitelist if you want to perform analysis based on run-time introspection of living objects. (c-extension-no-member)
+boost.py:154:46: I1101: Module 'metrics' has no 'mape' member, but source is unavailable. Consider adding this module to extension-pkg-whitelist if you want to perform analysis based on run-time introspection of living objects. (c-extension-no-member)
+boost.py:155:46: I1101: Module 'metrics' has no 'rmse' member, but source is unavailable. Consider adding this module to extension-pkg-whitelist if you want to perform analysis based on run-time introspection of living objects. (c-extension-no-member)
+
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+

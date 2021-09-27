@@ -57,11 +57,11 @@ def ignore_warnings(test_func):
     return do_test
 
 
-class Test_Knn(unittest.TestCase):
-    """Test suite for module ``KNN``."""
+class Test_RandomForest(unittest.TestCase):
+    """Test suite for module ``RandomForest``."""
 
     def setUp(self):
-        """Set up for module ``KNN``."""
+        """Set up for module ``RandomForest``."""
 
     def test_rf_class(self):
         """RandomForest: Test for classification."""
@@ -80,7 +80,7 @@ class Test_Knn(unittest.TestCase):
         self.assertGreaterEqual(acc, 0.93)
 
     @ignore_warnings
-    def test_knn_reg(self):
+    def test_rf_reg(self):
         """RandomForest: Test for regression."""
         x_var = ["x1", "x2", "x3", "x4"]
         y_var = "y"
