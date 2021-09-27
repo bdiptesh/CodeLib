@@ -29,6 +29,8 @@ from lib import cfg, utils  # noqa: F841
 from lib.cluster import Cluster  # noqa: F841
 from lib.model import GLMNet  # noqa: F841
 from lib.knn import KNN  # noqa: F841
+from lib.tree import RandomForest  # noqa: F841
+from lib.tree import XGBoost  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -92,6 +94,28 @@ if __name__ == '__main__':
     df_ip = pd.read_csv(path + "input/iris.csv")
     mod = KNN(df_ip, "y", ["x1", "x2", "x3", "x4"], method="classify")
     print("\nKNN\n")
+    for k, v in mod.model_summary.items():
+        print(k, str(v).rjust(69 - len(k)))
+    print(elapsed_time("Time", start_t),
+          sep="\n")
+    # --- Random forest
+    start_t = time.time_ns()
+    df_ip = pd.read_csv(path + "input/iris.csv")
+    x_var = ["x1", "x2", "x3", "x4"]
+    y_var = "y"
+    mod = RandomForest(df_ip, y_var, x_var, method="classify")
+    print("\nRandom forest\n")
+    for k, v in mod.model_summary.items():
+        print(k, str(v).rjust(69 - len(k)))
+    print(elapsed_time("Time", start_t),
+          sep="\n")
+    # --- XGBoost
+    start_t = time.time_ns()
+    df_ip = pd.read_csv(path + "input/iris.csv")
+    x_var = ["x1", "x2", "x3", "x4"]
+    y_var = "y"
+    mod = XGBoost(df_ip, y_var, x_var, method="classify")
+    print("\nXGBoost\n")
     for k, v in mod.model_summary.items():
         print(k, str(v).rjust(69 - len(k)))
     print(elapsed_time("Time", start_t),

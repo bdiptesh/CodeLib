@@ -104,7 +104,7 @@ class KNN():
     Example
     -------
     >>> mod = KNN(df=df_ip, y_var="y", x_var=["x1", "x2", "x3"])
-    >>> df_op = mod.predict(df_predict)
+    >>> df_op = mod.predict(x_predict)
 
     """
 
