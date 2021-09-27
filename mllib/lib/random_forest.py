@@ -1,9 +1,9 @@
 """
-k-NN module.
+Random Forest module.
 
 **Available routines:**
 
-- class ``KNN``: Builds K-Nearest Neighnour model using cross validation.
+- class ``RandomForest``: Builds Random Forest model using cross validation.
 
 Credits
 -------
@@ -13,7 +13,7 @@ Credits
         - Diptesh
         - Madhu
 
-    Date: Sep 25, 2021
+    Date: Sep 27, 2021
 """
 
 # pylint: disable=invalid-name
@@ -28,12 +28,10 @@ from os.path import abspath
 
 import pandas as pd
 import numpy as np
-
-from sklearn import neighbors as sn
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import classification_report
+import sklearn.ensemble as rf
 
 from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import classification_report
 
 path = abspath(getsourcefile(lambda: 0))
 path = re.sub(r"(.+\/)(.+.py)", "\\1", path)
@@ -42,12 +40,12 @@ sys.path.insert(0, path)
 import metrics  # noqa: F841
 
 
-class KNN():
-    """K-Nearest Neighbour (KNN) module.
+class RandomForest():
+    """Random forest module.
 
     Objective:
         - Build
-          `KNN <https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm>`_
+          `Random forest <https://en.wikipedia.org/wiki/Random_forest>`_
           model and determine optimal k
 
     Parameters
@@ -74,12 +72,14 @@ class KNN():
 
     param : dict, optional
 
-        KNN parameters (the default is None).
+        Random forest parameters (the default is None).
         In case of None, the parameters will default to::
 
-            n_neighbors: max(int(len(df)/(k_fold * 2)), 1)
-            weights: ["uniform", "distance"]
-            metric: ["euclidean", "manhattan"]
+            bootstrap: [True]
+            max_depth: [1, len(x_var)]
+            n_estimators: [1000]
+            max_features: ["sqrt", "auto"]
+            min_samples_leaf: [2, 5]
 
     Returns
     -------
@@ -103,7 +103,7 @@ class KNN():
 
     Example
     -------
-    >>> mod = KNN(df=df_ip, y_var="y", x_var=["x1", "x2", "x3"])
+    >>> mod = RandomForest(df=df_ip, y_var="y", x_var=["x1", "x2", "x3"])
     >>> df_op = mod.predict(df_predict)
 
     """
@@ -115,58 +115,28 @@ class KNN():
                  method: str = "regression",
                  k_fold: int = 5,
                  param: Dict = None):
-        """Initialize variables for module ``KNN``."""
+        """Initialize variables for module ``RandomForest``."""
         self.y_var = y_var
         self.x_var = x_var
         self.df = df.reset_index(drop=True)
         self.method = method
         self.model = None
         self.k_fold = k_fold
+        self.seed = 1
         if param is None:
-            max_k = max(int(len(self.df)/(self.k_fold * 2)), 1)
-            param = {"n_neighbors": list(range(1, max_k, 2)),
-                     "weights": ["uniform", "distance"],
-                     "metric": ["euclidean", "manhattan"]}
+            param = {"bootstrap": [True],
+                     "max_depth": list(range(1, len(x_var))),
+                     "n_estimators": [1000]}
+            if method == "classify":
+                param["max_features"] = ["sqrt"]
+                param["min_samples_leaf"] = [2]
+            elif method == "regression":
+                param["max_features"] = [int(len(x_var) / 3)]
+                param["min_samples_leaf"] = [5]
         self.param = param
-        self._pre_process()
         self.best_params_ = self._fit()
         self.model_summary = None
         self._compute_metrics()
-
-    def _pre_process(self):
-        """Pre-process the data, one hot encoding and normalizing."""
-        df_ip_x = pd.get_dummies(self.df[self.x_var])
-        self.x_var = list(df_ip_x.columns)
-        self.norm = MinMaxScaler()
-        self.norm.fit(df_ip_x)
-        df_ip_x = pd.DataFrame(self.norm.transform(df_ip_x[self.x_var]))
-        df_ip_x.columns = self.x_var
-        self.df = self.df[[self.y_var]].join(df_ip_x)
-
-    def _fit(self) -> Dict[str, Any]:
-        """Fit KNN model."""
-        if self.method == "classify":
-            gs = GridSearchCV(estimator=sn.KNeighborsClassifier(),
-                              param_grid=self.param,
-                              scoring='f1_weighted',
-                              verbose=0,
-                              refit=True,
-                              return_train_score=True,
-                              cv=self.k_fold,
-                              n_jobs=-1)
-        elif self.method == "regression":
-            gs = GridSearchCV(estimator=sn.KNeighborsRegressor(),
-                              param_grid=self.param,
-                              scoring='neg_root_mean_squared_error',
-                              verbose=0,
-                              refit=True,
-                              return_train_score=True,
-                              cv=self.k_fold,
-                              n_jobs=-1)
-        gs_op = gs.fit(self.df[self.x_var],
-                       self.df[self.y_var])
-        self.model = gs_op
-        return gs_op.best_params_
 
     def _compute_metrics(self):
         """Compute commonly used metrics to evaluate the model."""
@@ -189,29 +159,29 @@ class KNN():
                              for key in model_summary}
         self.model_summary = model_summary
 
+    def _fit(self) -> Dict[str, Any]:
+        """Fit RandomForest model."""
+        if self.method == "classify":
+            tmp_model = rf.RandomForestClassifier(oob_score=True,
+                                                  random_state=self.seed)
+        elif self.method == "regression":
+            tmp_model = rf.RandomForestRegressor(oob_score=True,
+                                                 random_state=self.seed)
+        gs = GridSearchCV(estimator=tmp_model,
+                          param_grid=self.param,
+                          n_jobs=-1,
+                          verbose=0,
+                          refit=True,
+                          return_train_score=True,
+                          cv=self.k_fold)
+        gs_op = gs.fit(self.df[self.x_var],
+                       self.df[self.y_var])
+        self.model = gs_op
+        return gs_op.best_params_
+
     def predict(self, x_predict: pd.DataFrame) -> pd.DataFrame:
-        """Predict y_var/target variable.
-
-        Parameters
-        ----------
-        df_predict : pd.DataFrame
-
-            Pandas dataframe containing `x_var`.
-
-        Returns
-        -------
-        pd.DataFrame
-
-            Pandas dataframe containing predicted `y_var` and `x_var`.
-
-        """
+        """Predict values."""
         df_op = x_predict.copy(deep=True)
-        df_predict = pd.get_dummies(x_predict)
-        df_predict_tmp = pd.DataFrame(columns=self.x_var)
-        df_predict = pd.concat([df_predict_tmp, df_predict])
-        df_predict = df_predict.fillna(0)
-        df_predict = pd.DataFrame(self.norm.transform(df_predict[self.x_var]))
-        df_predict.columns = self.x_var
-        y_hat = self.model.predict(df_predict)
+        y_hat = self.model.predict(x_predict)
         df_op.insert(loc=0, column=self.y_var, value=y_hat)
         return df_op
