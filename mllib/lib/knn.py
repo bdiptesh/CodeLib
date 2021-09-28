@@ -104,7 +104,7 @@ class KNN():
     Example
     -------
     >>> mod = KNN(df=df_ip, y_var="y", x_var=["x1", "x2", "x3"])
-    >>> df_op = mod.predict(df_predict)
+    >>> df_op = mod.predict(x_predict)
 
     """
 
@@ -189,7 +189,7 @@ class KNN():
                              for key in model_summary}
         self.model_summary = model_summary
 
-    def predict(self, df_predict: pd.DataFrame) -> pd.DataFrame:
+    def predict(self, x_predict: pd.DataFrame) -> pd.DataFrame:
         """Predict y_var/target variable.
 
         Parameters
@@ -205,8 +205,8 @@ class KNN():
             Pandas dataframe containing predicted `y_var` and `x_var`.
 
         """
-        df_op = df_predict.copy(deep=True)
-        df_predict = pd.get_dummies(df_predict)
+        df_op = x_predict.copy(deep=True)
+        df_predict = pd.get_dummies(x_predict)
         df_predict_tmp = pd.DataFrame(columns=self.x_var)
         df_predict = pd.concat([df_predict_tmp, df_predict])
         df_predict = df_predict.fillna(0)
