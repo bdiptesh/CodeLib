@@ -1,0 +1,227 @@
+\documentclass[titlepage]{article}
+\usepackage{multicol}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage{enumerate}
+\usepackage{sectsty}
+\usepackage[none]{hyphenat}
+\usepackage{setspace}
+\usepackage{cuted}
+\usepackage{nameref}
+\usepackage[utf8]{inputenc}
+
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+
+%--------------------------------------------------------------------------------
+% Notations
+
+\usepackage[nopostdot,  style=long3col, nonumberlist, toc]{glossaries}
+
+\newglossary{symbols}{sym}{sbl}{Nomenclature}
+
+\makeglossary
+
+
+\newglossaryentry{city_source}
+{
+type=symbols,
+name={\ensuremath{i}},
+sort={01},
+description={Source City}
+}
+
+\newglossaryentry{city_destination}
+{
+type=symbols,
+name={\ensuremath{j}},
+sort={01},
+description={Destination City}
+}
+
+\newglossaryentry{city_set}
+{
+type=symbols,
+name={\ensuremath{I}},
+sort={02},
+description={Set of cities}
+}
+
+\newglossaryentry{city_count}
+{
+type=symbols,
+name={\ensuremath{N}},
+sort={02},
+description={Total number of cities (\gls{city_set})}
+}
+
+\newglossaryentry{distance}
+{
+type=symbols,
+name={\ensuremath{D_{ij}}},
+sort={02},
+description={Distance between \gls{city_source} and \gls{city_destination}}
+}
+
+\newglossaryentry{dv_xij}
+{
+type=symbols,
+name={\ensuremath{X_{ij}}},
+sort={03},
+description={Binary falg, sales man travels from \gls{city_source} and \gls{city_destination}}
+}
+
+\newglossaryentry{av_ui}
+{
+type=symbols,
+name={\ensuremath{U_{i}}},
+sort={04},
+description={Integer, Artificial  variable for \gls{city_source}}
+}
+
+\newglossaryentry{av_uj}
+{
+type=symbols,
+name={\ensuremath{U_{j}}},
+sort={04},
+description={Integer, Artificial  variable for \gls{city_destination}}
+}
+%--------------------------------------------------------------------------------
+%Title and section font sizes
+
+\parttitlefont{\Large}
+\sectionfont{\large}
+
+%--------------------------------------------------------------------------------
+
+\renewenvironment{abstract}
+ {\par\noindent\textbf{\Large\abstractname}\\ \ignorespaces}
+ {\par\medskip}
+
+
+%--------------------------------------------------------------------------------
+% Title
+
+\title{Delivery schedule optimization for Direct Store Delivery categories}
+\author{
+Diptesh Basak\\
+\and
+Ishita Roy\\
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+%--------------------------------------------------------------------------------
+
+\pagebreak
+
+\begin{abstract}
+\hrule
+\hfill
+\doublespacing
+\newline Replenishment at Target in its current state focusses on filling up the sales floor capacity (planogram) and stocking future demand in the backroom. 
+
+\end{abstract}
+
+\pagebreak
+
+\tableofcontents
+
+\listoftables
+
+\pagebreak
+
+\hrule
+
+\begin{multicols}{2}
+
+\section{Travelling Salesman Problem}
+\label{section:obj}
+
+The travelling salesman problem (TSP) is about given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city
+
+\begin{flushleft}
+{
+\emph{Data Used:}
+\begin{flalign}
+\nonumber & \gls{city_source} \in \gls{city_set} & \\
+\nonumber & \gls{city_destination} \in \gls{city_set} & \\
+\nonumber  & \gls{distance} &
+\end{flalign}
+}
+
+
+
+\emph{Decision variables:}\\
+
+\vspace{0.3cm}
+$
+ \hspace{0.2cm}
+ \gls{dv_xij}=
+ \begin{cases}
+ 1,&\text{if sales man travels from \gls{city_source} to \gls{city_destination} in optimal route} \\
+ 0, & \text{otherwise}
+ \end{cases}
+ \vspace{0.2cm}
+$
+
+$
+ \hspace{0.2cm}
+ \vspace{0.2cm}
+ \gls{av_ui} \in Integer
+$
+
+$
+ \hspace{0.2cm}
+ \gls{av_uj} \in Integer
+ \vspace{0.2cm}
+$
+\vspace{0.2cm}
+
+\end{flushleft}
+
+\emph{Objective function:}
+
+\begin{equation}
+\min \sum_{\gls{city_source} \in \gls{city_set}} \sum_{\gls{city_destination} \in  \gls{city_set}} \gls{dv_xij} \times \gls{distance} 
+\end{equation}
+
+\emph{s.t.}
+\\
+\vspace{2mm}
+Each node should be entered and exited exactly once
+
+\begin{flalign}
+& \sum_{\gls{city_source}} \gls{dv_xij} = 1 & \forall \gls{city_destination}
+\end{flalign}
+
+\begin{flalign}
+& \sum_{\gls{city_destination}} \gls{dv_xij} = 1 & \forall \gls{city_source}
+\end{flalign}
+
+Eliminate subtours
+\begin{flalign}
+& \gls{av_ui} -  \gls{av_uj} + \gls{city_count} \times \gls{dv_xij} = \gls{city_count} - 1 & \forall \gls{city_source} \in 1,2..\gls{city_count}-1 \hspace{2mm} \gls{city_destination} \in 2, 3 .. \gls{city_count}
+\end{flalign}
+\end{multicols}
+
+
+
+%--------------------------------------------------------------------------------
+% Notations
+
+\pagebreak
+
+\hrule
+
+\printglossaries
+
+%--------------------------------------------------------------------------------
+
+\end{document}
+
+%--------------------------------------------------------------------------------
