@@ -31,7 +31,6 @@ Credits
 # --- Import libraries
 # =============================================================================
 
-from dataclasses import dataclass
 from typing import List, Tuple, Dict
 
 import copy
@@ -45,7 +44,6 @@ import pulp
 # =============================================================================
 
 
-@dataclass
 class TSP:
     """
     Travelling salesman problem.
