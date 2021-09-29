@@ -36,7 +36,7 @@ description={Source City}
 {
 type=symbols,
 name={\ensuremath{j}},
-sort={01},
+sort={02},
 description={Destination City}
 }
 
@@ -44,7 +44,7 @@ description={Destination City}
 {
 type=symbols,
 name={\ensuremath{I}},
-sort={02},
+sort={03},
 description={Set of cities}
 }
 
@@ -52,7 +52,7 @@ description={Set of cities}
 {
 type=symbols,
 name={\ensuremath{N}},
-sort={02},
+sort={04},
 description={Total number of cities (\gls{city_set})}
 }
 
@@ -60,7 +60,7 @@ description={Total number of cities (\gls{city_set})}
 {
 type=symbols,
 name={\ensuremath{D_{ij}}},
-sort={02},
+sort={05},
 description={Distance between \gls{city_source} and \gls{city_destination}}
 }
 
@@ -68,15 +68,15 @@ description={Distance between \gls{city_source} and \gls{city_destination}}
 {
 type=symbols,
 name={\ensuremath{X_{ij}}},
-sort={03},
-description={Binary falg, sales man travels from \gls{city_source} and \gls{city_destination}}
+sort={06},
+description={Binary flag, sales man travels from \gls{city_source} and \gls{city_destination}}
 }
 
 \newglossaryentry{av_ui}
 {
 type=symbols,
 name={\ensuremath{U_{i}}},
-sort={04},
+sort={07},
 description={Integer, Artificial  variable for \gls{city_source}}
 }
 
@@ -84,7 +84,7 @@ description={Integer, Artificial  variable for \gls{city_source}}
 {
 type=symbols,
 name={\ensuremath{U_{j}}},
-sort={04},
+sort={08},
 description={Integer, Artificial  variable for \gls{city_destination}}
 }
 %--------------------------------------------------------------------------------
@@ -103,11 +103,11 @@ description={Integer, Artificial  variable for \gls{city_destination}}
 %--------------------------------------------------------------------------------
 % Title
 
-\title{Delivery schedule optimization for Direct Store Delivery categories}
+\title{Optimization module}
 \author{
 Diptesh Basak\\
 \and
-Ishita Roy\\
+Madhu Tangudu\\
 }
 \date{\today}
 
@@ -123,7 +123,13 @@ Ishita Roy\\
 \hrule
 \hfill
 \doublespacing
-\newline Replenishment at Target in its current state focusses on filling up the sales floor capacity (planogram) and stocking future demand in the backroom. 
+\newline The objective of this document is to provide a structure for all
+future documentation for all products. In this paper, we illustrate some of the optimization techniques which has
+been implemented namely:
+\begin{itemize}
+  \item Travelling salesman problem
+  \item Transportation problem
+\end{itemize}}
 
 \end{abstract}
 
@@ -154,8 +160,6 @@ The travelling salesman problem (TSP) is about given a list of cities and the di
 \end{flalign}
 }
 
-
-
 \emph{Decision variables:}\\
 
 \vspace{0.3cm}
@@ -163,7 +167,7 @@ $
  \hspace{0.2cm}
  \gls{dv_xij}=
  \begin{cases}
- 1,&\text{if sales man travels from \gls{city_source} to \gls{city_destination} in optimal route} \\
+ 1,&\text{if salesman travels from \gls{city_source} to \gls{city_destination}} \\
  0, & \text{otherwise}
  \end{cases}
  \vspace{0.2cm}
@@ -187,12 +191,12 @@ $
 \emph{Objective function:}
 
 \begin{equation}
-\min \sum_{\gls{city_source} \in \gls{city_set}} \sum_{\gls{city_destination} \in  \gls{city_set}} \gls{dv_xij} \times \gls{distance} 
+\min \sum_{\gls{city_source} \in \gls{city_set}} \sum_{\gls{city_destination} \in  \gls{city_set}} \gls{dv_xij} \times \gls{distance}
 \end{equation}
 
 \emph{s.t.}
 \\
-\vspace{2mm}
+% \vspace{2mm}
 Each node should be entered and exited exactly once
 
 \begin{flalign}
