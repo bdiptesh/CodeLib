@@ -31,6 +31,8 @@ from lib.model import GLMNet  # noqa: F841
 from lib.knn import KNN  # noqa: F841
 from lib.tree import RandomForest  # noqa: F841
 from lib.tree import XGBoost  # noqa: F841
+from lib.opt import TSP  # noqa: F841
+from lib.opt import Transport  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -118,6 +120,31 @@ if __name__ == '__main__':
     print("\nXGBoost\n")
     for k, v in mod.model_summary.items():
         print(k, str(v).rjust(69 - len(k)))
+    print(elapsed_time("Time", start_t),
+          sep="\n")
+    # --- Travelling salesman
+    start_t = time.time_ns()
+    df_ip = pd.read_csv(path + "input/us_city.csv")
+    df_ip = df_ip.iloc[:10, :]
+    tsp = TSP()
+    opt = tsp.solve(loc=df_ip["city"].tolist(),
+                    lat=df_ip["lat"].tolist(),
+                    lon=df_ip["lng"].tolist(),
+                    debug=False)
+    print("\nTSP\n")
+    print("Optimal value:", round(opt[1], 3))
+    print(elapsed_time("Time", start_t),
+          sep="\n")
+    # --- Transportation
+    start_t = time.time_ns()
+    c_loc = ["1", "5", "10", "11", "100", "127", "324"]
+    c_demand = [20, 10, 15, 0, 0, 25, 0]
+    c_supply = [0, 0, 0, 30, 12, 0, 28]
+    c_lat = [42.1, 43.0, 40.3, 46.8, 43.9, 41.6, 45.2]
+    c_lon = [-102.1, -103.0, -100.3, -106.8, -103.9, -101.6, -105.2]
+    prob = Transport(c_loc, c_demand, c_supply, c_lat, c_lon, 1)
+    opt_out = prob.solve(0)
+    print("\nTransportation\n")
     print(elapsed_time("Time", start_t),
           sep="\n")
     # --- EOF

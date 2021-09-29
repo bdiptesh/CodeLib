@@ -5,6 +5,7 @@ Name                                                        Stmts   Miss  Cover 
 /media/ph33r/Data/Project/mllib/Git/mllib/lib/cluster.py      103      0   100%
 /media/ph33r/Data/Project/mllib/Git/mllib/lib/knn.py           70      0   100%
 /media/ph33r/Data/Project/mllib/Git/mllib/lib/model.py         44      0   100%
+/media/ph33r/Data/Project/mllib/Git/mllib/lib/opt.py          157      0   100%
 /media/ph33r/Data/Project/mllib/Git/mllib/lib/tree.py          79      0   100%
 -----------------------------------------------------------------------------------------
-TOTAL                                                         310      0   100%
+TOTAL                                                         467      0   100%

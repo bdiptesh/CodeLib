@@ -12,7 +12,7 @@
     1. [Version control](./README.md#version-control)
     1. [Contribution guidelines](./.github/CONTRIBUTING.md)
 1. [Project documents](./docs)
-    1. [Approach - WIP](./docs/Approach.pdf)
+    1. [Approach](./docs/Approach.pdf)
 1. [Pull request guidelines](./.github/PULL_REQUEST_TEMPLATE.md)
 1. [Initial setup](./README.md#initial-setup)
 1. [Unit tests](./README.md#run-unit-tests-and-pylint-ratings)
