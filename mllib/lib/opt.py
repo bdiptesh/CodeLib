@@ -368,7 +368,11 @@ class TSP:
 
 class Transport():
     """
-    Module to solve for Transportation Problem using Integer programming.
+    Transportation problem.
+
+    Module for `Transportation Problem
+    <https://en.wikipedia.org/wiki/Transportation_theory_(mathematics)>`_
+    using integer programming.
 
     Parameters
     ----------

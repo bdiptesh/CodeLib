@@ -194,7 +194,8 @@ Madhu Tangudu\\
 \newline The objective of this document is to provide a structure for all
 future documentation for all products. In this paper, we illustrate some of the optimization techniques which has
 been implemented namely:
-\begin{itemize}
+
+\begin{enumerate}[i]
   \item Travelling salesman problem
   \item Transportation problem
 \end{itemize}
@@ -216,7 +217,7 @@ been implemented namely:
 \section{Travelling Salesman Problem}
 \label{section:TSP}
 
-The travelling salesman problem (TSP) is about given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city
+The travelling salesman problem (TSP) is about given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city.
 
 \begin{flushleft}
 {
@@ -254,14 +255,13 @@ $
 $
 \vspace{0.2cm}
 
-\end{flushleft}
-
 \emph{Objective function:}
 
 \begin{equation}
 \min \sum_{\gls{city_source} \in \gls{city_set}} \sum_{\gls{city_destination} \in  \gls{city_set}} \gls{dv_xij} \times \gls{distance}
 \end{equation}
 
+\end{flushleft}
 
 \emph{s.t.}
 \\
@@ -275,16 +275,18 @@ Each node should be entered and exited exactly once
 \begin{flalign}
 & \sum_{\gls{city_destination}} \gls{dv_xij} = 1 & \forall \gls{city_source}
 \end{flalign}
-
-Eliminate subtours
-\begin{flalign}
-& \gls{av_ui} -  \gls{av_uj} + \gls{city_count} \times \gls{dv_xij} = \gls{city_count} - 1 & \forall \gls{city_source} \in 1,2..\gls{city_count}-1 \hspace{2mm} \gls{city_destination} \in 2, 3 .. \gls{city_count}
-\end{flalign}
-
+Eliminate subtours:
+\begin{equation}
+\begin{split}
+\gls{av_ui} - \gls{av_uj} + \gls{city_count} \times \gls{dv_xij} = \gls{city_count} - 1 \\
+  & \forall \gls{city_source} \in 1,2..\gls{city_count}-1 \\
+  & \gls{city_destination} \in 2, 3 .. \gls{city_count}
+\end{split}
+\end{equation}
 
 \section{Transportation Problem}
 \label{section:Transportation}
-Transportation problem is about goods being transported from a set of sources to a set of destinations subject to the supply and demand of the sources and destination respectively such that the total cost of transportation is minimized. It is also sometimes called as Hitchcock problem
+Transportation problem is about goods being transported from a set of sources to a set of destinations subject to the supply and demand of the sources and destination respectively such that the total cost of transportation is minimized. It is also sometimes called as Hitchcock problem.
 
 \begin{flushleft}
 {
@@ -295,9 +297,8 @@ Transportation problem is about goods being transported from a set of sources to
 \nonumber  & \gls{cost}, \gls{supply_qty}, \gls{demand_qty} &
 \end{flalign}
 }
-\end{flushleft}
 
-\emph{Decision variables:}\\
+\emph{Decision variables:}
 
 $
  \hspace{0.2cm}
@@ -308,8 +309,9 @@ $
 \emph{Objective function:}
 
 \begin{equation}
-\min \sum_{\gls{supply_node} \in \gls{supply_set}} \sum_{\gls{demand_node} \in  \gls{demand_set}} \gls{dv_xsd} \times \gls{cost}
+\min \sum_{\gls{supply_node} \in \gls{supply_set}} \sum_{\gls{demand_node} \in \gls{demand_set}} \gls{dv_xsd} \times \gls{cost}
 \end{equation}
+\end{flushleft}
 
 \emph{s.t.}
 \\
@@ -319,7 +321,6 @@ For a supply node, units shipped must be less than or equal to the supply quanti
 \begin{flalign}
 & \sum_{\gls{demand_node} \in \gls{demand_set}} \gls{dv_xsd} <= \gls{supply_qty} & \forall \gls{supply_node}
 \end{flalign}
-
 For a demand node, units shipped must be greater than or equal to the demand quantity
 
 \begin{flalign}
