@@ -21,6 +21,7 @@ on:
     branches:
       - 'stable'
       - 'testing'
+      - 'dev*'
   pull_request:
     branches:
       - 'stable'
@@ -46,7 +47,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install flake8 pytest
+        python -m pip install flake8 pytest coverage
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
@@ -55,5 +56,50 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
+      id: test
       run: |
-        pytest
+        # pytest
+        # coverage run --source=./ -L -m pytest -v
+        coverage run -m unittest discover -v -s ./tests/ -p "test_*.py"
+        # Obtain code coverage from coverage report
+        coverage report -m --omit="*/tests/test_*,*/opt/spark-*" > cov.out
+        coverage xml -o .github/badges/coverage.xml
+        COVERAGE=`grep "TOTAL" cov.out | grep -Eo "[0-9\.]+%"`
+        echo "##[set-output name=coverage;]${COVERAGE}"
+        # Choose a color based on code coverage
+        COVERAGE=${COVERAGE/\%/}
+        if (($COVERAGE == 100)); then
+          COLOR=green
+        elif (($COVERAGE > 90)); then
+          COLOR=orange
+        else
+          COLOR=red
+        fi
+        echo "##[set-output name=color;]${COLOR}"
+
+    - name: Create coverage badge
+      uses: emibcn/badge-action@v1.2.1
+      with:
+        label: coverage
+        status: ${{ steps.test.outputs.coverage }}
+        color: ${{ steps.test.outputs.color }}
+        path: .github/badges/coverage.svg
+
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+    - name: Create badges dir if necessary
+      run: mkdir -p .github/badges
+    - name: Commit badge
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .github/badges/coverage.svg
+        git commit -m "update coverage badge" || true
+
+    - name: Push badge commit
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ steps.extract_branch.outputs.branch }}
