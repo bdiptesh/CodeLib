@@ -21,7 +21,6 @@ on:
     branches:
       - 'stable'
       - 'testing'
-      - 'dev*'
   pull_request:
     branches:
       - 'stable'
