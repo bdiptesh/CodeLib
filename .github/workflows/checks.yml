@@ -21,12 +21,12 @@ on:
     branches:
       - 'stable'
       - 'testing'
-  # pull_request:
-  #   branches:
-  #     - 'stable'
-  #     - 'testing'
-  #     - 'feature*'
-  #     - '!maintenance*'
+  pull_request:
+    branches:
+      - 'stable'
+      - 'testing'
+      - 'feature*'
+      - '!maintenance*'
 
 jobs:
   build:
