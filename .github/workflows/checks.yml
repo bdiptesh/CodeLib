@@ -89,7 +89,7 @@ jobs:
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
-    - name: Create badges dir if necessary
+    - name: Create badges directory if necessary
       run: mkdir -p .github/badges
     - name: Commit badge
       run: |
