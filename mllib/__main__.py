@@ -79,6 +79,7 @@ if __name__ == '__main__':
     print("Clustering\n",
           "optimal k = " + str(clus_sol.optimal_k),
           elapsed_time("Time", start_t),
+          sep,
           sep="\n")
     # --- GLMNet
     start_t = time.time_ns()
@@ -90,6 +91,7 @@ if __name__ == '__main__':
     for k, v in glm_mod.model_summary.items():
         print(k, str(v).rjust(69 - len(k)))
     print(elapsed_time("Time", start_t),
+          sep,
           sep="\n")
     # --- KNN
     start_t = time.time_ns()
@@ -99,6 +101,7 @@ if __name__ == '__main__':
     for k, v in mod.model_summary.items():
         print(k, str(v).rjust(69 - len(k)))
     print(elapsed_time("Time", start_t),
+          sep,
           sep="\n")
     # --- Random forest
     start_t = time.time_ns()
@@ -110,6 +113,7 @@ if __name__ == '__main__':
     for k, v in mod.model_summary.items():
         print(k, str(v).rjust(69 - len(k)))
     print(elapsed_time("Time", start_t),
+          sep,
           sep="\n")
     # --- XGBoost
     start_t = time.time_ns()
@@ -121,6 +125,7 @@ if __name__ == '__main__':
     for k, v in mod.model_summary.items():
         print(k, str(v).rjust(69 - len(k)))
     print(elapsed_time("Time", start_t),
+          sep,
           sep="\n")
     # --- Travelling salesman
     start_t = time.time_ns()
@@ -131,9 +136,10 @@ if __name__ == '__main__':
                     lat=df_ip["lat"].tolist(),
                     lon=df_ip["lng"].tolist(),
                     debug=False)
-    print("\nTSP\n")
+    print("\nTravelling salesman problem\n")
     print("Optimal value:", round(opt[1], 3))
     print(elapsed_time("Time", start_t),
+          sep,
           sep="\n")
     # --- Transportation
     start_t = time.time_ns()
@@ -144,8 +150,9 @@ if __name__ == '__main__':
     c_lon = [-102.1, -103.0, -100.3, -106.8, -103.9, -101.6, -105.2]
     prob = Transport(c_loc, c_demand, c_supply, c_lat, c_lon, 1)
     opt_out = prob.solve(0)
-    print("\nTransportation\n")
+    print("\nTransportation problem\n")
     print(elapsed_time("Time", start_t),
+          sep,
           sep="\n")
     # --- EOF
     print(sep, elapsed_time("Total time", start), sep, sep="\n")
