@@ -62,8 +62,7 @@ class TestTimeSeries(unittest.TestCase):
     @ignore_warnings
     def test_multivariate(self):
         """TimeSeries: Test for multivariate."""
-        df_ip = pd.read_excel(path + "test_time_series.xlsx",
-                              sheet_name="product_01")
+        df_ip = pd.read_csv(path + "test_time_series.csv")
         mod = TimeSeries(df=df_ip,
                          y_var="y",
                          x_var=["cost", "stock_level", "retail_price"],
@@ -74,8 +73,7 @@ class TestTimeSeries(unittest.TestCase):
     @ignore_warnings
     def test_raise_exceptions(self):
         """TimeSeries: Test raise exceptions."""
-        df_ip = pd.read_excel(path + "test_time_series.xlsx",
-                              sheet_name="product_01")
+        df_ip = pd.read_csv(path + "test_time_series.csv")
         self.assertRaises(NotImplementedError, TimeSeries,
                           df=df_ip,
                           y_var="y",
