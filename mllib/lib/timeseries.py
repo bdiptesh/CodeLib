@@ -32,6 +32,7 @@ import pandas as pd
 import numpy as np
 
 import pystan
+import openpyxl
 from fbprophet import Prophet
 
 path = abspath(getsourcefile(lambda: 0))
@@ -40,7 +41,7 @@ sys.path.insert(0, path)
 
 import metrics  # noqa: F841
 
-__all__ = ["pystan", ]
+__all__ = ["pystan", "openpyxl", ]
 
 os.environ['NUMEXPR_MAX_THREADS'] = '8'
 
