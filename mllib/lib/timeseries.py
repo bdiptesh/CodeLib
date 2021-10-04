@@ -31,6 +31,7 @@ from os.path import abspath
 import pandas as pd
 import numpy as np
 
+import pystan
 from fbprophet import Prophet
 
 path = abspath(getsourcefile(lambda: 0))
@@ -38,6 +39,10 @@ path = re.sub(r"(.+\/)(.+.py)", "\\1", path)
 sys.path.insert(0, path)
 
 import metrics  # noqa: F841
+
+__all__ = ["pystan", ]
+
+os.environ['NUMEXPR_MAX_THREADS'] = '8'
 
 
 class suppress_stdout_stderr(object):
@@ -273,7 +278,8 @@ class TimeSeries():
 
     def _fit(self) -> Dict[str, Any]:
         """Fit model."""
-        model = Prophet(interval_width=self.param["interval_width"])
+        with suppress_stdout_stderr():
+            model = Prophet(interval_width=self.param["interval_width"])
         if self.x_var is not None:
             for var in self.x_var:
                 model.add_regressor(var)

@@ -89,6 +89,7 @@ class TestTimeSeries(unittest.TestCase):
                           ds="ds",
                           k_fold=5)
 
+    @ignore_warnings
     def test_univariate(self):
         """TimeSeries: Test for univariate."""
         df_ip = pd.read_csv(path + "test_ts_passengers.csv")

@@ -33,6 +33,7 @@ from lib.tree import RandomForest  # noqa: F841
 from lib.tree import XGBoost  # noqa: F841
 from lib.opt import TSP  # noqa: F841
 from lib.opt import Transport  # noqa: F841
+from lib.timeseries import TimeSeries  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -151,6 +152,20 @@ if __name__ == '__main__':
     prob = Transport(c_loc, c_demand, c_supply, c_lat, c_lon, 1)
     opt_out = prob.solve(0)
     print("\nTransportation problem\n")
+    print(elapsed_time("Time", start_t),
+          sep,
+          sep="\n")
+    # --- Time series
+    start_t = time.time_ns()
+    df_ip = pd.read_excel(path + "input/test_time_series.xlsx",
+                          sheet_name="product_01")
+    mod = TimeSeries(df=df_ip,
+                     y_var="y",
+                     x_var=["cost", "stock_level", "retail_price"],
+                     ds="ds")
+    op = mod.model_summary
+    print("\nTime series\n")
+    print("R-squared:", op["rsq"])
     print(elapsed_time("Time", start_t),
           sep,
           sep="\n")
