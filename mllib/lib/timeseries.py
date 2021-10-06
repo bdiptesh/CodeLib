@@ -143,7 +143,7 @@ class TimeSeries():
                  df: pd.DataFrame,
                  y_var: str,
                  x_var: List[str] = None,
-                 ds: str = None,
+                 ds: str = "ds",
                  k_fold: int = None,
                  uid: str = None,
                  param: Dict = None):
