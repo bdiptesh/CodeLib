@@ -159,6 +159,7 @@ class TimeSeries():
         if param is None:
             param = {"interval_width": 0.95}
         self.model = None
+        self.model_summary = None
         self.param = param
         self._pre_processing()
         self._fit()
