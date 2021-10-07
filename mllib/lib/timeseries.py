@@ -88,7 +88,7 @@ class TimeSeries():
     ----------
     df: pandas.DataFrame
 
-        Pandas dataframe containing the `y_var` and `x_var`
+        Pandas dataframe containing the `y_var`, `ds` and `x_var`
 
     y_var: str
 
@@ -112,7 +112,7 @@ class TimeSeries():
 
     param: dict, optional, Not implemented yet
 
-        Time series parameters(the default is None).
+        Time series parameters (the default is None).
 
     Returns
     -------
@@ -296,7 +296,7 @@ class TimeSeries():
         ----------
         x_predict : pd.DataFrame, optional
 
-            Pandas dataframe containing `x_var` (the default is None).
+            Pandas dataframe containing `ds` and `x_var` (the default is None).
 
         n_interval : int, optional
 
@@ -306,7 +306,7 @@ class TimeSeries():
         -------
         pd.DataFrame
 
-            Pandas dataframe containing `y_var` and `x_var`.
+            Pandas dataframe containing `y_var`, `ds` and `x_var`.
 
         """
         if self.x_var is None:
