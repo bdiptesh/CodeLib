@@ -27,7 +27,7 @@ body:
       label: Version
       description: What version of our product are you running?
       options:
-        - v0.1.0 (Default)
+        - v0.4.0 (Default)
     validations:
       required: true
 
@@ -37,5 +37,4 @@ body:
       label: Additional context
       placeholder: Add any other context or screenshots about the maintenance request here.
     validations:
-      required: false         
-  
+      required: false

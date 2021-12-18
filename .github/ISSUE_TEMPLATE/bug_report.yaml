@@ -4,7 +4,7 @@ title: "[Bug]: "
 labels: ["bug"]
 assignees:
   - octocat
-body:     
+body:
   - type: input
     id: contact
     attributes:
@@ -13,7 +13,7 @@ body:
       placeholder: ex. email@example.com
     validations:
       required: false
-      
+
   - type: textarea
     id: bug-description
     attributes:
@@ -21,7 +21,7 @@ body:
       placeholder: A clear and concise description of what the bug is.
     validations:
       required: true
- 
+
   - type: textarea
     id: bug-reproduce
     attributes:
@@ -34,7 +34,7 @@ body:
          4. See error
     validations:
      required: true
- 
+
   - type: textarea
     id: expected
     attributes:
@@ -42,14 +42,14 @@ body:
       placeholder: A clear and concise description of what you expected to happen.
     validations:
      required: true
- 
+
   - type: dropdown
     id: version
     attributes:
       label: Version
       description: What version of our product are you running?
       options:
-        - v0.1.0 (Default)
+        - v0.4.0 (Default)
     validations:
       required: true
 
@@ -59,11 +59,11 @@ body:
       label: Relevant log output/screenshots
       description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
       render: shell
-      
+
   - type: textarea
     id: add-context
     attributes:
       label: Additional context
       placeholder: Add any other context about the bug report here.
     validations:
-      required: false         
+      required: false
