@@ -17,6 +17,8 @@ Credits
 """
 
 # pylint: disable=invalid-name
+# pylint: disable=wrong-import-position
+# pylint: disable=R0903,W0611
 
 from typing import List, Dict, Any
 
@@ -29,6 +31,8 @@ from os.path import abspath
 
 import pandas as pd
 import numpy as np
+
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 
 path = abspath(getsourcefile(lambda: 0))
 path = re.sub(r"(.+\/)(.+.py)", "\\1", path)
@@ -54,10 +58,6 @@ class TimeSeries():
 
         Independant variables (the default is None).
 
-    ds: str, optional
-
-        Column name of the date variable (the default is None).
-
     param: dict, optional, Not implemented yet
 
         Time series parameters (the default is None).
@@ -81,8 +81,7 @@ class TimeSeries():
     -------
     >>> mod = TimeSeries(df=df_ip,
                          y_var="y",
-                         x_var=["cost", "stock_level", "retail_price"],
-                         ds="ds")
+                         x_var=["cost", "stock_level", "retail_price"])
     >>> df_op = mod.predict(x_predict)
 
     """
@@ -91,30 +90,25 @@ class TimeSeries():
                  df: pd.DataFrame,
                  y_var: str,
                  x_var: List[str] = None,
-                 ds: str = "ds",
                  param: Dict = None):
         """Initialize variables."""
+        self.df = df
         self.y_var = y_var
         self.x_var = x_var
-        self.ds = ds
-        self.df = df.reset_index(drop=True)
-        if param is None:
-            param = {"interval_width": 0.95}
-        self.model = None
-        self.model_summary = None
+        self._check_data()
         self.param = param
-        self._pre_processing()
-        self._fit()
-        self._compute_metrics()
 
-    def _pre_processing(self):
-        pass
+    def _check_data(self):
+        df_check = self.df.dropna()
+        if len(self.df) != len(df_check):
+            raise ValueError("Found missing values in input data")
+        # TO DO: Check for y_var, x_var, number of observations.
 
     def _opt_param(self):
-        pass
+        """Determine optimal parameters."""
 
     def _fit(self):
-        pass
+        """Fit the model."""
 
     def predict(self,
                 x_predict: pd.DataFrame = None,

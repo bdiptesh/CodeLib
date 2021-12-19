@@ -161,11 +161,10 @@ if __name__ == '__main__':
                           sheet_name="product_01")
     mod = TimeSeries(df=df_ip,
                      y_var="y",
-                     x_var=["cost", "stock_level", "retail_price"],
-                     ds="ds")
-    op = mod.model_summary
+                     x_var=["cost", "stock_level", "retail_price"])
+    # op = mod.model_summary
     print("\nTime series\n")
-    print("R-squared:", op["rsq"])
+    # print("R-squared:", op["rsq"])
     print(elapsed_time("Time", start_t),
           sep,
           sep="\n")

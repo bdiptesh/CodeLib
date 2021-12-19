@@ -13,6 +13,7 @@ Credits
 
 # pylint: disable=invalid-name
 # pylint: disable=wrong-import-position
+# pylint: disable=W0611
 
 import unittest
 import warnings
@@ -58,42 +59,6 @@ class TestTimeSeries(unittest.TestCase):
 
     def setUp(self):
         """Set up for module ``TimeSeries``."""
-
-    @ignore_warnings
-    def test_multivariate(self):
-        """TimeSeries: Test for multivariate."""
-        df_ip = pd.read_csv(path + "test_time_series.csv")
-        mod = TimeSeries(df=df_ip,
-                         y_var="y",
-                         x_var=["cost", "stock_level", "retail_price"],
-                         ds="ds")
-        op = mod.model_summary
-        self.assertAlmostEqual(0.99, op["rsq"], places=1)
-
-    @ignore_warnings
-    def test_raise_exceptions(self):
-        """TimeSeries: Test raise exceptions."""
-        df_ip = pd.read_csv(path + "test_time_series.csv")
-        self.assertRaises(NotImplementedError, TimeSeries,
-                          df=df_ip,
-                          y_var="y",
-                          x_var=["stock_level", "retail_price"],
-                          ds="ds",
-                          uid="cost")
-        self.assertRaises(NotImplementedError, TimeSeries,
-                          df=df_ip,
-                          y_var="y",
-                          x_var=["stock_level", "retail_price"],
-                          ds="ds",
-                          k_fold=5)
-
-    @ignore_warnings
-    def test_univariate(self):
-        """TimeSeries: Test for univariate."""
-        df_ip = pd.read_csv(path + "test_ts_passengers.csv")
-        mod = TimeSeries(df=df_ip, y_var="Passengers", ds="Month")
-        op = mod.predict()
-        self.assertAlmostEqual(op["y"].values[0], 446.911, places=1)
 
 
 # =============================================================================

@@ -51,6 +51,7 @@ then
     printf "\nRating code style...\n\n"
     score=0
     cnt=0
+		rm $proj_dir/logs/pylint/*.out
     for i in $(find "$proj_dir" -name "*.py")
     do
         file=${i#$(dirname "$(dirname "$i")")/}

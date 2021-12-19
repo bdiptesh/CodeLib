@@ -1,6 +1,6 @@
 [![checks](../../actions/workflows/checks.yml/badge.svg)](../../actions/workflows/checks.yml)
-[![pylint Score](https://mperlet.github.io/pybadge/badges/9.6.svg)](./logs/pylint/)
-[![Coverage score](https://img.shields.io/badge/coverage-99%25-red.svg)](./logs/cov.out)
+[![pylint Score](https://mperlet.github.io/pybadge/badges/10.0.svg)](./logs/pylint/)
+[![Coverage score](https://img.shields.io/badge/coverage-98%25-red.svg)](./logs/cov.out)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](./LICENSE)
 ***
 

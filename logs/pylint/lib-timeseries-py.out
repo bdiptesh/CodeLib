@@ -1,13 +1,4 @@
-************* Module mllib.lib.timeseries
-timeseries.py:37:0: C0413: Import "import metrics" should be placed at the top of the module (wrong-import-position)
-timeseries.py:90:4: R0913: Too many arguments (6/5) (too-many-arguments)
-timeseries.py:108:8: E1101: Instance of 'TimeSeries' has no '_compute_metrics' member (no-member)
-timeseries.py:40:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-timeseries.py:21:0: W0611: Unused Any imported from typing (unused-import)
-timeseries.py:25:0: W0611: Unused import os (unused-import)
-timeseries.py:31:0: W0611: Unused numpy imported as np (unused-import)
-timeseries.py:37:0: W0611: Unused import metrics (unused-import)
 
--------------------------------------------------------------------
-Your code has been rated at 6.36/10 (previous run: 10.00/10, -3.64)
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 

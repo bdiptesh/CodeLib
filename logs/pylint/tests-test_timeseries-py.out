@@ -1,7 +1,4 @@
-************* Module tests.test_timeseries
-test_timeseries.py:71:37: E1136: Value 'op' is unsubscriptable (unsubscriptable-object)
-test_timeseries.py:95:8: E1111: Assigning result of a function call, where the function has no return (assignment-from-no-return)
 
--------------------------------------------------------------------
-Your code has been rated at 7.22/10 (previous run: 10.00/10, -2.78)
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
