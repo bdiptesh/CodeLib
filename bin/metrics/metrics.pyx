@@ -186,7 +186,7 @@ cpdef mape(list y, list y_hat):
     return op
 
 
-cpdef double aic(list y, list y_hat, int k=1, str method="linear"):
+cpdef double aic(list y, list y_hat, int k, str method="linear"):
     """
     Compute `Akaike information criterion
     <https://en.wikipedia.org/wiki/Akaike_information_criterion>`_.
@@ -200,6 +200,10 @@ cpdef double aic(list y, list y_hat, int k=1, str method="linear"):
     y_hat : list
 
         Predicted values.
+
+    k : int
+
+        Number of parameters.
 
     method : str, optional
 

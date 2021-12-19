@@ -824,13 +824,12 @@ struct __pyx_opt_args_7metrics_aic;
 /* "metrics.pyx":189
  * 
  * 
- * cpdef double aic(list y, list y_hat, int k=1, str method="linear"):             # <<<<<<<<<<<<<<
+ * cpdef double aic(list y, list y_hat, int k, str method="linear"):             # <<<<<<<<<<<<<<
  *     """
  *     Compute `Akaike information criterion
  */
 struct __pyx_opt_args_7metrics_aic {
   int __pyx_n;
-  int k;
   PyObject *method;
 };
 
@@ -1161,7 +1160,7 @@ static PyObject *__pyx_f_7metrics_mse(PyObject *, PyObject *, int __pyx_skip_dis
 static PyObject *__pyx_f_7metrics_rmse(PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
 static PyObject *__pyx_f_7metrics_mae(PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
 static PyObject *__pyx_f_7metrics_mape(PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
-static double __pyx_f_7metrics_aic(PyObject *, PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_7metrics_aic *__pyx_optional_args); /*proto*/
+static double __pyx_f_7metrics_aic(PyObject *, PyObject *, int, int __pyx_skip_dispatch, struct __pyx_opt_args_7metrics_aic *__pyx_optional_args); /*proto*/
 #define __Pyx_MODULE_NAME "metrics"
 extern int __pyx_module_is_main_metrics;
 int __pyx_module_is_main_metrics = 0;
@@ -2327,14 +2326,13 @@ static PyObject *__pyx_pf_7metrics_8mape(CYTHON_UNUSED PyObject *__pyx_self, PyO
 /* "metrics.pyx":189
  * 
  * 
- * cpdef double aic(list y, list y_hat, int k=1, str method="linear"):             # <<<<<<<<<<<<<<
+ * cpdef double aic(list y, list y_hat, int k, str method="linear"):             # <<<<<<<<<<<<<<
  *     """
  *     Compute `Akaike information criterion
  */
 
 static PyObject *__pyx_pw_7metrics_11aic(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat, CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_7metrics_aic *__pyx_optional_args) {
-  int __pyx_v_k = ((int)1);
+static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat, int __pyx_v_k, CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_7metrics_aic *__pyx_optional_args) {
   PyObject *__pyx_v_method = ((PyObject*)__pyx_n_s_linear);
   double __pyx_v_op;
   double __pyx_v_sse;
@@ -2356,14 +2354,11 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
   __Pyx_RefNannySetupContext("aic", 0);
   if (__pyx_optional_args) {
     if (__pyx_optional_args->__pyx_n > 0) {
-      __pyx_v_k = __pyx_optional_args->k;
-      if (__pyx_optional_args->__pyx_n > 1) {
-        __pyx_v_method = __pyx_optional_args->method;
-      }
+      __pyx_v_method = __pyx_optional_args->method;
     }
   }
 
-  /* "metrics.pyx":215
+  /* "metrics.pyx":219
  * 
  *     """
  *     cdef double op = 0.0             # <<<<<<<<<<<<<<
@@ -2372,7 +2367,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
   __pyx_v_op = 0.0;
 
-  /* "metrics.pyx":216
+  /* "metrics.pyx":220
  *     """
  *     cdef double op = 0.0
  *     cdef double sse = 0.0             # <<<<<<<<<<<<<<
@@ -2381,7 +2376,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
   __pyx_v_sse = 0.0;
 
-  /* "metrics.pyx":217
+  /* "metrics.pyx":221
  *     cdef double op = 0.0
  *     cdef double sse = 0.0
  *     cdef double a = 0.0             # <<<<<<<<<<<<<<
@@ -2390,7 +2385,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
   __pyx_v_a = 0.0;
 
-  /* "metrics.pyx":218
+  /* "metrics.pyx":222
  *     cdef double sse = 0.0
  *     cdef double a = 0.0
  *     cdef double b = 0.0             # <<<<<<<<<<<<<<
@@ -2399,7 +2394,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
   __pyx_v_b = 0.0;
 
-  /* "metrics.pyx":219
+  /* "metrics.pyx":223
  *     cdef double a = 0.0
  *     cdef double b = 0.0
  *     cdef int arr_len = 0             # <<<<<<<<<<<<<<
@@ -2408,7 +2403,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
   __pyx_v_arr_len = 0;
 
-  /* "metrics.pyx":220
+  /* "metrics.pyx":224
  *     cdef double b = 0.0
  *     cdef int arr_len = 0
  *     cdef double small_sample = 0.0             # <<<<<<<<<<<<<<
@@ -2417,7 +2412,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
   __pyx_v_small_sample = 0.0;
 
-  /* "metrics.pyx":221
+  /* "metrics.pyx":225
  *     cdef int arr_len = 0
  *     cdef double small_sample = 0.0
  *     small_sample = arr_len * k ** -1             # <<<<<<<<<<<<<<
@@ -2426,7 +2421,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
   __pyx_v_small_sample = (__pyx_v_arr_len * __Pyx_pow_long(((long)__pyx_v_k), -1L));
 
-  /* "metrics.pyx":222
+  /* "metrics.pyx":226
  *     cdef double small_sample = 0.0
  *     small_sample = arr_len * k ** -1
  *     arr_len = len(y)             # <<<<<<<<<<<<<<
@@ -2435,23 +2430,23 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
   if (unlikely(__pyx_v_y == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 222, __pyx_L1_error)
+    __PYX_ERR(0, 226, __pyx_L1_error)
   }
-  __pyx_t_1 = PyList_GET_SIZE(__pyx_v_y); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 222, __pyx_L1_error)
+  __pyx_t_1 = PyList_GET_SIZE(__pyx_v_y); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 226, __pyx_L1_error)
   __pyx_v_arr_len = __pyx_t_1;
 
-  /* "metrics.pyx":223
+  /* "metrics.pyx":227
  *     small_sample = arr_len * k ** -1
  *     arr_len = len(y)
  *     if method == "linear":             # <<<<<<<<<<<<<<
  *         for i in range(0, arr_len, 1):
  *             a = y[i]
  */
-  __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_method, __pyx_n_s_linear, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 223, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_v_method, __pyx_n_s_linear, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 227, __pyx_L1_error)
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
 
-    /* "metrics.pyx":224
+    /* "metrics.pyx":228
  *     arr_len = len(y)
  *     if method == "linear":
  *         for i in range(0, arr_len, 1):             # <<<<<<<<<<<<<<
@@ -2463,7 +2458,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_i = __pyx_t_6;
 
-      /* "metrics.pyx":225
+      /* "metrics.pyx":229
  *     if method == "linear":
  *         for i in range(0, arr_len, 1):
  *             a = y[i]             # <<<<<<<<<<<<<<
@@ -2472,15 +2467,15 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
       if (unlikely(__pyx_v_y == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 225, __pyx_L1_error)
+        __PYX_ERR(0, 229, __pyx_L1_error)
       }
-      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_y, __pyx_v_i, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 225, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_y, __pyx_v_i, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 229, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_8 = __pyx_PyFloat_AsDouble(__pyx_t_7); if (unlikely((__pyx_t_8 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 225, __pyx_L1_error)
+      __pyx_t_8 = __pyx_PyFloat_AsDouble(__pyx_t_7); if (unlikely((__pyx_t_8 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 229, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_v_a = __pyx_t_8;
 
-      /* "metrics.pyx":226
+      /* "metrics.pyx":230
  *         for i in range(0, arr_len, 1):
  *             a = y[i]
  *             b = y_hat[i]             # <<<<<<<<<<<<<<
@@ -2489,15 +2484,15 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
       if (unlikely(__pyx_v_y_hat == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 226, __pyx_L1_error)
+        __PYX_ERR(0, 230, __pyx_L1_error)
       }
-      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_y_hat, __pyx_v_i, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 226, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_y_hat, __pyx_v_i, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 230, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_8 = __pyx_PyFloat_AsDouble(__pyx_t_7); if (unlikely((__pyx_t_8 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 226, __pyx_L1_error)
+      __pyx_t_8 = __pyx_PyFloat_AsDouble(__pyx_t_7); if (unlikely((__pyx_t_8 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 230, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_v_b = __pyx_t_8;
 
-      /* "metrics.pyx":227
+      /* "metrics.pyx":231
  *             a = y[i]
  *             b = y_hat[i]
  *             sse += (a - b) ** 2             # <<<<<<<<<<<<<<
@@ -2507,7 +2502,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
       __pyx_v_sse = (__pyx_v_sse + pow((__pyx_v_a - __pyx_v_b), 2.0));
     }
 
-    /* "metrics.pyx":228
+    /* "metrics.pyx":232
  *             b = y_hat[i]
  *             sse += (a - b) ** 2
  *         op = 2 * k - 2 * log(sse)             # <<<<<<<<<<<<<<
@@ -2516,7 +2511,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
     __pyx_v_op = ((2 * __pyx_v_k) - (2.0 * log(__pyx_v_sse)));
 
-    /* "metrics.pyx":229
+    /* "metrics.pyx":233
  *             sse += (a - b) ** 2
  *         op = 2 * k - 2 * log(sse)
  *         if small_sample <= 40:             # <<<<<<<<<<<<<<
@@ -2526,7 +2521,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
     __pyx_t_3 = ((__pyx_v_small_sample <= 40.0) != 0);
     if (__pyx_t_3) {
 
-      /* "metrics.pyx":230
+      /* "metrics.pyx":234
  *         op = 2 * k - 2 * log(sse)
  *         if small_sample <= 40:
  *             op += (2 * k * (k + 1)) * (arr_len - k - 1) ** -1             # <<<<<<<<<<<<<<
@@ -2534,7 +2529,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
       __pyx_v_op = (__pyx_v_op + (((2 * __pyx_v_k) * (__pyx_v_k + 1)) * __Pyx_pow_long(((__pyx_v_arr_len - __pyx_v_k) - 1), -1L)));
 
-      /* "metrics.pyx":229
+      /* "metrics.pyx":233
  *             sse += (a - b) ** 2
  *         op = 2 * k - 2 * log(sse)
  *         if small_sample <= 40:             # <<<<<<<<<<<<<<
@@ -2543,7 +2538,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
     }
 
-    /* "metrics.pyx":223
+    /* "metrics.pyx":227
  *     small_sample = arr_len * k ** -1
  *     arr_len = len(y)
  *     if method == "linear":             # <<<<<<<<<<<<<<
@@ -2552,7 +2547,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
  */
   }
 
-  /* "metrics.pyx":231
+  /* "metrics.pyx":235
  *         if small_sample <= 40:
  *             op += (2 * k * (k + 1)) * (arr_len - k - 1) ** -1
  *     return op             # <<<<<<<<<<<<<<
@@ -2563,7 +2558,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
   /* "metrics.pyx":189
  * 
  * 
- * cpdef double aic(list y, list y_hat, int k=1, str method="linear"):             # <<<<<<<<<<<<<<
+ * cpdef double aic(list y, list y_hat, int k, str method="linear"):             # <<<<<<<<<<<<<<
  *     """
  *     Compute `Akaike information criterion
  */
@@ -2580,7 +2575,7 @@ static double __pyx_f_7metrics_aic(PyObject *__pyx_v_y, PyObject *__pyx_v_y_hat,
 
 /* Python wrapper */
 static PyObject *__pyx_pw_7metrics_11aic(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_7metrics_10aic[] = "\n    Compute `Akaike information criterion\n    <https://en.wikipedia.org/wiki/Akaike_information_criterion>`_.\n\n    Parameters\n    ----------\n    y : list\n\n        Actual values.\n\n    y_hat : list\n\n        Predicted values.\n\n    method : str, optional\n\n        Type of regression (the default is linear).\n\n    Returns\n    -------\n    op : float\n\n        Akaike information criterion.\n\n    ";
+static char __pyx_doc_7metrics_10aic[] = "\n    Compute `Akaike information criterion\n    <https://en.wikipedia.org/wiki/Akaike_information_criterion>`_.\n\n    Parameters\n    ----------\n    y : list\n\n        Actual values.\n\n    y_hat : list\n\n        Predicted values.\n\n    k : int\n\n        Number of parameters.\n\n    method : str, optional\n\n        Type of regression (the default is linear).\n\n    Returns\n    -------\n    op : float\n\n        Akaike information criterion.\n\n    ";
 static PyObject *__pyx_pw_7metrics_11aic(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_y = 0;
   PyObject *__pyx_v_y_hat = 0;
@@ -2617,13 +2612,13 @@ static PyObject *__pyx_pw_7metrics_11aic(PyObject *__pyx_self, PyObject *__pyx_a
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_y_hat)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("aic", 0, 2, 4, 1); __PYX_ERR(0, 189, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("aic", 0, 3, 4, 1); __PYX_ERR(0, 189, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
-        if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_k);
-          if (value) { values[2] = value; kw_args--; }
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_k)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("aic", 0, 3, 4, 2); __PYX_ERR(0, 189, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
@@ -2640,8 +2635,7 @@ static PyObject *__pyx_pw_7metrics_11aic(PyObject *__pyx_self, PyObject *__pyx_a
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
         values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
         break;
         default: goto __pyx_L5_argtuple_error;
@@ -2649,16 +2643,12 @@ static PyObject *__pyx_pw_7metrics_11aic(PyObject *__pyx_self, PyObject *__pyx_a
     }
     __pyx_v_y = ((PyObject*)values[0]);
     __pyx_v_y_hat = ((PyObject*)values[1]);
-    if (values[2]) {
-      __pyx_v_k = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_k == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 189, __pyx_L3_error)
-    } else {
-      __pyx_v_k = ((int)1);
-    }
+    __pyx_v_k = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_k == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 189, __pyx_L3_error)
     __pyx_v_method = ((PyObject*)values[3]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("aic", 0, 2, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 189, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("aic", 0, 3, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 189, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("metrics.aic", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2686,10 +2676,9 @@ static PyObject *__pyx_pf_7metrics_10aic(CYTHON_UNUSED PyObject *__pyx_self, PyO
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("aic", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2.__pyx_n = 2;
-  __pyx_t_2.k = __pyx_v_k;
+  __pyx_t_2.__pyx_n = 1;
   __pyx_t_2.method = __pyx_v_method;
-  __pyx_t_1 = __pyx_f_7metrics_aic(__pyx_v_y, __pyx_v_y_hat, 0, &__pyx_t_2); 
+  __pyx_t_1 = __pyx_f_7metrics_aic(__pyx_v_y, __pyx_v_y_hat, __pyx_v_k, 0, &__pyx_t_2); 
   __pyx_t_3 = PyFloat_FromDouble(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 189, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
