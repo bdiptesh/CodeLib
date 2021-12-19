@@ -162,6 +162,7 @@ if __name__ == '__main__':
     mod = TimeSeries(df=df_ip,
                      y_var="y",
                      x_var=["cost", "stock_level", "retail_price"])
+    df_op = mod.predict(df_ip[["cost", "stock_level", "retail_price"]])
     # op = mod.model_summary
     print("\nTime series\n")
     # print("R-squared:", op["rsq"])
