@@ -18,27 +18,21 @@ Credits
 
 # pylint: disable=invalid-name
 # pylint: disable=wrong-import-position
-# pylint: disable=R0903,W0611
+# pylint: disable=R0903
 
-from typing import List, Dict, Any
+from typing import List, Dict
 
 import re
 import sys
-import os
 
 from inspect import getsourcefile
 from os.path import abspath
 
 import pandas as pd
-import numpy as np
-
-from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 
 path = abspath(getsourcefile(lambda: 0))
 path = re.sub(r"(.+\/)(.+.py)", "\\1", path)
 sys.path.insert(0, path)
-
-import metrics  # noqa: F841
 
 
 class TimeSeries():
