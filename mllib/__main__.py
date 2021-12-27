@@ -64,7 +64,6 @@ CLI.add_argument("-f", "--filename",
 args = CLI.parse_args()
 
 fn_ip = args.filename[0]
-fn_ip = "iris.csv"
 
 # =============================================================================
 # --- Main
@@ -161,11 +160,16 @@ if __name__ == '__main__':
                           sheet_name="product_01")
     mod = TimeSeries(df=df_ip,
                      y_var="y",
-                     x_var=["cost", "stock_level", "retail_price"])
+                     x_var=["cost"],
+                     param={"max_p": 5,
+                            "max_d": 2,
+                            "max_q": 2,
+                            "threshold": 0.05})
     df_op = mod.predict(df_ip[["cost", "stock_level", "retail_price"]])
-    # op = mod.model_summary
+    op = mod.model_summary
     print("\nTime series\n")
-    # print("R-squared:", op["rsq"])
+    for k, v in mod.model_summary.items():
+        print(k, str(v).rjust(69 - len(k)))
     print(elapsed_time("Time", start_t),
           sep,
           sep="\n")

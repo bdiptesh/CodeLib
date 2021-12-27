@@ -181,7 +181,8 @@ cpdef mape(list y, list y_hat):
     for i in range(0, arr_len, 1):
         a = y[i]
         b = y_hat[i]
-        op += abs(1 - (b * a ** -1.0))
+        if a != 0.0:
+          op += abs(1 - (b * a ** -1.0))
     op = op * arr_len ** -1.0
     return op
 
