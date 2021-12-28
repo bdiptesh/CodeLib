@@ -33,7 +33,7 @@ from lib.tree import RandomForest  # noqa: F841
 from lib.tree import XGBoost  # noqa: F841
 from lib.opt import TSP  # noqa: F841
 from lib.opt import Transport  # noqa: F841
-from lib.timeseries import TimeSeries  # noqa: F841
+from lib.timeseries import AutoArima  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -64,6 +64,7 @@ CLI.add_argument("-f", "--filename",
 args = CLI.parse_args()
 
 fn_ip = args.filename[0]
+fn_ip = "iris.csv"
 
 # =============================================================================
 # --- Main
@@ -71,12 +72,22 @@ fn_ip = args.filename[0]
 
 if __name__ == '__main__':
     start = time.time_ns()
+    # --- KNN
+    start_t = time.time_ns()
+    df_ip = pd.read_csv(path + "input/iris.csv")
+    mod = KNN(df_ip, "y", ["x1", "x2", "x3", "x4"], method="classify")
+    print("KNN\n")
+    for k, v in mod.model_summary.items():
+        print(k, str(v).rjust(69 - len(k)))
+    print(elapsed_time("Time", start_t),
+          sep,
+          sep="\n")
     # --- Clustering
     start_t = time.time_ns()
     df_ip = pd.read_csv(path + "input/" + fn_ip)
     clus_sol = Cluster(df=df_ip, x_var=["x1"])
     clus_sol.opt_k()
-    print("Clustering\n",
+    print("\nClustering\n",
           "optimal k = " + str(clus_sol.optimal_k),
           elapsed_time("Time", start_t),
           sep,
@@ -89,16 +100,6 @@ if __name__ == '__main__':
                      x_var=["x1", "x2"])
     print("\nGLMNet\n")
     for k, v in glm_mod.model_summary.items():
-        print(k, str(v).rjust(69 - len(k)))
-    print(elapsed_time("Time", start_t),
-          sep,
-          sep="\n")
-    # --- KNN
-    start_t = time.time_ns()
-    df_ip = pd.read_csv(path + "input/iris.csv")
-    mod = KNN(df_ip, "y", ["x1", "x2", "x3", "x4"], method="classify")
-    print("\nKNN\n")
-    for k, v in mod.model_summary.items():
         print(k, str(v).rjust(69 - len(k)))
     print(elapsed_time("Time", start_t),
           sep,
@@ -158,13 +159,13 @@ if __name__ == '__main__':
     start_t = time.time_ns()
     df_ip = pd.read_excel(path + "input/test_time_series.xlsx",
                           sheet_name="product_01")
-    mod = TimeSeries(df=df_ip,
-                     y_var="y",
-                     x_var=["cost"],
-                     param={"max_p": 5,
-                            "max_d": 2,
-                            "max_q": 2,
-                            "threshold": 0.05})
+    mod = AutoArima(df=df_ip,
+                    y_var="y",
+                    x_var=["cost"],
+                    param={"max_p": 5,
+                           "max_d": 2,
+                           "max_q": 2,
+                           "threshold": 0.05})
     df_op = mod.predict(df_ip[["cost", "stock_level", "retail_price"]])
     op = mod.model_summary
     print("\nTime series\n")

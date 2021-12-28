@@ -18,7 +18,7 @@ Credits
 
 # pylint: disable=invalid-name
 # pylint: disable=wrong-import-position
-# pylint: disable=R0902,R0903
+# pylint: disable=R0902,R0903,W0511
 
 from inspect import getsourcefile
 from os.path import abspath
@@ -35,7 +35,7 @@ import numpy as np
 
 from statsmodels.tsa.stattools import acf, pacf, adfuller
 import statsmodels.api as sm
-import scipy.stats as st
+import scipy.stats as stats
 
 path = abspath(getsourcefile(lambda: 0))
 path = re.sub(r"(.+\/)(.+.py)", "\\1", path)
@@ -44,8 +44,8 @@ sys.path.insert(0, path)
 import metrics  # noqa: F841
 
 
-class TimeSeries():
-    """Time series module.
+class AutoArima():
+    """Auto ARIMA time series module.
 
     Parameters
     ----------
@@ -125,7 +125,10 @@ class TimeSeries():
         self.opt_pdq = None
         self.aic_val = None
         self.model = None
+        self.y_hat = None
         self.model_summary = None
+        # TODO: Add decomposition
+        # TODO: Add PDQs
         self._opt_pdq(df=self.df[self.y_var], params=self.param)
         self._fit(self.opt_pdq)
         self._compute_metrics()
@@ -172,8 +175,8 @@ class TimeSeries():
                            "pacf": pd.Series(pacf(df,
                                                   nlags=params["max_p"],
                                                   method='ols'))})
-        df["thres_val"] = (np.round(st.norm.ppf(1 - (params["threshold"]
-                                                     / 2)), 2)
+        df["thres_val"] = (np.round(stats.norm.ppf(1 - (params["threshold"]
+                                                        / 2)), 2)
                            / ((ts_len - d) ** 0.5))
         df["acf_sig"] = np.where((abs(df['acf']) > df["thres_val"]),
                                  1, 0)
@@ -205,6 +208,7 @@ class TimeSeries():
                          "mape": np.round(metrics.mape(y, y_hat), 3),
                          "rmse": np.round(metrics.rmse(y, y_hat), 3)}
         model_summary["mse"] = np.round(model_summary["rmse"] ** 2, 3)
+        self.y_hat = y_hat
         self.model_summary = model_summary
 
     def _fit(self, pdq: Tuple[int, int, int]) -> float:
@@ -253,7 +257,7 @@ class TimeSeries():
         -------
         pd.DataFrame
 
-            Pandas dataframe containing `y_var` and `x_var`.
+            Pandas dataframe containing `y_var` and `x_var` (optional).
 
         """
         if self.x_var is None:

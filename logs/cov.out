@@ -6,7 +6,7 @@ Name                                                            Stmts   Miss  Co
 /media/ph33r/Data/Project/CodeLib/Git/mllib/lib/knn.py             70      0   100%
 /media/ph33r/Data/Project/CodeLib/Git/mllib/lib/model.py           44      0   100%
 /media/ph33r/Data/Project/CodeLib/Git/mllib/lib/opt.py            157      0   100%
-/media/ph33r/Data/Project/CodeLib/Git/mllib/lib/timeseries.py      69      0   100%
+/media/ph33r/Data/Project/CodeLib/Git/mllib/lib/timeseries.py      71      0   100%
 /media/ph33r/Data/Project/CodeLib/Git/mllib/lib/tree.py            79      0   100%
 ---------------------------------------------------------------------------------------------
-TOTAL                                                             536      0   100%
+TOTAL                                                             538      0   100%

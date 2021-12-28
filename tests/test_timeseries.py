@@ -13,7 +13,7 @@ Credits
 
 # pylint: disable=invalid-name
 # pylint: disable=wrong-import-position
-# pylint: disable=W0611
+# pylint: disable=W0511,W0611
 
 import unittest
 import warnings
@@ -31,7 +31,7 @@ path = re.sub(r"(.+)(\/tests.*)", "\\1", path)
 
 sys.path.insert(0, path)
 
-from mllib.lib.timeseries import TimeSeries  # noqa: F841
+from mllib.lib.timeseries import AutoArima  # noqa: F841
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -54,6 +54,7 @@ def ignore_warnings(test_func):
     return do_test
 
 
+# TODO: Change integration tests.
 class TestTimeSeries(unittest.TestCase):
     """Test suite for module ``TimeSeries``."""
 
@@ -64,13 +65,13 @@ class TestTimeSeries(unittest.TestCase):
     def test_multivariate(self):
         """TimeSeries: Test for multivariate."""
         df_ip = pd.read_csv(path + "test_time_series.csv")
-        mod = TimeSeries(df=df_ip,
-                         y_var="y",
-                         x_var=["cost", "stock_level", "retail_price"],
-                         param={"max_p": 5,
-                                "max_d": 2,
-                                "max_q": 2,
-                                "threshold": 0.05})
+        mod = AutoArima(df=df_ip,
+                        y_var="y",
+                        x_var=["cost", "stock_level", "retail_price"],
+                        param={"max_p": 5,
+                               "max_d": 2,
+                               "max_q": 2,
+                               "threshold": 0.05})
         op = mod.model_summary
         self.assertEqual(mod.opt_pdq, (1, 0, 1))
         self.assertEqual(1.0, op["rsq"])
@@ -83,12 +84,12 @@ class TestTimeSeries(unittest.TestCase):
     def test_univariate(self):
         """TimeSeries: Test for univariate."""
         df_ip = pd.read_csv(path + "test_ts_passengers.csv")
-        mod = TimeSeries(df=df_ip,
-                         y_var="Passengers",
-                         param={"max_p": 5,
-                                "max_d": 2,
-                                "max_q": 2,
-                                "threshold": 0.05})
+        mod = AutoArima(df=df_ip,
+                        y_var="Passengers",
+                        param={"max_p": 5,
+                               "max_d": 2,
+                               "max_q": 2,
+                               "threshold": 0.05})
         op = mod.predict()
         self.assertAlmostEqual(op["Passengers"].values[0], 471.038, places=1)
 
