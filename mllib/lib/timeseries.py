@@ -82,9 +82,9 @@ class AutoArima():
 
     Example
     -------
-    >>> mod = TimeSeries(df=df_ip,
-                         y_var="y",
-                         x_var=["cost", "stock_level", "retail_price"])
+    >>> mod = AutoArima(df=df_ip,
+                        y_var="y",
+                        x_var=["cost", "stock_level", "retail_price"])
     >>> df_op = mod.predict(x_predict)
 
     Approach
