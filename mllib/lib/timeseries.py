@@ -3,7 +3,7 @@ Time series module.
 
 **Available routines:**
 
-- class ``TimeSeries``: Builds time series model using fbprophet.
+- class ``AutoArima``: Builds time series model using SARIMAX.
 
 Credits
 -------
@@ -13,7 +13,7 @@ Credits
         - Diptesh
         - Madhu
 
-    Date: Dec 21, 2021
+    Date: Dec 28, 2021
 """
 
 # pylint: disable=invalid-name
