@@ -184,6 +184,7 @@ class AutoArima():
                                   1, 0)
         max_p = int(max(0, df[df["pacf_sig"] == 1].max()["lag"]))
         max_q = int(max(0, df[df["acf_sig"] == 1].max()["lag"]))
+        # TODO: Add stepwise search for faster computation.
         # Grid search
         pdq_val = list(product(list(range(max_p + 1)),
                                [d],
