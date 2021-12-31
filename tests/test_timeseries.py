@@ -24,6 +24,7 @@ from inspect import getsourcefile
 from os.path import abspath
 
 import pandas as pd
+import xlrd
 
 # Set base path
 path = abspath(getsourcefile(lambda: 0))
@@ -32,6 +33,8 @@ path = re.sub(r"(.+)(\/tests.*)", "\\1", path)
 sys.path.insert(0, path)
 
 from mllib.lib.timeseries import AutoArima  # noqa: F841
+
+__all__ = ["xlrd", ]
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
