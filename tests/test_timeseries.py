@@ -61,37 +61,25 @@ class TestTimeSeries(unittest.TestCase):
     def setUp(self):
         """Set up for module ``TimeSeries``."""
 
-    @ignore_warnings
     def test_multivariate(self):
-        """TimeSeries: Test for multivariate."""
-        df_ip = pd.read_csv(path + "test_time_series.csv")
-        mod = AutoArima(df=df_ip,
-                        y_var="y",
-                        x_var=["cost", "stock_level", "retail_price"],
-                        param={"max_p": 5,
-                               "max_d": 2,
-                               "max_q": 2,
-                               "threshold": 0.05})
-        op = mod.model_summary
-        self.assertEqual(mod.opt_pdq, (1, 0, 1))
-        self.assertEqual(1.0, op["rsq"])
-        self.assertAlmostEqual(5.214, op["mae"], places=1)
-        self.assertAlmostEqual(0.014, op["mape"], places=1)
-        self.assertAlmostEqual(11.052, op["rmse"], places=1)
-        self.assertAlmostEqual(122.147, op["mse"], places=1)
+        """TimeSeries: Test for multivariate"""
+        df_ip = pd.read_excel(path + "test_time_series.xlsx",
+                              sheet_name="exog")
+        df_ip = df_ip.set_index("ts")
+        mod = AutoArima(df=df_ip, y_var="y", x_var=["cost"])
+        op = mod.metrics
+        self.assertEqual(mod.opt_params["order"], (0, 1, 1))
+        self.assertAlmostEqual(1.0, op["rsq"], places=1)
+        self.assertLessEqual(op["mape"], 0.1)
 
-    @ignore_warnings
     def test_univariate(self):
-        """TimeSeries: Test for univariate."""
-        df_ip = pd.read_csv(path + "test_ts_passengers.csv")
-        mod = AutoArima(df=df_ip,
-                        y_var="Passengers",
-                        param={"max_p": 5,
-                               "max_d": 2,
-                               "max_q": 2,
-                               "threshold": 0.05})
+        """TimeSeries: Test for univariate"""
+        df_ip = pd.read_excel(path + "test_time_series.xlsx",
+                              sheet_name="endog")
+        df_ip = df_ip.set_index("ts")
+        mod = AutoArima(df=df_ip, y_var="Passengers")
         op = mod.predict()
-        self.assertAlmostEqual(op["Passengers"].values[0], 471.038, places=1)
+        self.assertAlmostEqual(op["Passengers"].values[0], 445.634, places=1)
 
 
 # =============================================================================

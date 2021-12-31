@@ -60,7 +60,7 @@ class TestIntegrationCluster(unittest.TestCase):
         """Set up for module ``metric``."""
 
     def test_categorical(self):
-        """Cluster: Test for categorical variables."""
+        """Cluster: Test for categorical variables"""
         df_ip = pd.read_csv(path + "test_cluster.csv")
         clus_sol = Cluster(df=df_ip, x_var=["x1"],
                            max_cluster=6,
@@ -70,7 +70,7 @@ class TestIntegrationCluster(unittest.TestCase):
         self.assertEqual(clus_sol.method, "gap_max")
 
     def test_categorical_multiple(self):
-        """Cluster: Test for multiple categorical variables."""
+        """Cluster: Test for multiple categorical variables"""
         df_ip = pd.read_csv(path + "test_cluster.csv")
         clus_sol = Cluster(df=df_ip, x_var=["x1", "x4"],
                            max_cluster=10,
@@ -80,7 +80,7 @@ class TestIntegrationCluster(unittest.TestCase):
         self.assertEqual(clus_sol.method, "gap_max")
 
     def test_categorical_continuos(self):
-        """Cluster: Test for categorical and continuos variables."""
+        """Cluster: Test for categorical and continuos variables"""
         df_ip = pd.read_csv(path + "test_cluster.csv")
         clus_sol = Cluster(df=df_ip, x_var=["x1", "x2"],
                            max_cluster=6,
@@ -90,7 +90,7 @@ class TestIntegrationCluster(unittest.TestCase):
         self.assertEqual(clus_sol.method, "gap_max")
 
     def test_continuos_gap_max(self):
-        """Cluster: Test for continuos variables gap_max."""
+        """Cluster: Test for continuos variables gap_max"""
         df_ip = pd.read_csv(path + "test_cluster.csv")
         clus_sol = Cluster(df=df_ip, x_var=["x2"],
                            max_cluster=5,
@@ -101,7 +101,7 @@ class TestIntegrationCluster(unittest.TestCase):
         self.assertEqual(clus_sol.method, "gap_max")
 
     def test_continuos_one_se(self):
-        """Cluster: Test for continuos variables one_se."""
+        """Cluster: Test for continuos variables one_se"""
         df_ip = pd.read_csv(path + "test_cluster.csv")
         clus_sol = Cluster(df=df_ip, x_var=["x2", "x3"],
                            max_cluster=3,
@@ -111,7 +111,7 @@ class TestIntegrationCluster(unittest.TestCase):
         self.assertEqual(clus_sol.method, "one_se")
 
     def test_gap_max_less_max_clus(self):
-        """Cluster: Test for gap_max where optimal k < max_cluster."""
+        """Cluster: Test for gap_max where optimal k < max_cluster"""
         df_ip = pd.read_csv(path + "test_cluster.csv")
         clus_sol = Cluster(df=df_ip, x_var=["x3"],
                            max_cluster=3,

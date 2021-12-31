@@ -65,7 +65,7 @@ class Test_RandomForest(unittest.TestCase):
         """Set up for module ``RandomForest``."""
 
     def test_rf_class(self):
-        """RandomForest: Test for classification."""
+        """RandomForest: Test for classification"""
         x_var = ["x1", "x2", "x3", "x4"]
         y_var = "y"
         df_ip = pd.read_csv(path + "iris.csv")
@@ -82,7 +82,7 @@ class Test_RandomForest(unittest.TestCase):
 
     @ignore_warnings
     def test_rf_reg(self):
-        """RandomForest: Test for regression."""
+        """RandomForest: Test for regression"""
         x_var = ["x1", "x2", "x3", "x4"]
         y_var = "y"
         df_ip = pd.read_csv(path + "iris.csv")
@@ -106,7 +106,7 @@ class Test_XGBoost(unittest.TestCase):
 
     @ignore_warnings
     def test_xgboost_class(self):
-        """XGBoost: Test for classification."""
+        """XGBoost: Test for classification"""
         x_var = ["x1", "x2"]
         y_var = "y"
         df_ip = pd.read_csv(path + "iris.csv")
@@ -123,7 +123,7 @@ class Test_XGBoost(unittest.TestCase):
 
     @ignore_warnings
     def test_xgboost_reg(self):
-        """XGBoost: Test for regression."""
+        """XGBoost: Test for regression"""
         x_var = ["x1", "x2", "x3", "x4"]
         y_var = "y"
         df_ip = pd.read_csv(path + "iris.csv")

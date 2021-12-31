@@ -64,8 +64,6 @@ CLI.add_argument("-f", "--filename",
 args = CLI.parse_args()
 
 fn_ip = args.filename[0]
-# TODO: Remove this line.
-fn_ip = "iris.csv"
 
 # =============================================================================
 # --- Main
@@ -159,18 +157,12 @@ if __name__ == '__main__':
     # --- Time series
     start_t = time.time_ns()
     df_ip = pd.read_excel(path + "input/test_time_series.xlsx",
-                          sheet_name="product_01")
-    mod = AutoArima(df=df_ip,
-                    y_var="y",
-                    x_var=["cost"],
-                    param={"max_p": 5,
-                           "max_d": 2,
-                           "max_q": 2,
-                           "threshold": 0.05})
-    df_op = mod.predict(df_ip[["cost", "stock_level", "retail_price"]])
-    op = mod.model_summary
+                          sheet_name="exog")
+    df_ip = df_ip.set_index("ts")
+    mod = AutoArima(df=df_ip, y_var="y", x_var=["cost"])
+    op = mod.metrics
     print("\nTime series\n")
-    for k, v in mod.model_summary.items():
+    for k, v in op.items():
         print(k, str(v).rjust(69 - len(k)))
     print(elapsed_time("Time", start_t),
           sep,
