@@ -61,7 +61,7 @@ class TestGLMNet(unittest.TestCase):
         """Set up for module ``GLMNet``."""
 
     def test_known_equation(self):
-        """GLMNet: Test a known equation."""
+        """GLMNet: Test a known equation"""
         df_ip = pd.read_csv(path + "test_glmnet.csv")
         mod = GLMNet(df=df_ip,
                      y_var="y",
@@ -73,7 +73,7 @@ class TestGLMNet(unittest.TestCase):
         self.assertEqual(np.round(op.get('coef')[2], 0), 0.0)
 
     def test_predict_target_variable(self):
-        """GLMNet: Test to predict a target variable."""
+        """GLMNet: Test to predict a target variable"""
         df_ip = pd.read_csv(path + "test_glmnet.csv")
         mod = GLMNet(df=df_ip,
                      y_var="y",

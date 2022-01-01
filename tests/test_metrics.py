@@ -54,7 +54,7 @@ class TestMetrics(unittest.TestCase):
         """Set up for module ``metrics``."""
 
     def test_rsq(self):
-        """Metrics: Test for R-squared."""
+        """Metrics: Test for R-squared"""
         y = [3, 8, 10, 17, 24, 27]
         y_hat = [2, 8, 10, 13, 18, 20]
         exp_op = 0.973
@@ -62,7 +62,7 @@ class TestMetrics(unittest.TestCase):
         self.assertEqual(op, exp_op)
 
     def test_mse(self):
-        """Metrics: Test for MSE."""
+        """Metrics: Test for MSE"""
         y = [34, 37, 44, 47, 48, 48, 46, 43, 32, 27, 26, 24]
         y_hat = [37, 40, 46, 44, 46, 50, 45, 44, 34, 30, 22, 23]
         exp_op = 5.917
@@ -70,7 +70,7 @@ class TestMetrics(unittest.TestCase):
         self.assertEqual(op, exp_op)
 
     def test_rmse(self):
-        """Metrics: Test for RMSE."""
+        """Metrics: Test for RMSE"""
         y = [34, 37, 44, 47, 48, 48, 46, 43, 32, 27, 26, 24]
         y_hat = [37, 40, 46, 44, 46, 50, 45, 44, 34, 30, 22, 23]
         exp_op = 2.432
@@ -78,7 +78,7 @@ class TestMetrics(unittest.TestCase):
         self.assertEqual(op, exp_op)
 
     def test_mae(self):
-        """Metrics: Test for MAE."""
+        """Metrics: Test for MAE"""
         y = [12, 13, 14, 15, 15, 22, 27]
         y_hat = [11, 13, 14, 14, 15, 16, 18]
         exp_op = 2.429
@@ -86,11 +86,19 @@ class TestMetrics(unittest.TestCase):
         self.assertEqual(op, exp_op)
 
     def test_mape(self):
-        """Metrics: Test for MAPE."""
+        """Metrics: Test for MAPE"""
         y = [34, 37, 44, 47, 48, 48, 46, 43, 32, 27, 26, 24]
         y_hat = [37, 40, 46, 44, 46, 50, 45, 44, 34, 30, 22, 23]
         exp_op = 0.065
         op = np.round(metrics.mape(y, y_hat), 3)
+        self.assertEqual(op, exp_op)
+
+    def test_aic_linear(self):
+        """Metrics: Test for AIC in linear regression"""
+        y = [34, 37, 44, 47, 48, 48, 46, 43, 32, 27, 26, 24]
+        y_hat = [37, 40, 46, 44, 46, 50, 45, 44, 34, 30, 22, 23]
+        exp_op = -6.525
+        op = np.round(metrics.aic(y, y_hat, k=1, method="linear"), 3)
         self.assertEqual(op, exp_op)
 
 

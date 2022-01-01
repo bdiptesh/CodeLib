@@ -64,7 +64,7 @@ class Test_Knn(unittest.TestCase):
         """Set up for module ``KNN``."""
 
     def test_knn_class(self):
-        """KNN: Test for classification."""
+        """KNN: Test for classification"""
         x_var = ["x1", "x2"]
         y_var = "y"
         df_ip = pd.read_csv(path + "iris.csv")
@@ -81,7 +81,7 @@ class Test_Knn(unittest.TestCase):
 
     @ignore_warnings
     def test_knn_reg(self):
-        """KNN: Test for regression."""
+        """KNN: Test for regression"""
         x_var = ["x1", "x2"]
         y_var = "y"
         df_ip = pd.read_csv(path + "iris.csv")
@@ -97,7 +97,7 @@ class Test_Knn(unittest.TestCase):
         self.assertLessEqual(mse, 0.1)
 
     def test_knn_cat(self):
-        """KNN: Test for one-hot encoding in prediction."""
+        """KNN: Test for one-hot encoding in prediction"""
         x_var = ["x1", "x2"]
         y_var = "y"
         df_ip = pd.read_csv(path + "iris.csv")

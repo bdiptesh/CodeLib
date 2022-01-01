@@ -13,6 +13,7 @@ Credits
 
 # pylint: disable=invalid-name
 # pylint: disable=wrong-import-position
+# pylint: disable=W0511,W0611
 
 import unittest
 import warnings
@@ -23,6 +24,7 @@ from inspect import getsourcefile
 from os.path import abspath
 
 import pandas as pd
+import xlrd
 
 # Set base path
 path = abspath(getsourcefile(lambda: 0))
@@ -30,7 +32,9 @@ path = re.sub(r"(.+)(\/tests.*)", "\\1", path)
 
 sys.path.insert(0, path)
 
-from mllib.lib.timeseries import TimeSeries  # noqa: F841
+from mllib.lib.timeseries import AutoArima  # noqa: F841
+
+__all__ = ["xlrd", ]
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
@@ -53,47 +57,32 @@ def ignore_warnings(test_func):
     return do_test
 
 
+# TODO: Change integration tests.
 class TestTimeSeries(unittest.TestCase):
     """Test suite for module ``TimeSeries``."""
 
     def setUp(self):
         """Set up for module ``TimeSeries``."""
 
-    @ignore_warnings
     def test_multivariate(self):
-        """TimeSeries: Test for multivariate."""
-        df_ip = pd.read_csv(path + "test_time_series.csv")
-        mod = TimeSeries(df=df_ip,
-                         y_var="y",
-                         x_var=["cost", "stock_level", "retail_price"],
-                         ds="ds")
-        op = mod.model_summary
-        self.assertAlmostEqual(0.99, op["rsq"], places=1)
+        """TimeSeries: Test for multivariate"""
+        df_ip = pd.read_excel(path + "test_time_series.xlsx",
+                              sheet_name="exog")
+        df_ip = df_ip.set_index("ts")
+        mod = AutoArima(df=df_ip, y_var="y", x_var=["cost"])
+        op = mod.metrics
+        self.assertEqual(mod.opt_params["order"], (0, 1, 1))
+        self.assertAlmostEqual(1.0, op["rsq"], places=1)
+        self.assertLessEqual(op["mape"], 0.1)
 
-    @ignore_warnings
-    def test_raise_exceptions(self):
-        """TimeSeries: Test raise exceptions."""
-        df_ip = pd.read_csv(path + "test_time_series.csv")
-        self.assertRaises(NotImplementedError, TimeSeries,
-                          df=df_ip,
-                          y_var="y",
-                          x_var=["stock_level", "retail_price"],
-                          ds="ds",
-                          uid="cost")
-        self.assertRaises(NotImplementedError, TimeSeries,
-                          df=df_ip,
-                          y_var="y",
-                          x_var=["stock_level", "retail_price"],
-                          ds="ds",
-                          k_fold=5)
-
-    @ignore_warnings
     def test_univariate(self):
-        """TimeSeries: Test for univariate."""
-        df_ip = pd.read_csv(path + "test_ts_passengers.csv")
-        mod = TimeSeries(df=df_ip, y_var="Passengers", ds="Month")
+        """TimeSeries: Test for univariate"""
+        df_ip = pd.read_excel(path + "test_time_series.xlsx",
+                              sheet_name="endog")
+        df_ip = df_ip.set_index("ts")
+        mod = AutoArima(df=df_ip, y_var="Passengers")
         op = mod.predict()
-        self.assertAlmostEqual(op["y"].values[0], 446.911, places=1)
+        self.assertAlmostEqual(op["Passengers"].values[0], 445.634, places=1)
 
 
 # =============================================================================

@@ -3,7 +3,7 @@ Time series module.
 
 **Available routines:**
 
-- class ``TimeSeries``: Builds time series model using fbprophet.
+- class ``AutoArima``: Builds time series model using SARIMAX.
 
 Credits
 -------
@@ -13,26 +13,27 @@ Credits
         - Diptesh
         - Madhu
 
-    Date: Oct 03, 2021
+    Date: Dec 31, 2021
 """
 
 # pylint: disable=invalid-name
-# pylint: disable=R0902,R0903,R0913,C0413,R0205
-
-from typing import List, Dict, Any
-
-import re
-import sys
-import os
+# pylint: disable=wrong-import-position
+# pylint: disable=R0902,R0903,W0511
 
 from inspect import getsourcefile
 from os.path import abspath
 
+from typing import Dict, List
+
+import re
+import sys
+
 import pandas as pd
 import numpy as np
 
-import pystan
-from fbprophet import Prophet
+import pmdarima as pm
+
+from statsmodels.tsa.seasonal import seasonal_decompose
 
 path = abspath(getsourcefile(lambda: 0))
 path = re.sub(r"(.+\/)(.+.py)", "\\1", path)
@@ -40,55 +41,20 @@ sys.path.insert(0, path)
 
 import metrics  # noqa: F841
 
-__all__ = ["pystan", ]
-
-os.environ['NUMEXPR_MAX_THREADS'] = '8'
-
-
-class suppress_stdout_stderr(object):
-    """
-    Suppress fbprophet stdout.
-
-    A context manager for doing a "deep suppression" of stdout and stderr in
-    Python, i.e. will suppress all print, even if the print originates in a
-    compiled C/Fortran sub-function.
-       This will not suppress raised exceptions, since exceptions are printed
-    to stderr just before a script exits, and after the context manager has
-    exited (at least, I think that is why it lets exceptions through).
-
-    """
-
-    def __init__(self):
-        """Initialize variables."""
-        # Open a pair of null files
-        self.null_fds = [os.open(os.devnull, os.O_RDWR) for x in range(2)]
-        # Save the actual stdout (1) and stderr (2) file descriptors.
-        self.save_fds = (os.dup(1), os.dup(2))
-
-    def __enter__(self):
-        """Enter statements."""
-        # Assign the null pointers to stdout and stderr.
-        os.dup2(self.null_fds[0], 1)
-        os.dup2(self.null_fds[1], 2)
-
-    def __exit__(self, *_):
-        """Exit statements."""
-        # Re-assign the real stdout/stderr back to (1) and (2)
-        os.dup2(self.save_fds[0], 1)
-        os.dup2(self.save_fds[1], 2)
-        # Close the null files
-        os.close(self.null_fds[0])
-        os.close(self.null_fds[1])
+# =============================================================================
+# ---
+# =============================================================================
 
 
-class TimeSeries():
-    """Time series module.
+class AutoArima():
+    """Auto ARIMA time series module.
 
     Parameters
     ----------
     df: pandas.DataFrame
 
-        Pandas dataframe containing the `y_var`, `ds` and `x_var`
+        Pandas dataframe containing the `y_var` and optinal `x_var`. The index
+        **must** be a datetime with no missing periods.
 
     y_var: str
 
@@ -98,21 +64,21 @@ class TimeSeries():
 
         Independant variables (the default is None).
 
-    ds: str, optional
+    params: dict, optional
 
-        Column name of the date variable (the default is None).
+        Time series parameters (the default is None). If no parameters are
+        passed the following is set as parameters::
 
-    k_fold: int, optional, Not implemented yet
-
-        Number of cross validations folds (the default is None).
-
-    uid: str, optional, Not implemented yet
-
-        Description of parameter `uid` (the default is None).
-
-    param: dict, optional, Not implemented yet
-
-        Time series parameters (the default is None).
+                  max_p: 15,
+                  max_d: 2,
+                  max_q: 15,
+                  max_P: 15,
+                  max_D: 2,
+                  max_Q: 15,
+                  seasonal: seasonal,
+                  m: m,
+                  threshold: 0.05,
+                  debug: False
 
     Returns
     -------
@@ -120,10 +86,18 @@ class TimeSeries():
 
         Final optimal model.
 
-    model_summary: Dict
+    metrics: Dict
 
-        Model summary containing key metrics like R-squared, RMSE, MSE, MAE,
+        Model metrics containing key metrics like R-squared, RMSE, MSE, MAE,
         MAPE.
+
+    model_summary: object
+
+        Model summary with optimal parameters.
+
+    y_hat: list
+
+        Predicted values for the orginal data.
 
     Methods
     -------
@@ -131,11 +105,10 @@ class TimeSeries():
 
     Example
     -------
-    >> > mod = TimeSeries(df=df_ip,
-                         y_var="y",
-                         x_var=["cost", "stock_level", "retail_price"],
-                         ds="ds")
-    >> > df_op = mod.predict(x_predict)
+    >>> mod = AutoArima(df=df_ip,
+                        y_var="y",
+                        x_var=["cost", "stock_level", "retail_price"])
+    >>> df_op = mod.predict(x_predict)
 
     """
 
@@ -143,150 +116,102 @@ class TimeSeries():
                  df: pd.DataFrame,
                  y_var: str,
                  x_var: List[str] = None,
-                 ds: str = "ds",
-                 k_fold: int = None,
-                 uid: str = None,
-                 param: Dict = None):
+                 params: Dict[str, object] = None
+                 ):
         """Initialize variables."""
+        self.df = df
         self.y_var = y_var
         self.x_var = x_var
-        self.ds = ds
-        self.df = df.reset_index(drop=True)
-        if uid is not None:
-            raise NotImplementedError("uid is not supported yet")
-        if k_fold is not None:
-            raise NotImplementedError("k_fold is not supported yet")
-        if param is None:
-            param = {"interval_width": 0.95}
-        self.model = None
+        self.params = params
+        self.y_hat = None
         self.model_summary = None
-        self.param = param
-        self._pre_processing()
-        self._fit()
-        self._compute_metrics()
-        if x_var is not None:
-            self.betas = self._regressor_coefficients(self.model)
+        # Set default parameters
+        if self.params is None:
+            self.params = self._seasonality()
+        # Build optimal model
+        self.model = self._opt_params()
+        self.opt_params = self.model.to_dict()
+        # Compute metrics
+        self.metrics = self._compute_metrics()
+        # Model summary
+        self.model_summary = self.model.summary()
 
-    def _pre_processing(self):
-        self.df[self.ds] = pd.to_datetime(self.df[self.ds])
+    def _seasonality(self) -> Dict[str, object]:
+        """Determine seasonality and return parameters."""
+        decomposition = seasonal_decompose(self.df[self.y_var],
+                                           model="additive")
+        _seasonal = decomposition.seasonal
+        freq = _seasonal.value_counts()
+        m = int(np.ceil(len(self.df) / freq.iloc[0]))
+        seasonal = True
+        if m < 2:  # pragma: no cover
+            seasonal = False
+        params = {"max_p": 15,
+                  "max_d": 2,
+                  "max_q": 15,
+                  "max_P": 15,
+                  "max_D": 2,
+                  "max_Q": 15,
+                  "seasonal": seasonal,
+                  "m": m,
+                  "threshold": 0.05,
+                  "debug": False}
+        return params
+
+    def _opt_params(self) -> object:
         if self.x_var is None:
-            self.df = self.df[[self.ds] + [self.y_var]]
+            model = pm.auto_arima(y=self.df[[self.y_var]],
+                                  start_p=0,
+                                  max_p=self.params["max_p"],
+                                  max_d=self.params["max_d"],
+                                  start_q=0,
+                                  max_q=self.params["max_q"],
+                                  start_P=0,
+                                  max_P=self.params["max_P"],
+                                  max_D=self.params["max_D"],
+                                  start_Q=0,
+                                  max_Q=self.params["max_Q"],
+                                  information_criterion="aicc",
+                                  alpha=self.params["threshold"],
+                                  trace=self.params["debug"],
+                                  seasonal=self.params["seasonal"],
+                                  m=self.params["m"])
         else:
-            self.df = self.df[[self.ds] + [self.y_var] + self.x_var]
-        coln = list(self.df.columns)
-        self.df.columns = ["ds", "y"] + coln[2:]
-        self.y_var = "y"
-        self.ds = "ds"
+            model = pm.auto_arima(y=self.df[[self.y_var]],
+                                  X=self.df[self.x_var],
+                                  start_p=0,
+                                  max_p=self.params["max_p"],
+                                  max_d=self.params["max_d"],
+                                  start_q=0,
+                                  max_q=self.params["max_q"],
+                                  start_P=0,
+                                  max_P=self.params["max_P"],
+                                  max_D=self.params["max_D"],
+                                  start_Q=0,
+                                  max_Q=self.params["max_Q"],
+                                  information_criterion="aicc",
+                                  alpha=self.params["threshold"],
+                                  trace=self.params["debug"],
+                                  seasonal=self.params["seasonal"],
+                                  m=self.params["m"])
+        return model
 
-    def _compute_metrics(self):
+    def _compute_metrics(self) -> Dict[str, float]:
         """Compute commonly used metrics to evaluate the model."""
-        y = self.df.loc[:, self.y_var].values.tolist()
+        y = self.df[[self.y_var]].iloc[:, 0].values.tolist()
         if self.x_var is None:
-            y_hat = list(self.model.predict(self.df[[self.ds]])["yhat"])
+            d = self.opt_params["order"][1]
+            y_hat = list(self.model.predict_in_sample(start=d,
+                                                      end=len(self.df)))
         else:
-            y_hat = list(self.model.predict(self.df[[self.ds]
-                                                    + self.x_var])["yhat"])
+            y_hat = list(self.predict(self.df[self.x_var])[self.y_var].values)
         model_summary = {"rsq": np.round(metrics.rsq(y, y_hat), 3),
                          "mae": np.round(metrics.mae(y, y_hat), 3),
                          "mape": np.round(metrics.mape(y, y_hat), 3),
                          "rmse": np.round(metrics.rmse(y, y_hat), 3)}
         model_summary["mse"] = np.round(model_summary["rmse"] ** 2, 3)
-        self.model_summary = model_summary
-
-    @staticmethod
-    def _regressor_index(m, name):
-        """
-        Given the name of a regressor, return its index in the `beta` matrix.
-
-        Parameters
-        ----------
-        m: object
-
-            Prophet model object, after fitting.
-
-        name: str
-
-            Name of the regressor, as passed into the `add_regressor` function.
-
-        Returns
-        -------
-        int
-
-            The column index of the regressor in the `beta` matrix.
-
-        """
-        op = np.extract(m.train_component_cols[name] == 1,
-                        m.train_component_cols.index)[0]
-        return op
-
-    def _regressor_coefficients(self, m):  # pragma: no cover
-        """
-        Summarise the coefficients of the extra regressors used in the model.
-
-        For additive regressors, the coefficient represents the incremental
-        impact on `y` of a unit increase in the regressor. For multiplicative
-        regressors, the incremental impact is equal to `trend(t)` multiplied
-        by the coefficient.
-
-        Coefficients are measured on the original scale of the training data.
-
-        Parameters
-        ----------
-        m: object
-
-            Prophet model object, after fitting.
-
-        Returns
-        -------
-        pd.DataFrame
-
-        containing: :
-
-            regressor: Name of the regressor
-            regressor_mode: Additive/multiplicative effect on y
-            center: The mean of the regressor if standardized else 0
-            coef_lower: Lower bound for the coefficient
-            coef: Expected value of the coefficient
-            coef_upper: Upper bound for the coefficient
-
-        coef_lower/upper are estimated from MCMC samples.
-        It is only different to coef if mcmc_samples > 0.
-
-        """
-        assert len(m.extra_regressors) > 0, 'No extra regressors found.'
-        coefs = []
-        for regressor, params in m.extra_regressors.items():
-            beta = m.params['beta'][:, self._regressor_index(m, regressor)]
-            if params['mode'] == 'additive':
-                coef = beta * m.y_scale / params['std']
-            else:
-                coef = beta / params['std']
-            percentiles = [
-                (1 - m.interval_width) / 2,
-                1 - (1 - m.interval_width) / 2,
-            ]
-            coef_bounds = np.quantile(coef, q=percentiles)
-            record = {
-                'regressor': regressor,
-                'regressor_mode': params['mode'],
-                'center': params['mu'],
-                'coef_lower': coef_bounds[0],
-                'coef': np.mean(coef),
-                'coef_upper': coef_bounds[1],
-            }
-            coefs.append(record)
-        return pd.DataFrame(coefs)
-
-    def _fit(self) -> Dict[str, Any]:
-        """Fit model."""
-        with suppress_stdout_stderr():
-            model = Prophet(interval_width=self.param["interval_width"])
-        if self.x_var is not None:
-            for var in self.x_var:
-                model.add_regressor(var)
-        with suppress_stdout_stderr():
-            model.fit(self.df)
-        self.model = model
+        self.y_hat = y_hat
+        return model_summary
 
     def predict(self,
                 x_predict: pd.DataFrame = None,
@@ -297,7 +222,7 @@ class TimeSeries():
         ----------
         x_predict : pd.DataFrame, optional
 
-            Pandas dataframe containing `ds` and `x_var` (the default is None).
+            Pandas dataframe containing `x_var` (the default is None).
 
         n_interval : int, optional
 
@@ -307,14 +232,24 @@ class TimeSeries():
         -------
         pd.DataFrame
 
-            Pandas dataframe containing `y_var`, `ds` and `x_var`.
+            Pandas dataframe containing `y_var` and `x_var` (optional).
 
         """
         if self.x_var is None:
-            x_predict = self.model.make_future_dataframe(periods=n_interval)
-            x_predict = x_predict.iloc[-n_interval:, :]
-        df_op = x_predict.copy(deep=True)
-        forecast = self.model.predict(x_predict)
-        y_hat = forecast['yhat'].values.tolist()
-        df_op.insert(loc=0, column=self.y_var, value=y_hat)
-        return df_op
+            df_pred = self.model.predict(n_periods=n_interval,
+                                         alpha=self.params["threshold"],
+                                         return_conf_int=False)
+            df_pred = pd.DataFrame(df_pred)
+            df_pred.columns = [self.y_var]
+        else:
+            n_interval = x_predict.shape[0]
+            df_pred = self.model.predict(n_periods=n_interval,
+                                         X=x_predict,
+                                         alpha=self.params["threshold"],
+                                         return_conf_int=False)
+            df_pred = pd.DataFrame(df_pred)
+            df_pred = pd.concat([df_pred, x_predict.reset_index(drop=True)],
+                                axis=1,
+                                ignore_index=True)
+            df_pred.columns = list(self.y_var) + self.x_var
+        return df_pred

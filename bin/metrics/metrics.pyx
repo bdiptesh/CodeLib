@@ -7,6 +7,7 @@ Common metrics required in machine learning modules.
     - ``rmse``: Root mean squared error
     - ``mae``: Mean absolute error
     - ``mape``: Mean absolute percentage error
+    - ``aic``: Akaike information criterion
 
 Credits
 -------
@@ -15,10 +16,12 @@ Credits
     Authors:
         - Diptesh
 
-    Date: Sep 10, 2021
+    Date: Dec 19, 2021
 """
 
 import numpy as _np
+
+from libc.math cimport log
 
 # =============================================================================
 # --- User defined functions
@@ -178,6 +181,56 @@ cpdef mape(list y, list y_hat):
     for i in range(0, arr_len, 1):
         a = y[i]
         b = y_hat[i]
-        op += abs(1 - (b * a ** -1.0))
+        if a != 0.0:
+          op += abs(1 - (b * a ** -1.0))
     op = op * arr_len ** -1.0
+    return op
+
+
+cpdef double aic(list y, list y_hat, int k, str method="linear"):
+    """
+    Compute `Akaike information criterion
+    <https://en.wikipedia.org/wiki/Akaike_information_criterion>`_.
+
+    Parameters
+    ----------
+    y : list
+
+        Actual values.
+
+    y_hat : list
+
+        Predicted values.
+
+    k : int
+
+        Number of parameters.
+
+    method : str, optional
+
+        Type of regression (the default is linear).
+
+    Returns
+    -------
+    op : float
+
+        Akaike information criterion.
+
+    """
+    cdef double op = 0.0
+    cdef double sse = 0.0
+    cdef double a = 0.0
+    cdef double b = 0.0
+    cdef int arr_len = 0
+    cdef double small_sample = 0.0
+    small_sample = arr_len * k ** -1
+    arr_len = len(y)
+    if method == "linear":
+        for i in range(0, arr_len, 1):
+            a = y[i]
+            b = y_hat[i]
+            sse += (a - b) ** 2
+        op = 2 * k - 2 * log(sse)
+        if small_sample <= 40:
+            op += (2 * k * (k + 1)) * (arr_len - k - 1) ** -1
     return op
