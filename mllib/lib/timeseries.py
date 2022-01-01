@@ -53,7 +53,8 @@ class AutoArima():
     ----------
     df: pandas.DataFrame
 
-        Pandas dataframe containing the `y_var`, `ts` and optinal `x_var`
+        Pandas dataframe containing the `y_var` and optinal `x_var`. The index
+        **must** be a datetime with no missing periods.
 
     y_var: str
 
@@ -65,7 +66,19 @@ class AutoArima():
 
     params: dict, optional
 
-        Time series parameters (the default is None).
+        Time series parameters (the default is None). If no parameters are
+        passed the following is set as parameters::
+
+                  max_p: 15,
+                  max_d: 2,
+                  max_q: 15,
+                  max_P: 15,
+                  max_D: 2,
+                  max_Q: 15,
+                  seasonal: seasonal,
+                  m: m,
+                  threshold: 0.05,
+                  debug: False
 
     Returns
     -------
@@ -73,10 +86,14 @@ class AutoArima():
 
         Final optimal model.
 
-    model_summary: Dict
+    metrics: Dict
 
-        Model summary containing key metrics like R-squared, RMSE, MSE, MAE,
+        Model metrics containing key metrics like R-squared, RMSE, MSE, MAE,
         MAPE.
+
+    model_summary: object
+
+        Model summary with optimal parameters.
 
     y_hat: list
 
