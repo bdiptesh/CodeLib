@@ -69,11 +69,17 @@ class TestTimeSeries(unittest.TestCase):
         df_ip = pd.read_excel(path + "test_time_series.xlsx",
                               sheet_name="exog")
         df_ip = df_ip.set_index("ts")
-        mod = AutoArima(df=df_ip, y_var="y", x_var=["cost"])
-        op = mod.metrics
+        y_var = "y"
+        x_var = ["cost"]
+        mod = AutoArima(df=df_ip, y_var=y_var, x_var=x_var)
+        metrics = mod.metrics
+        X = pd.DataFrame(df_ip.iloc[-1]).T
+        op = mod.predict(x_predict=X[x_var])[y_var][0]
+        exp_op = X[y_var][0]
         self.assertEqual(mod.opt_params["order"], (0, 1, 1))
-        self.assertAlmostEqual(1.0, op["rsq"], places=1)
-        self.assertLessEqual(op["mape"], 0.1)
+        self.assertAlmostEqual(1.0, metrics["rsq"], places=1)
+        self.assertLessEqual(metrics["mape"], 0.1)
+        self.assertAlmostEqual(op, exp_op, places=0)
 
     def test_univariate(self):
         """TimeSeries: Test for univariate"""
