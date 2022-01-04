@@ -204,7 +204,8 @@ class AutoArima():
             y_hat = list(self.model.predict_in_sample(start=d,
                                                       end=len(self.df)))
         else:
-            y_hat = list(self.predict(self.df[self.x_var])[self.y_var].values)
+            exog = self.df[self.x_var]
+            y_hat = list(self.model.predict(n_periods=len(exog), X=exog))
         model_summary = {"rsq": np.round(metrics.rsq(y, y_hat), 3),
                          "mae": np.round(metrics.mae(y, y_hat), 3),
                          "mape": np.round(metrics.mape(y, y_hat), 3),
@@ -251,5 +252,5 @@ class AutoArima():
             df_pred = pd.concat([df_pred, x_predict.reset_index(drop=True)],
                                 axis=1,
                                 ignore_index=True)
-            df_pred.columns = list(self.y_var) + self.x_var
+            df_pred.columns = [self.y_var] + self.x_var
         return df_pred
