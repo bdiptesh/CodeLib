@@ -68,6 +68,7 @@ body:
       label: Version
       description: What version of our product are you running?
       options:
-        - v0.4.0 (Default)
+        - v0.4.1 (Default)
+        - v0.4.0
     validations:
       required: true
