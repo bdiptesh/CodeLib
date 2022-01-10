@@ -167,5 +167,29 @@ if __name__ == '__main__':
     print(elapsed_time("Time", start_t),
           sep,
           sep="\n")
+    # --- XGBoost time series
+    start_t = time.time_ns()
+    df_ip = pd.read_excel(path + "input/test_time_series.xlsx",
+                          sheet_name="exog")
+    df_ip = df_ip.set_index("ts")
+    mod = XGBoost(df=df_ip, y_var="y", x_var=["cost"], method="timeseries")
+    print("\nXGBoost time series\n")
+    for k, v in mod.model_summary.items():
+        print(k, str(v).rjust(69 - len(k)))
+    print(elapsed_time("Time", start_t),
+          sep,
+          sep="\n")
+    # --- Random forest time series
+    start_t = time.time_ns()
+    df_ip = pd.read_excel(path + "input/test_time_series.xlsx",
+                          sheet_name="exog")
+    df_ip = df_ip.set_index("ts")
+    mod = RandomForest(df_ip, y_var="y", x_var=["cost"], method="timeseries")
+    print("\nRandom forest time series\n")
+    for k, v in mod.model_summary.items():
+        print(k, str(v).rjust(69 - len(k)))
+    print(elapsed_time("Time", start_t),
+          sep,
+          sep="\n")
     # --- EOF
     print(sep, elapsed_time("Total time", start), sep, sep="\n")
