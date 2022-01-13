@@ -86,12 +86,7 @@ class AutoArima():
 
         Final optimal model.
 
-    metrics: Dict
-
-        Model metrics containing key metrics like R-squared, RMSE, MSE, MAE,
-        MAPE.
-
-    model_summary: object
+    model_summary: Dict
 
         Model summary with optimal parameters.
 
@@ -124,7 +119,6 @@ class AutoArima():
         self.x_var = x_var
         self.param = param
         self.y_hat = None
-        self.model_summary = None
         # Set default parameters
         if self.param is None:
             self.param = self._seasonality()
@@ -132,9 +126,7 @@ class AutoArima():
         self.model = self._opt_param()
         self.opt_param = self.model.to_dict()
         # Compute metrics
-        self.metrics = self._compute_metrics()
-        # Model summary
-        self.model_summary = self.model.summary()
+        self.model_summary = self._compute_metrics()
 
     def _seasonality(self) -> Dict[str, object]:
         """Determine seasonality and return parameters."""

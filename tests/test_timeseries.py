@@ -72,7 +72,7 @@ class TestTimeSeries(unittest.TestCase):
         y_var = "y"
         x_var = ["cost"]
         mod = AutoArima(df=df_ip, y_var=y_var, x_var=x_var)
-        metrics = mod.metrics
+        metrics = mod.model_summary
         X = pd.DataFrame(df_ip.iloc[-1]).T
         op = mod.predict(x_predict=X[x_var])[y_var][0]
         exp_op = X[y_var][0]

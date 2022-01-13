@@ -97,7 +97,7 @@ class Test_RandomForest(unittest.TestCase):
         self.assertLessEqual(mse, 0.1)
 
     def test_rf_ts_exog(self):
-        """RandomForest: Test for time series with exog"""
+        """RandomForest: Test for time series with exogenous variables"""
         x_var = ["cost"]
         y_var = "y"
         test_perc = 0.2
@@ -114,7 +114,7 @@ class Test_RandomForest(unittest.TestCase):
         self.assertLessEqual(metrics["mape"], 0.5)
 
     def test_rf_ts_endog(self):
-        """RandomForest: Test for time series with endog"""
+        """RandomForest: Test for time series with endogenous variable"""
         y_var = "y"
         df_ip = pd.read_excel(path + "test_time_series.xlsx",
                               sheet_name="exog")
@@ -124,6 +124,7 @@ class Test_RandomForest(unittest.TestCase):
         metrics = mod.model_summary
         self.assertGreaterEqual(metrics["rsq"], 0.6)
         self.assertLessEqual(metrics["mape"], 1)
+
 
 class Test_XGBoost(unittest.TestCase):
     """Test suite for module ``XGBoost``."""
@@ -164,7 +165,7 @@ class Test_XGBoost(unittest.TestCase):
         self.assertLessEqual(mse, 0.5)
 
     def test_xgboost_ts_exog(self):
-        """XGBoost: Test for time series with exog"""
+        """XGBoost: Test for time series with exogenous variables"""
         x_var = ["cost"]
         y_var = "y"
         test_perc = 0.2
@@ -181,7 +182,7 @@ class Test_XGBoost(unittest.TestCase):
         self.assertLessEqual(metrics["mape"], 0.1)
 
     def test_xgboost_ts_endog(self):
-        """XGBoost: Test for time series with endog"""
+        """XGBoost: Test for time series with endogenous variable"""
         y_var = "y"
         df_ip = pd.read_excel(path + "test_time_series.xlsx",
                               sheet_name="exog")

@@ -18,7 +18,7 @@ Credits
 """
 
 # pylint: disable=invalid-name
-# pylint: disable=R0902,R0903,R0913,C0413
+# pylint: disable=W0511,R0902,R0903,R0913,C0413
 
 from typing import List, Dict, Any
 
@@ -34,7 +34,8 @@ import xgboost as xgb
 
 from scipy.stats import norm
 from sklearn.metrics import classification_report
-from sklearn.model_selection import RandomizedSearchCV, TimeSeriesSplit as ts_split
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import TimeSeriesSplit as ts_split
 from statsmodels.tsa.stattools import pacf
 from statsmodels.tsa.seasonal import seasonal_decompose
 
@@ -72,8 +73,8 @@ class Tree():
             self.ts_x_var = None
             self.ts_lag_var = None
             self._ts_data_transform()
-            self.k_fold = ts_split(n_splits=self.k_fold) \
-                                        .split(X=self.ts_df[self.y_var])
+            self.k_fold = ts_split(n_splits=self.k_fold)\
+                .split(X=self.ts_df[self.y_var])
         self.model = None
         self.model_summary = None
         self.param = param
@@ -131,7 +132,8 @@ class Tree():
             if i == 0:
                 self.ts_lag_var.remove(i)
         self.ts_df = pd.DataFrame(self.df.loc[:, self.y_var])
-        if len(self.ts_lag_var) == 0:
+        # TODO: Add integration test
+        if len(self.ts_lag_var) == 0:  # pragma: no cover
             self.ts_lag_var = [1]
         for lag in self.ts_lag_var:
             self.ts_df.loc[:, "lag_" + str(lag)] = self.ts_df["y"].shift(lag)
@@ -180,6 +182,7 @@ class Tree():
             df_op.insert(loc=0, column=self.y_var, value=y_hat)
         return df_op
 
+
 class RandomForest(Tree):
     """Random forest module.
 
@@ -204,7 +207,8 @@ class RandomForest(Tree):
 
     method : str, optional
 
-        Can be either `classify` or `regression` (the default is regression)
+        Can be either `classify`, `timeseries` or `regression`
+        (the default is regression)
 
     k_fold : int, optional
 
@@ -324,7 +328,8 @@ class XGBoost(Tree):
 
     method : str, optional
 
-        Can be either `classify` or `regression` (the default is regression)
+        Can be either `classify`, `timeseries` or `regression`
+        (the default is regression)
 
     k_fold : int, optional
 

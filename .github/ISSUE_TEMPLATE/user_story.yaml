@@ -1,7 +1,7 @@
 name: User story
 description: A valuable increment of functionality, testable by the users
 title: "[User story]: "
-labels: ["user story"]
+labels: ["1: story"]
 assignees:
   - octocat
 body:
@@ -60,10 +60,10 @@ body:
       label: Acceptance criteria
       placeholder: |
         NOTE: Acceptance criteria should be measurable and should be based on maximum possible limit.
-        
+
         Example: If the acceptance criteria for an application is based on response time, specify the response time such that post which the application will not be adopted/used at all i.e. a deal breaker. Meaning if the acceptance criteria for response time is 1 minute, the end user will NOT use the application at all if the response time is more than 1 minute.
     validations:
-      required: true         
+      required: true
 
   - type: input
     id: sponsor
@@ -73,12 +73,11 @@ body:
       placeholder: ex. email@example.com
     validations:
       required: true
-      
+
   - type: textarea
     id: add-context
     attributes:
       label: Additional context
       placeholder: Add any other context or screenshots about the user story here.
     validations:
-      required: false         
-      
+      required: false

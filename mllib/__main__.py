@@ -160,7 +160,7 @@ if __name__ == '__main__':
                           sheet_name="exog")
     df_ip = df_ip.set_index("ts")
     mod = AutoArima(df=df_ip, y_var="y", x_var=["cost"])
-    op = mod.metrics
+    op = mod.model_summary
     print("\nTime series\n")
     for k, v in op.items():
         print(k, str(v).rjust(69 - len(k)))
