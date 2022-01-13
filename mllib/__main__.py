@@ -83,7 +83,7 @@ if __name__ == '__main__':
           sep="\n")
     # --- Clustering
     start_t = time.time_ns()
-    df_ip = pd.read_csv(path + "input/" + fn_ip)
+    df_ip = pd.read_csv(path + "input/iris.csv")
     clus_sol = Cluster(df=df_ip, x_var=["x1"])
     clus_sol.opt_k()
     print("\nClustering\n",
@@ -161,20 +161,8 @@ if __name__ == '__main__':
     df_ip = df_ip.set_index("ts")
     mod = AutoArima(df=df_ip, y_var="y", x_var=["cost"])
     op = mod.model_summary
-    print("\nTime series\n")
+    print("\nAutoArima timeseries\n")
     for k, v in op.items():
-        print(k, str(v).rjust(69 - len(k)))
-    print(elapsed_time("Time", start_t),
-          sep,
-          sep="\n")
-    # --- XGBoost time series
-    start_t = time.time_ns()
-    df_ip = pd.read_excel(path + "input/test_time_series.xlsx",
-                          sheet_name="exog")
-    df_ip = df_ip.set_index("ts")
-    mod = XGBoost(df=df_ip, y_var="y", x_var=["cost"], method="timeseries")
-    print("\nXGBoost time series\n")
-    for k, v in mod.model_summary.items():
         print(k, str(v).rjust(69 - len(k)))
     print(elapsed_time("Time", start_t),
           sep,
@@ -185,7 +173,19 @@ if __name__ == '__main__':
                           sheet_name="exog")
     df_ip = df_ip.set_index("ts")
     mod = RandomForest(df_ip, y_var="y", x_var=["cost"], method="timeseries")
-    print("\nRandom forest time series\n")
+    print("\nRandom forest timeseries\n")
+    for k, v in mod.model_summary.items():
+        print(k, str(v).rjust(69 - len(k)))
+    print(elapsed_time("Time", start_t),
+          sep,
+          sep="\n")
+    # --- XGBoost time series
+    start_t = time.time_ns()
+    df_ip = pd.read_excel(path + "input/test_time_series.xlsx",
+                          sheet_name="exog")
+    df_ip = df_ip.set_index("ts")
+    mod = XGBoost(df=df_ip, y_var="y", x_var=["cost"], method="timeseries")
+    print("\nXGBoost timeseries\n")
     for k, v in mod.model_summary.items():
         print(k, str(v).rjust(69 - len(k)))
     print(elapsed_time("Time", start_t),
