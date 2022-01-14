@@ -57,7 +57,7 @@ class TestMetrics(unittest.TestCase):
         """Metrics: Test for R-squared"""
         y = [3, 8, 10, 17, 24, 27]
         y_hat = [2, 8, 10, 13, 18, 20]
-        exp_op = 0.973
+        exp_op = 0.772
         op = np.round(metrics.rsq(y, y_hat), 3)
         self.assertEqual(op, exp_op)
 

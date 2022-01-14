@@ -51,7 +51,28 @@ cpdef rsq(list y, list y_hat):
         R-Squared value.
 
     """
-    return _np.round(_np.corrcoef(y, y_hat)[0][1] ** 2, 3)
+    cdef int i = 0
+    cdef int arr_len = 0
+    cdef double a = 0.0
+    cdef double b = 0.0
+    cdef double y_sum = 0.0
+    cdef double y_mean = 0.0
+    cdef double num = 0.0
+    cdef double den = 0.0
+    cdef double op = 0.0
+    arr_len = len(y)
+    for i in range(0, arr_len, 1):
+        a = y[i]
+        y_sum += a
+    y_mean = y_sum * arr_len ** -1.0
+    for i in range(0, arr_len, 1):
+        a = y[i]
+        b = y_hat[i]
+        num += (a - b) ** 2
+        den += (a - y_mean) ** 2
+    if den != 0.0:
+        op = 1 - (num * den ** -1.0)
+    return op
 
 
 cpdef mse(list y, list y_hat):
