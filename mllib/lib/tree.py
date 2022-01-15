@@ -137,8 +137,7 @@ class Tree():
         self.ts_param["ts_lag_var"].append(self.ts_param["seasonality"])
         self.ts_param["ts_lag_var"] = \
             [x for x in self.ts_param["ts_lag_var"] if x != 0]
-        self.ts_param["ts_lag_var"] = set(self.ts_param["ts_lag_var"])
-        self.ts_param["ts_lag_var"] = list(self.ts_param["ts_lag_var"])
+        self.ts_param["ts_lag_var"] = list(set(self.ts_param["ts_lag_var"]))
         self.ts_df = pd.DataFrame(self.df.loc[:, self.y_var])
         # TODO: Add integration test
         if len(self.ts_param["ts_lag_var"]) == 0:  # pragma: no cover
