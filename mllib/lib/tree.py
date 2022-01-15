@@ -110,7 +110,7 @@ class Tree():
         self.model_summary = model_summary
 
     def _ts_data_transform(self):
-        """Transform input data with significant lag variables."""
+        """Transform input data with significant lag variables. """
         # Determine seasonality and return seaonal lag
         decomposition = seasonal_decompose(self.df[self.y_var],
                                            model="additive")
