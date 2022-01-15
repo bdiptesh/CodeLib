@@ -16,10 +16,11 @@ Credits
 """
 
 # pylint: disable=invalid-name
-# pylint: disable=R0902,R0903,R0913,C0413
+# pylint: disable=R0902,R0903,R0913,C0413,W0511
 
 from typing import List, Dict
 
+import warnings
 import re
 import sys
 from inspect import getsourcefile
@@ -40,6 +41,17 @@ import metrics  # noqa: F841
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
 # =============================================================================
+
+
+def ignore_warnings(test_func):
+    """Suppress warnings."""
+
+    def do_test(self, *args, **kwargs):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            test_func(self, *args, **kwargs)
+
+    return do_test
 
 
 class GLMNet():
@@ -133,6 +145,8 @@ class GLMNet():
         self._fit()
         self._compute_metrics()
 
+    # TODO: Remove this once GLMNet is updated
+    @ignore_warnings
     def _fit(self) -> None:
         """Fit the best GLMNet model."""
         train_x, test_x,\
