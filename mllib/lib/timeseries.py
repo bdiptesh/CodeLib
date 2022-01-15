@@ -13,7 +13,7 @@ Credits
         - Diptesh
         - Madhu
 
-    Date: Dec 31, 2021
+    Date: Jan 05, 2022
 """
 
 # pylint: disable=invalid-name
@@ -64,7 +64,7 @@ class AutoArima():
 
         Independant variables (the default is None).
 
-    params: dict, optional
+    param: dict, optional
 
         Time series parameters (the default is None). If no parameters are
         passed the following is set as parameters::
@@ -86,12 +86,7 @@ class AutoArima():
 
         Final optimal model.
 
-    metrics: Dict
-
-        Model metrics containing key metrics like R-squared, RMSE, MSE, MAE,
-        MAPE.
-
-    model_summary: object
+    model_summary: Dict
 
         Model summary with optimal parameters.
 
@@ -116,25 +111,22 @@ class AutoArima():
                  df: pd.DataFrame,
                  y_var: str,
                  x_var: List[str] = None,
-                 params: Dict[str, object] = None
+                 param: Dict[str, object] = None
                  ):
         """Initialize variables."""
         self.df = df
         self.y_var = y_var
         self.x_var = x_var
-        self.params = params
+        self.param = param
         self.y_hat = None
-        self.model_summary = None
         # Set default parameters
-        if self.params is None:
-            self.params = self._seasonality()
+        if self.param is None:
+            self.param = self._seasonality()
         # Build optimal model
-        self.model = self._opt_params()
-        self.opt_params = self.model.to_dict()
+        self.model = self._opt_param()
+        self.opt_param = self.model.to_dict()
         # Compute metrics
-        self.metrics = self._compute_metrics()
-        # Model summary
-        self.model_summary = self.model.summary()
+        self.model_summary = self._compute_metrics()
 
     def _seasonality(self) -> Dict[str, object]:
         """Determine seasonality and return parameters."""
@@ -146,61 +138,61 @@ class AutoArima():
         seasonal = True
         if m < 2:  # pragma: no cover
             seasonal = False
-        params = {"max_p": 15,
-                  "max_d": 2,
-                  "max_q": 15,
-                  "max_P": 15,
-                  "max_D": 2,
-                  "max_Q": 15,
-                  "seasonal": seasonal,
-                  "m": m,
-                  "threshold": 0.05,
-                  "debug": False}
-        return params
+        param = {"max_p": 15,
+                 "max_d": 2,
+                 "max_q": 15,
+                 "max_P": 15,
+                 "max_D": 2,
+                 "max_Q": 15,
+                 "seasonal": seasonal,
+                 "m": m,
+                 "threshold": 0.05,
+                 "debug": False}
+        return param
 
-    def _opt_params(self) -> object:
+    def _opt_param(self) -> object:
         if self.x_var is None:
             model = pm.auto_arima(y=self.df[[self.y_var]],
                                   start_p=0,
-                                  max_p=self.params["max_p"],
-                                  max_d=self.params["max_d"],
+                                  max_p=self.param["max_p"],
+                                  max_d=self.param["max_d"],
                                   start_q=0,
-                                  max_q=self.params["max_q"],
+                                  max_q=self.param["max_q"],
                                   start_P=0,
-                                  max_P=self.params["max_P"],
-                                  max_D=self.params["max_D"],
+                                  max_P=self.param["max_P"],
+                                  max_D=self.param["max_D"],
                                   start_Q=0,
-                                  max_Q=self.params["max_Q"],
+                                  max_Q=self.param["max_Q"],
                                   information_criterion="aicc",
-                                  alpha=self.params["threshold"],
-                                  trace=self.params["debug"],
-                                  seasonal=self.params["seasonal"],
-                                  m=self.params["m"])
+                                  alpha=self.param["threshold"],
+                                  trace=self.param["debug"],
+                                  seasonal=self.param["seasonal"],
+                                  m=self.param["m"])
         else:
             model = pm.auto_arima(y=self.df[[self.y_var]],
                                   X=self.df[self.x_var],
                                   start_p=0,
-                                  max_p=self.params["max_p"],
-                                  max_d=self.params["max_d"],
+                                  max_p=self.param["max_p"],
+                                  max_d=self.param["max_d"],
                                   start_q=0,
-                                  max_q=self.params["max_q"],
+                                  max_q=self.param["max_q"],
                                   start_P=0,
-                                  max_P=self.params["max_P"],
-                                  max_D=self.params["max_D"],
+                                  max_P=self.param["max_P"],
+                                  max_D=self.param["max_D"],
                                   start_Q=0,
-                                  max_Q=self.params["max_Q"],
+                                  max_Q=self.param["max_Q"],
                                   information_criterion="aicc",
-                                  alpha=self.params["threshold"],
-                                  trace=self.params["debug"],
-                                  seasonal=self.params["seasonal"],
-                                  m=self.params["m"])
+                                  alpha=self.param["threshold"],
+                                  trace=self.param["debug"],
+                                  seasonal=self.param["seasonal"],
+                                  m=self.param["m"])
         return model
 
     def _compute_metrics(self) -> Dict[str, float]:
         """Compute commonly used metrics to evaluate the model."""
         y = self.df[[self.y_var]].iloc[:, 0].values.tolist()
         if self.x_var is None:
-            d = self.opt_params["order"][1]
+            d = self.opt_param["order"][1]
             y_hat = list(self.model.predict_in_sample(start=d,
                                                       end=len(self.df)))
         else:
@@ -238,7 +230,7 @@ class AutoArima():
         """
         if self.x_var is None:
             df_pred = self.model.predict(n_periods=n_interval,
-                                         alpha=self.params["threshold"],
+                                         alpha=self.param["threshold"],
                                          return_conf_int=False)
             df_pred = pd.DataFrame(df_pred)
             df_pred.columns = [self.y_var]
@@ -246,7 +238,7 @@ class AutoArima():
             n_interval = x_predict.shape[0]
             df_pred = self.model.predict(n_periods=n_interval,
                                          X=x_predict,
-                                         alpha=self.params["threshold"],
+                                         alpha=self.param["threshold"],
                                          return_conf_int=False)
             df_pred = pd.DataFrame(df_pred)
             df_pred = pd.concat([df_pred, x_predict.reset_index(drop=True)],

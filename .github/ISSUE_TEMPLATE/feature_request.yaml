@@ -1,7 +1,7 @@
 name: Feature request
 description: Request a feature addition
 title: "[Feature]: "
-labels: ["feature"]
+labels: ["1: feature", "2: tests"]
 assignees:
   - octocat
 body:
@@ -68,6 +68,7 @@ body:
       label: Version
       description: What version of our product are you running?
       options:
-        - v0.4.0 (Default)
+        - v0.4.1 (Default)
+        - v0.4.0
     validations:
       required: true

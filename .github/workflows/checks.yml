@@ -22,11 +22,13 @@ on:
       - 'stable'
       - 'testing'
       - 'feature*'
+      - 'bug*'
   pull_request:
     branches:
       - 'stable'
       - 'testing'
       - 'feature*'
+      - 'bug*'
       - '!maintenance*'
 
 jobs:

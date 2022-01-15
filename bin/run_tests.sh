@@ -31,7 +31,7 @@ printf "=%.0s" {1..70}
 # Run unit tests
 if [[ $module == "-a" || $module == "-u" ]]
 then
-	printf "\nRunning unit & integration tests...\n\n"
+	printf "\nRunning unit & integration tests ...\n\n"
 	coverage run -m unittest discover -v -s $test_dir -p "test_*.py"
 	coverage report -m --omit="*/tests/test_*,*/opt/spark-*" > "$proj_dir/logs/cov.out"
 	COV_SCORE=`grep "TOTAL" $proj_dir/logs/cov.out | tail -1 | awk '{ printf("%d", $4) }'`
@@ -48,7 +48,7 @@ fi
 # Rate coding styles for all python scripts
 if [[ $module == "-a" || $module == "-r" ]]
 then
-    printf "\nRating code style...\n\n"
+    printf "\nRating code style ...\n\n"
     score=0
     cnt=0
 		rm $proj_dir/logs/pylint/*.out

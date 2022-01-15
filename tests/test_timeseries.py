@@ -8,7 +8,7 @@ Credits
     Authors:
         - Diptesh
 
-    Date: Sep 07, 2021
+    Date: Jan 05, 2022
 """
 
 # pylint: disable=invalid-name
@@ -72,11 +72,11 @@ class TestTimeSeries(unittest.TestCase):
         y_var = "y"
         x_var = ["cost"]
         mod = AutoArima(df=df_ip, y_var=y_var, x_var=x_var)
-        metrics = mod.metrics
+        metrics = mod.model_summary
         X = pd.DataFrame(df_ip.iloc[-1]).T
         op = mod.predict(x_predict=X[x_var])[y_var][0]
         exp_op = X[y_var][0]
-        self.assertEqual(mod.opt_params["order"], (0, 1, 1))
+        self.assertEqual(mod.opt_param["order"], (0, 1, 1))
         self.assertAlmostEqual(1.0, metrics["rsq"], places=1)
         self.assertLessEqual(metrics["mape"], 0.1)
         self.assertAlmostEqual(op, exp_op, places=0)

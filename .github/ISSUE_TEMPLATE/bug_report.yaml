@@ -1,7 +1,7 @@
 name: Bug Report
 description: File a bug report
 title: "[Bug]: "
-labels: ["bug"]
+labels: ["1: bug", "2: tests"]
 assignees:
   - octocat
 body:
@@ -49,7 +49,8 @@ body:
       label: Version
       description: What version of our product are you running?
       options:
-        - v0.4.0 (Default)
+        - v0.4.1 (Default)
+        - v0.4.0
     validations:
       required: true
 
