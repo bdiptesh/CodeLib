@@ -14,7 +14,7 @@ Credits
         - Diptesh
         - Madhu
 
-    Date: Jan 10, 2022
+    Date: Jan 15, 2022
 """
 
 # pylint: disable=invalid-name
@@ -110,7 +110,7 @@ class Tree():
         self.model_summary = model_summary
 
     def _ts_data_transform(self):
-        """Transform input data with significant lag variables. """
+        """Transform input data with significant lag variables."""
         # Determine seasonality and return seaonal lag
         decomposition = seasonal_decompose(self.df[self.y_var],
                                            model="additive")
@@ -172,7 +172,7 @@ class Tree():
             df_pred_x = pd.DataFrame(df_op.iloc[i]).T
             for j, _ in enumerate(self.ts_param["ts_lag_var"]):
                 df_pred_x["lag_" + str(self.ts_param["ts_lag_var"][j])] \
-                    = lst_lag_val[len(lst_lag_val) \
+                    = lst_lag_val[len(lst_lag_val)
                                   - self.ts_param["ts_lag_var"][j]]
             df_pred_x = pd.DataFrame(df_pred_x)
             y_hat = self.model.predict(df_pred_x[self.ts_param["ts_x_var"]])
@@ -223,10 +223,6 @@ class RandomForest(Tree):
     k_fold : int, optional
 
         Number of cross validations folds (the default is 5)
-
-    max_lag : int, optional
-
-        Maximum lag value for auto regression in timeseries (the default is 20)
 
     threshold : float, optional
 
@@ -356,10 +352,6 @@ class XGBoost(Tree):
     k_fold : int, optional
 
         Number of cross validations folds (the default is 5)
-
-    max_lag : int, optional
-
-        Maximum lag value for auto regression in timeseries (the default is 20)
 
     threshold : float, optional
 
