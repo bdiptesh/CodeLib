@@ -56,7 +56,7 @@ class Tree():
                  method: str = "regression",
                  k_fold: int = 5,
                  param: Dict = None,
-                 ts_params: Dict = None):
+                 ts_param: Dict = None):
         """Initialize variables."""
         self.y_var = y_var
         self.x_var = x_var
@@ -67,13 +67,13 @@ class Tree():
         self.k_fold = k_fold
         self.seed = 1
         if self.method == "timeseries":
-            self.ts_params = ts_params
-            if self.ts_params is None:
-                self.ts_params = {}
-                self.ts_params["threshold"] = 0.05
-                self.ts_params["max_lag"] = 20
-            self.ts_params["ts_x_var"] = None
-            self.ts_params["ts_lag_var"] = None
+            self.ts_param = ts_param
+            if self.ts_param is None:
+                self.ts_param = {}
+                self.ts_param["threshold"] = 0.05
+                self.ts_param["max_lag"] = 20
+            self.ts_param["ts_x_var"] = None
+            self.ts_param["ts_lag_var"] = None
             self._ts_data_transform()
             self.k_fold = ts_split(n_splits=self.k_fold)\
                 .split(X=self.ts_df[self.y_var])
@@ -91,7 +91,7 @@ class Tree():
         elif self.method == "timeseries":
             y = self.ts_df.loc[:, self.y_var].values.tolist()
             y_hat = list(self.model.predict(
-                self.ts_df[self.ts_params["ts_x_var"]]))
+                self.ts_df[self.ts_param["ts_x_var"]]))
         if self.method in ("regression", "timeseries"):
             model_summary = {"rsq": np.round(metrics.rsq(y, y_hat), 3),
                              "mae": np.round(metrics.mae(y, y_hat), 3),
@@ -116,40 +116,41 @@ class Tree():
                                            model="additive")
         _seasonal = decomposition.seasonal
         freq = _seasonal.value_counts()
-        m = int(np.ceil(len(self.df) / freq.iloc[0]))
+        self.ts_param["seasonality"] = \
+            int(np.ceil(len(self.df) / freq.iloc[0]))
         # Determine significant lags
         df = self.df.copy(deep=True)
         df = df[self.y_var]
-        df = pd.DataFrame({"lag": list(range(self.ts_params["max_lag"]+1)),
+        df = pd.DataFrame({"lag": list(range(self.ts_param["max_lag"]+1)),
                            "pacf": pacf(df,
-                                        nlags=self.ts_params["max_lag"],
+                                        nlags=self.ts_param["max_lag"],
                                         method='ols')})
         df["thres_val"] = \
-            (np.round(norm.ppf(1 - (self.ts_params["threshold"] / 2)), 2)
+            (np.round(norm.ppf(1 - (self.ts_param["threshold"] / 2)), 2)
              / (len(self.df) ** 0.5))
         df["pacf_sig"] = np.where((df['pacf'] >= df["thres_val"])
                                   | (df['pacf'] <= - df["thres_val"]),
                                   1, 0)
         df = df.where(df['pacf_sig'] > 0)
         df = df.dropna()
-        self.ts_params["ts_lag_var"] = df['lag'].astype(int).to_list()
-        self.ts_params["ts_lag_var"].append(m)
-        self.ts_params["ts_lag_var"]  = \
-            [x for x in self.ts_params["ts_lag_var"] if x != 0]
-        self.ts_params["ts_lag_var"] = set(self.ts_params["ts_lag_var"])
-        self.ts_params["ts_lag_var"] = list(self.ts_params["ts_lag_var"])
+        self.ts_param["ts_lag_var"] = df['lag'].astype(int).to_list()
+        self.ts_param["ts_lag_var"].append(self.ts_param["seasonality"])
+        self.ts_param["ts_lag_var"] = \
+            [x for x in self.ts_param["ts_lag_var"] if x != 0]
+        self.ts_param["ts_lag_var"] = set(self.ts_param["ts_lag_var"])
+        self.ts_param["ts_lag_var"] = list(self.ts_param["ts_lag_var"])
         self.ts_df = pd.DataFrame(self.df.loc[:, self.y_var])
         # TODO: Add integration test
-        if len(self.ts_params["ts_lag_var"]) == 0:  # pragma: no cover
-            self.ts_params["ts_lag_var"] = [1]
-        for lag in self.ts_params["ts_lag_var"]:
+        if len(self.ts_param["ts_lag_var"]) == 0:  # pragma: no cover
+            self.ts_param["ts_lag_var"] = [1]
+        for lag in self.ts_param["ts_lag_var"]:
             self.ts_df.loc[:, "lag_" + str(lag)] = \
                                     self.ts_df[self.y_var].shift(lag)
         if self.x_var is not None:
             self.ts_df = self.ts_df.join(self.df[self.x_var])
         self.ts_df = self.ts_df.dropna()
-        self.ts_params["ts_x_var"] = list(self.ts_df.columns)
-        self.ts_params["ts_x_var"].remove(self.y_var)
+        self.ts_param["ts_x_var"] = list(self.ts_df.columns)
+        self.ts_param["ts_x_var"].remove(self.y_var)
 
     def _fit(self) -> Dict[str, Any]:  # pragma: no cover
         """Fit model."""
@@ -169,12 +170,12 @@ class Tree():
         lst_lag_val = self.df[self.y_var].tolist()
         for i, _ in enumerate(df_op):
             df_pred_x = pd.DataFrame(df_op.iloc[i]).T
-            for j, _ in enumerate(self.ts_params["ts_lag_var"]):
-                df_pred_x["lag_" + str(self.ts_params["ts_lag_var"][j])] \
+            for j, _ in enumerate(self.ts_param["ts_lag_var"]):
+                df_pred_x["lag_" + str(self.ts_param["ts_lag_var"][j])] \
                     = lst_lag_val[len(lst_lag_val) \
-                                  - self.ts_params["ts_lag_var"][j]]
+                                  - self.ts_param["ts_lag_var"][j]]
             df_pred_x = pd.DataFrame(df_pred_x)
-            y_hat = self.model.predict(df_pred_x[self.ts_params["ts_x_var"]])
+            y_hat = self.model.predict(df_pred_x[self.ts_param["ts_x_var"]])
             df_op.iloc[i, df_op.columns.get_loc(self.y_var)] = y_hat[0]
             lst_lag_val.append(y_hat[0])
         return df_op
@@ -242,6 +243,17 @@ class RandomForest(Tree):
             max_features: ["sqrt", "auto"]
             min_samples_leaf: [2, 5]
 
+    ts_param : dict, optional
+
+        Random forest parameters (the default is None).
+        In case of None, the parameters will default to::
+
+            threshold: 0.05
+            max_lag: 20
+            ts_x_var: None
+            ts_lag_var: None
+            seasonality: None
+
     Returns
     -------
     model : object
@@ -286,10 +298,10 @@ class RandomForest(Tree):
                     = list(range(1, len(self.x_var)))
             elif self.method == "timeseries":
                 self.param["max_features"] \
-                    = [int(np.ceil(len(self.ts_params["ts_x_var"]) / 3))]
+                    = [int(np.ceil(len(self.ts_param["ts_x_var"]) / 3))]
                 self.param["min_samples_leaf"] = [5]
                 self.param["max_depth"] = \
-                    list(range(1, len(self.ts_params["ts_x_var"])))
+                    list(range(1, len(self.ts_param["ts_x_var"])))
         if self.method == "classify":
             tmp_model = rf.RandomForestClassifier(oob_score=True,
                                                   random_state=self.seed)
@@ -305,7 +317,7 @@ class RandomForest(Tree):
                                 return_train_score=True,
                                 cv=self.k_fold)
         if self.method == "timeseries":
-            gs_op = gs.fit(self.ts_df[self.ts_params["ts_x_var"]],
+            gs_op = gs.fit(self.ts_df[self.ts_param["ts_x_var"]],
                            self.ts_df[self.y_var])
         elif self.method in ("regression", "classify"):
             gs_op = gs.fit(self.df[self.x_var],
@@ -363,8 +375,19 @@ class XGBoost(Tree):
             subsample: [0.5, 0.75, 1.0]
             colsample_bytree: [0.5, 1.0]
             min_child_weight: [0.5, 1.0, 3.0]
-            max_depth: [int(len(self.x_var) * 0.8)]
+            max_depth: [int(len(self.x_var) * 0.8]
             objective: ["reg:squarederror", "binary:logistic"]
+
+    ts_param : dict, optional
+
+        Random forest time series parameters (the default is None).
+        In case of None, the parameters will default to::
+
+            threshold: 0.05
+            max_lag: 20
+            ts_x_var: None
+            ts_lag_var: None
+            seasonlity: None
 
     Returns
     -------
@@ -403,7 +426,7 @@ class XGBoost(Tree):
                           "min_child_weight": [0.5, 1.0, 3.0]}
             if self.method == "timeseries":
                 self.param["max_depth"] = \
-                    [int(len(self.ts_params["ts_x_var"]) * 0.8)]
+                    [int(len(self.ts_param["ts_x_var"]) * 0.8)]
             elif self.method in ("regression", "classify"):
                 self.param["max_depth"] = [int(len(self.x_var) * 0.8)]
             if self.method == "classify":
@@ -433,7 +456,7 @@ class XGBoost(Tree):
                                 cv=self.k_fold,
                                 random_state=self.seed)
         if self.method == "timeseries":
-            gs_op = gs.fit(self.ts_df[self.ts_params["ts_x_var"]],
+            gs_op = gs.fit(self.ts_df[self.ts_param["ts_x_var"]],
                            self.ts_df[self.y_var])
         elif self.method in ("regression", "classify"):
             gs_op = gs.fit(self.df[self.x_var],
