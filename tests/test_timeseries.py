@@ -25,6 +25,7 @@ from os.path import abspath
 
 import pandas as pd
 import xlrd
+import openpyxl
 
 # Set base path
 path = abspath(getsourcefile(lambda: 0))
@@ -34,7 +35,7 @@ sys.path.insert(0, path)
 
 from mllib.lib.timeseries import AutoArima  # noqa: F841
 
-__all__ = ["xlrd", ]
+__all__ = ["xlrd", "openpyxl", ]
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
