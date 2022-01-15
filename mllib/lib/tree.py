@@ -69,6 +69,7 @@ class Tree():
         self.max_lag = max_lag
         self.threshold = threshold
         self.seed = 1
+        # TODO: Use a Dict to store all time series related values
         if self.method == "timeseries":
             self.ts_x_var = None
             self.ts_lag_var = None
@@ -108,13 +109,13 @@ class Tree():
 
     def _ts_data_transform(self):
         """Transform input data with significant lag variables."""
-        # Determine seasonality and return seaonal lag.
+        # Determine seasonality and return seaonal lag
         decomposition = seasonal_decompose(self.df[self.y_var],
                                            model="additive")
         _seasonal = decomposition.seasonal
         freq = _seasonal.value_counts()
         m = int(np.ceil(len(self.df) / freq.iloc[0]))
-        # Determine significant lags.
+        # Determine significant lags
         df = self.df.copy(deep=True)
         df = df[self.y_var]
         df = pd.DataFrame({"lag": list(range(self.max_lag+1)),
@@ -141,6 +142,7 @@ class Tree():
             self.ts_df = self.ts_df.join(self.df[self.x_var])
         self.ts_df = self.ts_df.dropna()
         self.ts_x_var = list(self.ts_df.columns)
+        # TODO: Check for consistency and edge cases
         self.ts_x_var.remove(self.y_var[0])
 
     def _fit(self) -> Dict[str, Any]:  # pragma: no cover
@@ -159,8 +161,10 @@ class Tree():
             df_op = x_predict.copy(deep=True)
             df_op[self.y_var] = -1.0
         lst_lag_val = self.df[self.y_var].tolist()
+        # TODO: Use enumerate
         for i in range(0, len(df_op)):
             df_pred_x = pd.DataFrame(df_op.iloc[i]).T
+            # TODO: Use enumerate
             for j in range(0, len(self.ts_lag_var)):
                 df_pred_x["lag_" + str(self.ts_lag_var[j])] \
                     = lst_lag_val[len(lst_lag_val) - self.ts_lag_var[j]]
@@ -294,6 +298,7 @@ class RandomForest(Tree):
                                 n_iter=3,
                                 return_train_score=True,
                                 cv=self.k_fold)
+        # TODO: Use a Dict to store all time series related values
         if self.method == "timeseries":
             gs_op = gs.fit(self.ts_df[self.ts_x_var],
                            self.ts_df[self.y_var])
