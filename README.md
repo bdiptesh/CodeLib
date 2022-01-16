@@ -13,6 +13,15 @@
     1. [Contribution guidelines](./.github/CONTRIBUTING.md)
 1. [Project documents](./docs)
     1. [Approach](./docs/Approach.pdf)
+1. [Available modules](./mllib/lib)
+    1. [Clustering](./mllib/lib/cluster.py) - determines optimal _k_
+    1. [GLMNet](./mllib/lib/model.py) - classification/regression
+    1. [k-nearest neighbours](./mllib/lib/knn.py) - classification/regression
+    1. [Random forest](./mllib/lib/tree.py) - classification/timeseries/regression
+    1. [XGBoost](./mllib/lib/tree.py) - classification/timeseries/regression
+    1. [Traveling salesman problem](./mllib/lib/opt.py) - integer programming/heuristic
+    1. [Transportation problem](./mllib/lib/opt.py) - integer programming
+    1. [Time series](./mllib/lib/timeseries.py)
 1. [Pull request guidelines](./.github/PULL_REQUEST_TEMPLATE.md)
 1. [Initial setup](./README.md#initial-setup)
 1. [Unit tests](./README.md#run-unit-tests-and-pylint-ratings)

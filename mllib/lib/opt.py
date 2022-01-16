@@ -46,9 +46,9 @@ import pulp
 
 class TSP:
     """
-    Travelling salesman problem.
+    Traveling salesman problem.
 
-    Module for `Travelling salesman problem
+    Module for `Traveling salesman problem
     <https://en.wikipedia.org/wiki/Travelling_salesman_problem>`_ using
     integer programming or nearest neighbour algorithm.
 

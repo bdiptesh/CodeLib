@@ -3,7 +3,7 @@ k-NN module.
 
 **Available routines:**
 
-- class ``KNN``: Builds K-Nearest Neighnour model using cross validation.
+- class ``KNN``: Builds K-Nearest Neighbours model using cross validation.
 
 Credits
 -------
@@ -123,7 +123,7 @@ class KNN():
         self.model = None
         self.k_fold = k_fold
         if param is None:
-            max_k = max(int(len(self.df)/(self.k_fold * 2)), 1)
+            max_k = max(int(len(self.df) / (self.k_fold * 2)), 1)
             param = {"n_neighbors": list(range(1, max_k, 2)),
                      "weights": ["uniform", "distance"],
                      "metric": ["euclidean", "manhattan"]}
@@ -163,8 +163,7 @@ class KNN():
                               return_train_score=True,
                               cv=self.k_fold,
                               n_jobs=-1)
-        gs_op = gs.fit(self.df[self.x_var],
-                       self.df[self.y_var])
+        gs_op = gs.fit(self.df[self.x_var], self.df[self.y_var])
         self.model = gs_op
         return gs_op.best_params_
 

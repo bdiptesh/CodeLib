@@ -51,6 +51,7 @@ def ignore_warnings(test_func):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             test_func(self, *args, **kwargs)
+
     return do_test
 
 
@@ -63,21 +64,17 @@ class TestGLMNet(unittest.TestCase):
     def test_known_equation(self):
         """GLMNet: Test a known equation"""
         df_ip = pd.read_csv(path + "test_glmnet.csv")
-        mod = GLMNet(df=df_ip,
-                     y_var="y",
-                     x_var=["x1", "x2", "x3"])
+        mod = GLMNet(df=df_ip, y_var="y", x_var=["x1", "x2", "x3"])
         op = mod.opt
-        self.assertEqual(np.round(op.get('intercept'), 0), 100.0)
-        self.assertEqual(np.round(op.get('coef')[0], 0), 2.0)
-        self.assertEqual(np.round(op.get('coef')[1], 0), 3.0)
-        self.assertEqual(np.round(op.get('coef')[2], 0), 0.0)
+        self.assertEqual(np.round(op.get("intercept"), 0), 100.0)
+        self.assertEqual(np.round(op.get("coef")[0], 0), 2.0)
+        self.assertEqual(np.round(op.get("coef")[1], 0), 3.0)
+        self.assertEqual(np.round(op.get("coef")[2], 0), 0.0)
 
     def test_predict_target_variable(self):
         """GLMNet: Test to predict a target variable"""
         df_ip = pd.read_csv(path + "test_glmnet.csv")
-        mod = GLMNet(df=df_ip,
-                     y_var="y",
-                     x_var=["x1", "x2", "x3"])
+        mod = GLMNet(df=df_ip, y_var="y", x_var=["x1", "x2", "x3"])
         df_predict = pd.DataFrame({"x1": [10, 20],
                                    "x2": [5, 10],
                                    "x3": [100, 0]})
@@ -91,5 +88,5 @@ class TestGLMNet(unittest.TestCase):
 # --- Main
 # =============================================================================
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

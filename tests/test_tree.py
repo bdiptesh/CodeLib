@@ -24,6 +24,8 @@ from inspect import getsourcefile
 from os.path import abspath
 
 import pandas as pd
+import xlrd
+import openpyxl
 
 from sklearn.model_selection import train_test_split as split
 from sklearn import metrics as sk_metrics
@@ -36,6 +38,8 @@ sys.path.insert(0, path)
 
 from mllib.lib.tree import RandomForest  # noqa: F841
 from mllib.lib.tree import XGBoost  # noqa: F841
+
+__all__ = ["xlrd", "openpyxl", ]
 
 # =============================================================================
 # --- DO NOT CHANGE ANYTHING FROM HERE
