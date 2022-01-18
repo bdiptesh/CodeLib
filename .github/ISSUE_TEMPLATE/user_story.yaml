@@ -1,7 +1,7 @@
 name: User story
 description: A valuable increment of functionality, testable by the users
 title: "[User story]: "
-labels: ["1: story"]
+labels: ["story"]
 assignees:
   - octocat
 body:
