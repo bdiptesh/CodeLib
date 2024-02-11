@@ -147,7 +147,7 @@ class GLMNet():
 
     def _fit(self) -> None:
         """Fit the best GLMNet model."""
-        train_x, test_x,\
+        train_x, test_x, \
             train_y, test_y = split(self.df[self.x_var],
                                     self.df[[self.y_var]],
                                     test_size=self.param["test_perc"],
