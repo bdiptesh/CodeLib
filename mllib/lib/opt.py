@@ -205,7 +205,7 @@ class TSP:
 
         """
         # Initiate IP formulation model
-        model = pulp.LpProblem("Travelling Salesman Problem", pulp.LpMinimize)
+        model = pulp.LpProblem("Travelling_Salesman_Problem", pulp.LpMinimize)
         # Decision variables - 1 if chosen, 0 otherwise
         dv_leg = pulp.LpVariable.dicts("Decision variable leg", dist,
                                        lowBound=0, upBound=1, cat='Binary')
@@ -587,7 +587,7 @@ class Transport():
         supply_node = supply.keys()
         demand_node = demand.keys()
         # Integer programming
-        model = pulp.LpProblem("Transportation problem", pulp.LpMinimize)
+        model = pulp.LpProblem("Transportation_problem", pulp.LpMinimize)
         Routes = [(s, d) for s in supply_node for d in demand_node]
         route_vars = pulp.LpVariable.dicts("Route",
                                            (supply_node, demand_node),
