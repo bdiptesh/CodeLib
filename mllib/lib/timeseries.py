@@ -246,3 +246,92 @@ class AutoArima():
                                 ignore_index=True)
             df_pred.columns = [self.y_var] + self.x_var
         return df_pred
+
+
+class BatesGrager():
+    """Bates & Granger module.
+
+    Parameters
+    ----------
+    df: pandas.DataFrame
+
+        Pandas dataframe containing the `ts`, `y` and `y_hat`.
+
+    y: str
+
+        Dependant variable
+
+    y_hat: List[str]
+
+        List of different input forecasts which needs to be considered.
+
+    lag: int, optional
+
+        Time periods to be considered for creating the model 
+        (the default is 1).
+
+    Returns
+    -------
+    model: object
+
+        Final model with output under the column `y_hat_bg`.
+
+    Methods
+    -------
+    predict
+
+    Example
+    -------
+    >>> mod = BatesGrager(df=df_ip,
+                          y="y",
+                          y_hat=["y_hat_01", "y_hat_02",
+                                 "y_hat_03", "y_hat_04"],
+                          lag=53)
+    >>> df_op = mod.predict()
+    """
+    def __init__(self,
+                 df: pd.DataFrame,
+                 y: str,
+                 y_hat: List[str],
+                 lag: int = 1
+                 ):      
+        """Initialize variables."""
+        self.df = df
+        self.y = y
+        self.y_hat = y_hat
+        self.lag = lag
+        # Set default parameters
+        self.var = ["ts", y]
+        self.var.extend(y_hat)
+        self.df = self.df[self.var].reset_index(drop=True)
+        self.dict_weights = {}
+        self.fcst = np.zeros(len(self.df))
+        self.df_op = self.df.copy()
+
+    def predict(self):
+        """Predict module.
+
+        Returns
+        -------
+        pd.DataFrame
+
+            Pandas dataframe containing `y`, `y_hat` and `y_hat_bg`.
+
+        """
+        for i in self.y_hat:
+            self.df["sq_error_" + i] = (abs(self.df[i] - self.df[self.y])
+                                        * 100 / self.df[self.y] ) ** 2
+        for epoch in range(len(self.fcst)-self.lag):
+            df_tmp = self.df.iloc[epoch:self.lag+epoch]
+            mse_val = [np.mean(df_tmp["sq_error_" + i]) for i in self.y_hat]
+            weights = [1/i for i in mse_val]
+            tot = sum(weights)
+            weights = [i/tot for i in weights]
+            self.dict_weights[epoch+self.lag] = [weights, mse_val]
+            df_tmp_fcst = self.df.iloc[self.lag+epoch]
+            fcst_tmp = 0
+            for i, _ in enumerate(self.y_hat):
+                fcst_tmp += df_tmp_fcst[self.y_hat[i]] * weights[i]
+            self.fcst[self.lag+epoch] = fcst_tmp
+        self.df_op["y_hat_bg"] = self.fcst
+        return self.df_op
