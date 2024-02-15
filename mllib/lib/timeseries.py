@@ -294,7 +294,7 @@ class BatesGrager():
                  y: str,
                  y_hat: List[str],
                  lag: int = 1
-                 ):      
+                 ):
         """Initialize variables."""
         self.df = df
         self.y = y
@@ -320,7 +320,7 @@ class BatesGrager():
         """
         for i in self.y_hat:
             self.df["sq_error_" + i] = (abs(self.df[i] - self.df[self.y])
-                                        * 100 / self.df[self.y] ) ** 2
+                                        * 100 / self.df[self.y]) ** 2
         for epoch in range(len(self.fcst)-self.lag):
             df_tmp = self.df.iloc[epoch:self.lag+epoch]
             mse_val = [np.mean(df_tmp["sq_error_" + i]) for i in self.y_hat]

@@ -31,6 +31,10 @@ printf "=%.0s" {1..70}
 # Run unit tests
 if [[ $module == "-a" || $module == "-u" ]]
 then
+	printf "\nRunning unit & integration tests ...\n\n"
+	coverage run -m unittest discover -v -s $test_dir -p "test_*.py"	
+  printf "=%.0s" {1..70}
+	printf "\n"
 	printf "\nComputing test coverage ...\n\n"
 	coverage report -m --omit="*/tests/test_*,*/opt/spark-*" 2>&1 | tee "$proj_dir/logs/cov.out"
 	COV_SCORE=`grep "TOTAL" $proj_dir/logs/cov.out | tail -1 | awk '{ printf("%d", $4) }'`
@@ -40,10 +44,6 @@ then
 		COV_COLOR="dagreen"
 	fi
 	sed -i "3s/.*/\[\!\[Coverage score\]\(\https\:\/\/img\.shields\.io\/badge\/coverage\-$COV_SCORE\%25\-$COV_COLOR.svg\)\]\(\.\/logs\/cov\.out\)/" "$proj_dir/README.md"
-	printf "=%.0s" {1..70}
-	printf "\n"
-	printf "\nRunning unit & integration tests ...\n\n"
-	coverage run -m unittest discover -v -s $test_dir -p "test_*.py"
 	printf "=%.0s" {1..70}
 fi
 
