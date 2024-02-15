@@ -267,7 +267,7 @@ class BatesGrager():
 
     lag: int, optional
 
-        Time periods to be considered for creating the model 
+        Time periods to be considered for creating the model
         (the default is 1).
 
     Returns
