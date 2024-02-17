@@ -13,12 +13,12 @@ Credits
         - Diptesh
         - Madhu
 
-    Date: Jan 05, 2022
+    Date: Feb 16, 2024
 """
 
 # pylint: disable=invalid-name
 # pylint: disable=wrong-import-position
-# pylint: disable=R0902,R0903,W0511
+# pylint: disable=R0902,R0903,R0913,W0511
 
 from inspect import getsourcefile
 from os.path import abspath
@@ -265,10 +265,14 @@ class BatesGrager():
 
         List of different input forecasts which needs to be considered.
 
+    pred_period: int, optional
+
+        Time periods to be to be predicted (the default is 1).
+
     lag: int, optional
 
         Time periods to be considered for creating the model
-        (the default is 1).
+        (the default is 53).
 
     Returns
     -------
@@ -286,30 +290,58 @@ class BatesGrager():
                           y="y",
                           y_hat=["y_hat_01", "y_hat_02",
                                  "y_hat_03", "y_hat_04"],
-                          lag=53)
-    >>> df_op = mod.predict()
+                          lag=53, pred_period=1)
+    >>> op = mod.solve()
     """
+
     def __init__(self,
                  df: pd.DataFrame,
                  y: str,
                  y_hat: List[str],
-                 lag: int = 1
+                 pred_period: int = 1,
+                 lag: int = 53
                  ):
         """Initialize variables."""
         self.df = df
         self.y = y
         self.y_hat = y_hat
+        self.pred_period = pred_period
         self.lag = lag
         # Set default parameters
         self.var = ["ts", y]
         self.var.extend(y_hat)
         self.df = self.df[self.var].reset_index(drop=True)
-        self.dict_weights = {}
+        self.weights = {}
         self.fcst = np.zeros(len(self.df))
         self.df_op = self.df.copy()
 
-    def predict(self):
+    def _predict(self, df):
         """Predict module.
+
+        Returns
+        -------
+        tuple
+
+            Tuple containing `forecast`, `weights` and `MSE`.
+
+        """
+        df_bg_pred = None
+        pred_period=self.pred_period
+        y_hat = self.y_hat
+        df_bg_train = df.iloc[:-pred_period]
+        df_bg_pred = df.iloc[-pred_period:]
+        mse_val = [metrics.mse(df_bg_train["y"].tolist(),
+                               df_bg_train[i].tolist())
+                   for i in y_hat]
+        weights = [1/i for i in mse_val]
+        tot = sum(weights)
+        weights = [i/tot for i in weights]
+        pred_op = [df_bg_pred[j] * weights[i] for i, j in enumerate(y_hat)]
+        pred_op = sum(pred_op)
+        return (pred_op, weights, mse_val)
+
+    def solve(self):
+        """Forecast for all possible time periods.
 
         Returns
         -------
@@ -318,20 +350,15 @@ class BatesGrager():
             Pandas dataframe containing `y`, `y_hat` and `y_hat_bg`.
 
         """
-        for i in self.y_hat:
-            self.df["sq_error_" + i] = (abs(self.df[i] - self.df[self.y])
-                                        * 100 / self.df[self.y]) ** 2
-        for epoch in range(len(self.fcst)-self.lag):
-            df_tmp = self.df.iloc[epoch:self.lag+epoch]
-            mse_val = [np.mean(df_tmp["sq_error_" + i]) for i in self.y_hat]
-            weights = [1/i for i in mse_val]
-            tot = sum(weights)
-            weights = [i/tot for i in weights]
-            self.dict_weights[epoch+self.lag] = [weights, mse_val]
-            df_tmp_fcst = self.df.iloc[self.lag+epoch]
-            fcst_tmp = 0
-            for i, _ in enumerate(self.y_hat):
-                fcst_tmp += df_tmp_fcst[self.y_hat[i]] * weights[i]
-            self.fcst[self.lag+epoch] = fcst_tmp
+        df = self.df
+        pred_period = self.pred_period
+        lag = self.lag
+        if pred_period + lag > len(df):
+            raise AssertionError("Insufficient data to predict.")
+        for epoch in range(len(df)-lag):
+            df_bg = df.iloc[epoch:lag+epoch+pred_period]
+            fcst_tmp = self._predict(df=df_bg)
+            self.fcst[lag+epoch] = fcst_tmp[0]
+            self.weights[epoch+self.lag] = [fcst_tmp[1], fcst_tmp[2]]
         self.df_op["y_hat_bg"] = self.fcst
         return self.df_op
