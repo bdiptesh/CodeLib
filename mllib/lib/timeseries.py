@@ -326,7 +326,7 @@ class BatesGrager():
 
         """
         df_bg_pred = None
-        pred_period=self.pred_period
+        pred_period = self.pred_period
         y_hat = self.y_hat
         df_bg_train = df.iloc[:-pred_period]
         df_bg_pred = df.iloc[-pred_period:]
