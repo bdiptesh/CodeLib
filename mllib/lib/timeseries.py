@@ -4,6 +4,7 @@ Time series module.
 **Available routines:**
 
 - class ``AutoArima``: Builds time series model using SARIMAX.
+- class ``BatesGranger``: Combines multiple forecasts.
 
 Credits
 -------
@@ -13,7 +14,7 @@ Credits
         - Diptesh
         - Madhu
 
-    Date: Feb 16, 2024
+    Date: Feb 17, 2024
 """
 
 # pylint: disable=invalid-name
