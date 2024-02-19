@@ -1,7 +1,7 @@
 name: Bug Report
 description: File a bug report
 title: "[Bug]: "
-labels: ["1: bug", "2: tests"]
+labels: ["bug", "tests"]
 assignees:
   - octocat
 body:

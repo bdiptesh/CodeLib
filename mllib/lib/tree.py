@@ -429,8 +429,7 @@ class XGBoost(Tree):
                                           verbosity=0,
                                           silent=True,
                                           random_state=self.seed,
-                                          seed=self.seed,
-                                          use_label_encoder=False)
+                                          seed=self.seed)
         elif self.method in ("regression", "timeseries"):
             tmp_model = xgb.XGBRegressor(n_jobs=1,
                                          verbosity=0,

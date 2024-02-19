@@ -1,7 +1,7 @@
 name: Feature request
 description: Request a feature addition
 title: "[Feature]: "
-labels: ["1: feature", "2: tests"]
+labels: ["feature", "tests"]
 assignees:
   - octocat
 body:
